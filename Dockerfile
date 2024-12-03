@@ -49,7 +49,7 @@ RUN mvn clean package -DskipTests
 # COPY /app/target/fenerbahce-notifier-0.0.1-SNAPSHOT.jar fenerbahce-notifier.jar
 
 # 7. Uygulamayı çalıştır
-CMD ["java", "-jar", "/app/target/pos-1.0.0.jar"]
+CMD ["java", "-jar", "/app/target/pos-api-1.0.0.jar"]
 
 # Spring Boot varsayılan portunu aç
 EXPOSE 8080
