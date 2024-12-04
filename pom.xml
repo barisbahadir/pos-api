@@ -102,9 +102,9 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.10.1</version> <!-- En güncel sürüm olabilir -->
+				<version>3.10.1</version>
 				<configuration>
-					<source>21</source> <!-- Projenizde kullandığınız JDK sürümüne uygun olmalı -->
+					<source>21</source>
 					<target>21</target>
 					<annotationProcessorPaths>
 						<path>
@@ -115,7 +115,28 @@
 					</annotationProcessorPaths>
 				</configuration>
 			</plugin>
+			<!-- Maven Jar Plugin -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>3.3.0</version>
+				<configuration>
+					<archive>
+						<manifest>
+							<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+							<mainClass>com.bahadir.pos.PosApplication</mainClass>
+						</manifest>
+					</archive>
+				</configuration>
+			</plugin>
+			<!-- Spring Boot Maven Plugin -->
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<version>3.3.6</version>
+			</plugin>
 		</plugins>
 	</build>
+
 
 </project>
