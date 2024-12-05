@@ -1,11 +1,7 @@
 package com.bahadir.pos.controller;
 
-import com.bahadir.pos.entity.Product;
 import com.bahadir.pos.entity.Transaction;
-import com.bahadir.pos.entity.transaction.TransactionRequest;
-import com.bahadir.pos.service.ProductService;
 import com.bahadir.pos.service.TransactionService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,6 +17,13 @@ public class TransactionController {
         this.transactionService = transactionService;
     }
 
+    // Ürünleri listele
+    @GetMapping("/list")
+    public ResponseEntity<List<Transaction>> getAllTransactions() {
+        List<Transaction> transactions = transactionService.getAll();
+        return ResponseEntity.ok(transactions);
+    }
+
     @PostMapping("/add")
     public Transaction createTransaction(@RequestBody Transaction transaction) {
         return transactionService.createTransaction(transaction);
@@ -30,5 +33,11 @@ public class TransactionController {
     @GetMapping("/{id}")
     public Transaction getTransactionById(@PathVariable Long id) {
         return transactionService.getTransactionById(id);
+    }
+
+    @GetMapping("/delete/all")
+    public ResponseEntity<Boolean> deleteAllTransactions() {
+        transactionService.deleteAllTransactions();
+        return ResponseEntity.ok(true);
     }
 }

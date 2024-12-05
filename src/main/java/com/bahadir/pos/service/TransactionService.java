@@ -1,5 +1,6 @@
 package com.bahadir.pos.service;
 
+import com.bahadir.pos.entity.Product;
 import com.bahadir.pos.entity.Transaction;
 import com.bahadir.pos.entity.TransactionItem;
 import com.bahadir.pos.repository.TransactionRepository;
@@ -15,6 +16,11 @@ public class TransactionService {
 
     @Autowired
     private TransactionRepository transactionRepository;
+
+    // Ürünleri listele
+    public List<Transaction> getAll() {
+        return transactionRepository.findAll();
+    }
 
     // Yeni bir transaction (satış) oluştur
     public Transaction createTransaction(Transaction transaction) {
@@ -48,5 +54,10 @@ public class TransactionService {
     public Transaction getTransactionById(Long id) {
         return transactionRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Transaction not found with id: " + id));
+    }
+
+    // Tüm ürünleri sil
+    public void deleteAllTransactions() {
+        transactionRepository.deleteAll();
     }
 }
