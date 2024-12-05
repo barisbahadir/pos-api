@@ -17,6 +17,7 @@ public class Category {
     private Long id;
 
     private String name;
+    private Integer orderValue;
 
     @OneToMany(mappedBy = "category")
     @JsonManagedReference

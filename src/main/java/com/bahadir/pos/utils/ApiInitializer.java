@@ -20,9 +20,9 @@ public class ApiInitializer implements CommandLineRunner {
         if (categoryRepository.count() == 0) {
             // Kayıt yoksa, yeni bir kategori ekle
             Category category = new Category();
-            category.setName("Varsayilan Kategori");
+            category.setName("POS");
             categoryRepository.save(category);
-            System.out.println("Default category created!");
+            System.out.println("Default category: 'POS' created!");
         }
     }
 }

@@ -21,6 +21,7 @@ public class Product {
     private BigDecimal price;
     private String image;
     private Integer stockQuantity;
+    private Integer orderValue;
 
     @ManyToOne
     @JoinColumn(name = "category_id")
