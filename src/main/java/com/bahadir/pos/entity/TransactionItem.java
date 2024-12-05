@@ -15,12 +15,15 @@ public class TransactionItem {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String productName;  // Ürün adı
-    private BigDecimal price;  // Ürün fiyatı
-    private Integer quantity;  // Ürün miktarı
+    private Long productId;
+    private String productName;
+    private String barcode;
+    private BigDecimal price;
+    private Integer quantity;
 
     // Constructor
-    public TransactionItem(String productName, BigDecimal price, Integer quantity) {
+    public TransactionItem(Long productId, String productName, BigDecimal price, Integer quantity) {
+        this.productId = productId;
         this.productName = productName;
         this.price = price;
         this.quantity = quantity;

@@ -16,11 +16,11 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String name;  // Ürün adı
+    private String name;
     private String barcode;
-    private BigDecimal price;  // Ürün fiyatı
-    private String image;  // Ürün resmi (base64 string)
-    private Integer stockQuantity;  // Ürün stoğu
+    private BigDecimal price;
+    private String image;
+    private Integer stockQuantity;
 
     @ManyToOne
     @JoinColumn(name = "category_id")

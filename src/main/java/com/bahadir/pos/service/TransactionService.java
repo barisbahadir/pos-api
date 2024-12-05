@@ -17,37 +17,30 @@ public class TransactionService {
     @Autowired
     private TransactionRepository transactionRepository;
 
-    // Ürünleri listele
     public List<Transaction> getAll() {
         return transactionRepository.findAll();
     }
 
-    // Yeni bir transaction (satış) oluştur
     public Transaction createTransaction(Transaction transaction) {
-        // Yeni bir transaction nesnesi oluştur
         Transaction finalTransaction = new Transaction();
         finalTransaction.setTransactionDate(LocalDateTime.now()); // Satış tarihini şu anki zaman olarak ayarla
         finalTransaction.setTransactionItems(transaction.getTransactionItems()); // Sepetteki ürünleri transaction'a ekle
 
-        // Sepetin toplam tutarını hesapla ve transaction'a ekle
         BigDecimal totalAmount = calculateTotalAmount(transaction.getTransactionItems()); // Sepet toplamı hesapla
         finalTransaction.setTotalAmount(totalAmount); // Hesaplanan tutarı transaction'a ekle
 
-        // Transaction'ı veritabanına kaydet
         return transactionRepository.save(finalTransaction);
     }
 
-    // Sepetin toplam tutarını hesaplamak
-    public BigDecimal calculateTotalAmount(List<TransactionItem> items) {
+    private BigDecimal calculateTotalAmount(List<TransactionItem> items) {
         BigDecimal totalAmount = BigDecimal.ZERO;
 
         for (TransactionItem item : items) {
-            // Ürün fiyatı * miktar
             BigDecimal itemTotal = item.getPrice().multiply(BigDecimal.valueOf(item.getQuantity()));
-            totalAmount = totalAmount.add(itemTotal); // Toplam tutarı ekle
+            totalAmount = totalAmount.add(itemTotal);
         }
 
-        return totalAmount; // Toplam tutarı döndür
+        return totalAmount;
     }
 
     // Transaction'ı id'ye göre bul

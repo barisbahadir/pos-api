@@ -23,13 +23,12 @@ public class Transaction {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private LocalDateTime transactionDate;  // Satış tarihi
-
-    private BigDecimal totalAmount;  // Sepet toplam tutarı
+    private LocalDateTime transactionDate;
+    private BigDecimal totalAmount;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "transaction_id")
-    private List<TransactionItem> transactionItems;  // Sepetteki öğeler (Ürün adı, fiyatı ve miktarı)
+    private List<TransactionItem> transactionItems;
     
     private BigDecimal calculateTotalAmount(List<TransactionItem> items) {
         BigDecimal totalPrice = BigDecimal.ZERO;
