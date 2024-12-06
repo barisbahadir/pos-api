@@ -19,9 +19,12 @@ public class Product {
     private String name;
     private String barcode;
     private BigDecimal price;
-    private String image;
     private Integer stockQuantity;
     private Integer orderValue;
+
+    @Lob
+    @Column(name = "image", columnDefinition = "TEXT") // PostgreSQL için uygun
+    private String image;
 
     @ManyToOne
     @JoinColumn(name = "category_id")
