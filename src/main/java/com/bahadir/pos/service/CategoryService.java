@@ -11,7 +11,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class CategoryService {
@@ -54,8 +53,9 @@ public class CategoryService {
         Boolean hasNullValues = updates.stream()
                 .anyMatch(update -> update.getId() == null || update.getOrderValue() == null);
 
-        if (!hasNullValues) {
-            // Sorguyu dinamik oluştur
+        if (hasNullValues || updates == null || updates.isEmpty()) {
+            return false;
+        } else {
             StringBuilder query = new StringBuilder("UPDATE category SET order_value = CASE ");
             List<Long> ids = new ArrayList<>();
 
@@ -65,20 +65,14 @@ public class CategoryService {
             }
 
             // Verilmeyen id'ler için order_value'yu 1 olarak ayarlama
-            query.append("WHEN id NOT IN (");
-            query.append(String.join(",", ids.stream().map(String::valueOf).collect(Collectors.toList())));
-            query.append(") THEN 1 ");  // Verilmeyen id'ler için order_value'yu 1 olarak ayarla
-
-            query.append("END WHERE id IN (:ids)");
+            query.append("ELSE 1 ");
+            query.append("END");
 
             // Sorguyu çalıştır
             Query nativeQuery = entityManager.createNativeQuery(query.toString());
-            nativeQuery.setParameter("ids", ids);
             nativeQuery.executeUpdate();
 
             return true;
-        } else {
-            return false;
         }
     }
 

@@ -55,13 +55,14 @@ public class ProductService {
     }
 
     @Transactional
-    public Boolean updateOrderValues(List<OrderUpdateDto> updates) {
+    public Boolean updateOrderValues(Long categoryId, List<OrderUpdateDto> updates) {
 
         Boolean hasNullValues = updates.stream()
                 .anyMatch(update -> update.getId() == null || update.getOrderValue() == null);
 
-        if (!hasNullValues) {
-            // Sorguyu dinamik oluştur
+        if (hasNullValues || categoryId == null || updates == null || updates.isEmpty()) {
+            return false;
+        } else {
             StringBuilder query = new StringBuilder("UPDATE product SET order_value = CASE ");
             List<Long> ids = new ArrayList<>();
 
@@ -71,20 +72,15 @@ public class ProductService {
             }
 
             // Verilmeyen id'ler için order_value'yu 1 olarak ayarlama
-            query.append("WHEN id NOT IN (");
-            query.append(String.join(",", ids.stream().map(String::valueOf).collect(Collectors.toList())));
-            query.append(") THEN 1 ");  // Verilmeyen id'ler için order_value'yu 1 olarak ayarla
-
-            query.append("END WHERE id IN (:ids)");
+            query.append("ELSE 1 ");
+            query.append("END WHERE category_id = :categoryId");
 
             // Sorguyu çalıştır
             Query nativeQuery = entityManager.createNativeQuery(query.toString());
-            nativeQuery.setParameter("ids", ids);
+            nativeQuery.setParameter("categoryId", categoryId);
             nativeQuery.executeUpdate();
 
             return true;
-        } else {
-            return false;
         }
     }
 
