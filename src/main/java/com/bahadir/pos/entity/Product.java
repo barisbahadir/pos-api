@@ -22,10 +22,9 @@ public class Product {
     private Integer stockQuantity;
     private Integer orderValue;
 
-    @Lob
-    @Column(name = "base64_image", columnDefinition = "TEXT")
-    @Basic(fetch = FetchType.EAGER)
-    private String image;
+    // BYTEA ile görüntü verisini saklıyoruz
+    @Column(name = "image", columnDefinition = "BYTEA")
+    private byte[] image;
 
     @ManyToOne
     @JoinColumn(name = "category_id")
