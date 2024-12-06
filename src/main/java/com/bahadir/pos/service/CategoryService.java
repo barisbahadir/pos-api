@@ -55,7 +55,7 @@ public class CategoryService {
 
         if (!hasNullValues) {
             // Sorguyu dinamik oluştur
-            StringBuilder query = new StringBuilder("UPDATE categories SET order_value = CASE ");
+            StringBuilder query = new StringBuilder("UPDATE category SET order_value = CASE ");
             List<Long> ids = new ArrayList<>();
 
             for (OrderUpdateDto update : updates) {

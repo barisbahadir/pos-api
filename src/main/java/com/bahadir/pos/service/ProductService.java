@@ -61,7 +61,7 @@ public class ProductService {
 
         if (!hasNullValues) {
             // Sorguyu dinamik oluştur
-            StringBuilder query = new StringBuilder("UPDATE products SET order_value = CASE ");
+            StringBuilder query = new StringBuilder("UPDATE product SET order_value = CASE ");
             List<Long> ids = new ArrayList<>();
 
             for (OrderUpdateDto update : updates) {
