@@ -2,6 +2,7 @@ package com.bahadir.pos.controller;
 
 import com.bahadir.pos.entity.Category;
 import com.bahadir.pos.entity.OrderUpdateDto;
+import com.bahadir.pos.entity.OrderUpdateItemDto;
 import com.bahadir.pos.service.CategoryService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -33,8 +34,8 @@ public class CategoryController {
     }
 
     @PostMapping("/order-update")
-    public ResponseEntity<String> updateOrderValues(@RequestBody List<OrderUpdateDto> orderedValues) {
-        Boolean result = categoryService.updateOrderValues(orderedValues);
+    public ResponseEntity<String> updateOrderValues(@RequestBody OrderUpdateDto orderData) {
+        Boolean result = categoryService.updateOrderValues(orderData.getOrderedValues());
         String resultMsg = result
                 ? "Kategoriler basariyla siralandi."
                 : "Siralama kaydedilirken bir hata olustu, bos degerleri kontrol edins!";

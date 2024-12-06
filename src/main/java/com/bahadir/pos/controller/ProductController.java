@@ -40,8 +40,8 @@ public class ProductController {
     }
 
     @PostMapping("/order-update")
-    public ResponseEntity<String> updateOrderValues(@RequestBody List<OrderUpdateDto> orderedValues) {
-        Boolean result = productService.updateOrderValues(orderedValues);
+    public ResponseEntity<String> updateOrderValues(@RequestBody OrderUpdateDto orderData) {
+        Boolean result = productService.updateOrderValues(orderData.getCategoryId(), orderData.getOrderedValues());
         String resultMsg = result
                 ? "Urunler basariyla siralandi."
                 : "Siralama kaydedilirken bir hata olustu, bos degerleri kontrol edins!";

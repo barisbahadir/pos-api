@@ -1,6 +1,6 @@
 package com.bahadir.pos.service;
 
-import com.bahadir.pos.entity.OrderUpdateDto;
+import com.bahadir.pos.entity.OrderUpdateItemDto;
 import com.bahadir.pos.entity.Product;
 import com.bahadir.pos.repository.ProductRepository;
 import jakarta.persistence.EntityManager;
@@ -11,7 +11,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class ProductService {
@@ -55,7 +54,7 @@ public class ProductService {
     }
 
     @Transactional
-    public Boolean updateOrderValues(Long categoryId, List<OrderUpdateDto> updates) {
+    public Boolean updateOrderValues(Long categoryId, List<OrderUpdateItemDto> updates) {
 
         Boolean hasNullValues = updates.stream()
                 .anyMatch(update -> update.getId() == null || update.getOrderValue() == null);
@@ -66,7 +65,7 @@ public class ProductService {
             StringBuilder query = new StringBuilder("UPDATE product SET order_value = CASE ");
             List<Long> ids = new ArrayList<>();
 
-            for (OrderUpdateDto update : updates) {
+            for (OrderUpdateItemDto update : updates) {
                 query.append("WHEN id = ").append(update.getId()).append(" THEN ").append(update.getOrderValue()).append(" ");
                 ids.add(update.getId());
             }

@@ -1,7 +1,7 @@
 package com.bahadir.pos.service;
 
 import com.bahadir.pos.entity.Category;
-import com.bahadir.pos.entity.OrderUpdateDto;
+import com.bahadir.pos.entity.OrderUpdateItemDto;
 import com.bahadir.pos.repository.CategoryRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
@@ -48,7 +48,7 @@ public class CategoryService {
     }
 
     @Transactional
-    public Boolean updateOrderValues(List<OrderUpdateDto> updates) {
+    public Boolean updateOrderValues(List<OrderUpdateItemDto> updates) {
 
         Boolean hasNullValues = updates.stream()
                 .anyMatch(update -> update.getId() == null || update.getOrderValue() == null);
@@ -59,7 +59,7 @@ public class CategoryService {
             StringBuilder query = new StringBuilder("UPDATE category SET order_value = CASE ");
             List<Long> ids = new ArrayList<>();
 
-            for (OrderUpdateDto update : updates) {
+            for (OrderUpdateItemDto update : updates) {
                 query.append("WHEN id = ").append(update.getId()).append(" THEN ").append(update.getOrderValue()).append(" ");
                 ids.add(update.getId());
             }
