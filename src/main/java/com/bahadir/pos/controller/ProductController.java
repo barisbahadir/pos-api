@@ -3,9 +3,11 @@ package com.bahadir.pos.controller;
 import com.bahadir.pos.entity.OrderUpdateDto;
 import com.bahadir.pos.entity.Product;
 import com.bahadir.pos.service.ProductService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Base64;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -35,6 +37,12 @@ public class ProductController {
     // Ürün oluştur
     @PostMapping("/add")
     public ResponseEntity<Product> createProduct(@RequestBody Product product) {
+
+        if(product.getImageBase64() != null && !StringUtils.isBlank(product.getImageBase64())){
+            byte[] imageBytes = Base64.getDecoder().decode(product.getImageBase64().split(",")[1]);
+            product.setImage(imageBytes);
+        }
+
         Product createdProduct = productService.createProduct(product);
         return ResponseEntity.ok(createdProduct);
     }
