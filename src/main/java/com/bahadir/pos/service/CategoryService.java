@@ -79,7 +79,7 @@ public class CategoryService {
         }
     }
 
-    // Kategori silme
+    @Transactional
     public void deleteCategory(Long categoryId) {
         Optional<Category> existingCategoryOpt = categoryRepository.findById(categoryId);
 
