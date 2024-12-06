@@ -26,6 +26,9 @@ public class Product {
     @Column(name = "image", columnDefinition = "BYTEA")
     private byte[] image;
 
+    @Transient
+    private String imageBase64;
+
     @ManyToOne
     @JoinColumn(name = "category_id")
     @JsonBackReference  // Kategorinin geri referansı (kategorilerle ilgili gereksiz döngüyü önler)
