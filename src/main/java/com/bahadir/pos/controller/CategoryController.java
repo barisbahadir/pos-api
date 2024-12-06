@@ -2,7 +2,6 @@ package com.bahadir.pos.controller;
 
 import com.bahadir.pos.entity.Category;
 import com.bahadir.pos.entity.OrderUpdateDto;
-import com.bahadir.pos.entity.OrderUpdateItemDto;
 import com.bahadir.pos.entity.Product;
 import com.bahadir.pos.service.CategoryService;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +23,7 @@ public class CategoryController {
 
     // Kategorileri listele
     @GetMapping("/list")
-    public ResponseEntity<List<Category>> getAllCategories() {
+    public ResponseEntity<List<Category>> listAll() {
         List<Category> categories = categoryService.getAllCategories();
 
         List<Category> sortedCategories = categories.stream()
@@ -46,9 +45,16 @@ public class CategoryController {
 
     // Yeni kategori oluştur
     @PostMapping("/add")
-    public ResponseEntity<Category> createCategory(@RequestBody Category category) {
+    public ResponseEntity<Category> add(@RequestBody Category category) {
         Category createdCategory = categoryService.createCategory(category);
         return ResponseEntity.ok(createdCategory);
+    }
+
+    // Ürün güncelle
+    @PostMapping("/update/{categoryId}")
+    public ResponseEntity<Category> update(@PathVariable Long categoryId, @RequestBody Category category) {
+        Category updatedCategory = categoryService.updateCategory(categoryId, category);
+        return ResponseEntity.ok(updatedCategory);
     }
 
     @PostMapping("/order-update")
@@ -60,8 +66,14 @@ public class CategoryController {
         return ResponseEntity.ok(resultMsg);
     }
 
+    @PostMapping("/delete/{categoryId}")
+    public ResponseEntity<Boolean> deleteById(@PathVariable Long categoryId) {
+        categoryService.deleteCategory(categoryId);
+        return ResponseEntity.ok(true);
+    }
+
     @GetMapping("/delete/all")
-    public ResponseEntity<Boolean> deleteAllCategories() {
+    public ResponseEntity<Boolean> deleteAll() {
         categoryService.deleteAllCategories();
         return ResponseEntity.ok(true);
     }

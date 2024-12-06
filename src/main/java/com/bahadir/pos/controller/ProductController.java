@@ -24,7 +24,7 @@ public class ProductController {
 
     // Ürünleri listele
     @GetMapping("/list")
-    public ResponseEntity<List<Product>> getAllProducts() {
+    public ResponseEntity<List<Product>> listAll() {
         List<Product> products = productService.getAllProducts();
 
         List<Product> sortedCategories = products.stream()
@@ -36,7 +36,7 @@ public class ProductController {
 
     // Ürün oluştur
     @PostMapping("/add")
-    public ResponseEntity<Product> createProduct(@RequestBody Product product) {
+    public ResponseEntity<Product> add(@RequestBody Product product) {
 
         if(product.getImageBase64() != null && !StringUtils.isBlank(product.getImageBase64())){
             byte[] imageBytes = Base64.getDecoder().decode(product.getImageBase64().split(",")[1]);
@@ -49,7 +49,7 @@ public class ProductController {
 
     // Ürün güncelle
     @PostMapping("/update/{productId}")
-    public ResponseEntity<Product> updateProduct(@PathVariable Long productId, @RequestBody Product product) {
+    public ResponseEntity<Product> update(@PathVariable Long productId, @RequestBody Product product) {
         Product updatedProduct = productService.updateProduct(productId, product);
         return ResponseEntity.ok(updatedProduct);
     }
@@ -65,13 +65,13 @@ public class ProductController {
 
     // Ürün sil
     @PostMapping("/delete/{productId}")
-    public ResponseEntity<Void> deleteProduct(@PathVariable Long productId) {
+    public ResponseEntity<Boolean> delete(@PathVariable Long productId) {
         productService.deleteProduct(productId);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(true);
     }
 
     @GetMapping("/delete/all")
-    public ResponseEntity<Boolean> deleteAllProducts() {
+    public ResponseEntity<Boolean> deleteAll() {
         productService.deleteAllProducts();
         return ResponseEntity.ok(true);
     }
