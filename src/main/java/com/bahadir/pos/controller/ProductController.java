@@ -6,7 +6,9 @@ import com.bahadir.pos.service.ProductService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/product")
@@ -22,7 +24,12 @@ public class ProductController {
     @GetMapping("/list")
     public ResponseEntity<List<Product>> getAllProducts() {
         List<Product> products = productService.getAllProducts();
-        return ResponseEntity.ok(products);
+
+        List<Product> sortedCategories = products.stream()
+                .sorted(Comparator.comparingInt(Product::getOrderValue))
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(sortedCategories);
     }
 
     // Ürün oluştur
