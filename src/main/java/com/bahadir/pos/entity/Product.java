@@ -23,7 +23,8 @@ public class Product {
     private Integer orderValue;
 
     @Lob
-    @Column(name = "image", columnDefinition = "TEXT") // PostgreSQL için uygun
+    @Column(name = "base64_image", columnDefinition = "TEXT")
+    @Basic(fetch = FetchType.EAGER)
     private String image;
 
     @ManyToOne
