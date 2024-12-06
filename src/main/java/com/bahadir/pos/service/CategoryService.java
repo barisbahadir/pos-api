@@ -23,6 +23,7 @@ public class CategoryService {
 
     // Yeni kategori oluştur
     public Category createCategory(Category category) {
+        category.setOrderValue(1);
         return categoryRepository.save(category);
     }
 
