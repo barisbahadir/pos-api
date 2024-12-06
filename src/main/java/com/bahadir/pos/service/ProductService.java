@@ -1,9 +1,14 @@
 package com.bahadir.pos.service;
 
+import com.bahadir.pos.entity.OrderUpdateDto;
 import com.bahadir.pos.entity.Product;
 import com.bahadir.pos.repository.ProductRepository;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.Query;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -11,9 +16,11 @@ import java.util.Optional;
 public class ProductService {
 
     private final ProductRepository productRepository;
+    private final EntityManager entityManager;
 
-    public ProductService(ProductRepository productRepository) {
+    public ProductService(ProductRepository productRepository, EntityManager entityManager) {
         this.productRepository = productRepository;
+        this.entityManager = entityManager;
     }
 
     // Ürünleri listele
@@ -43,6 +50,35 @@ public class ProductService {
             return productRepository.save(existingProduct);
         } else {
             throw new IllegalArgumentException("Ürün bulunamadı: " + productId);
+        }
+    }
+
+    @Transactional
+    public Boolean updateOrderValues(List<OrderUpdateDto> updates) {
+
+        Boolean hasNullValues = updates.stream()
+                .anyMatch(update -> update.getId() == null || update.getOrderValue() == null);
+
+        if (!hasNullValues) {
+            // Sorguyu dinamik oluştur
+            StringBuilder query = new StringBuilder("UPDATE products SET order_value = CASE ");
+            List<Long> ids = new ArrayList<>();
+
+            for (OrderUpdateDto update : updates) {
+                query.append("WHEN id = ").append(update.getId()).append(" THEN ").append(update.getOrderValue()).append(" ");
+                ids.add(update.getId());
+            }
+
+            query.append("END WHERE id IN (:ids)");
+
+            // Sorguyu çalıştır
+            Query nativeQuery = entityManager.createNativeQuery(query.toString());
+            nativeQuery.setParameter("ids", ids);
+            nativeQuery.executeUpdate();
+
+            return true;
+        } else {
+            return false;
         }
     }
 

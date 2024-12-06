@@ -1,6 +1,7 @@
 package com.bahadir.pos.controller;
 
 import com.bahadir.pos.entity.Category;
+import com.bahadir.pos.entity.OrderUpdateDto;
 import com.bahadir.pos.service.CategoryService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -29,6 +30,15 @@ public class CategoryController {
     public ResponseEntity<Category> createCategory(@RequestBody Category category) {
         Category createdCategory = categoryService.createCategory(category);
         return ResponseEntity.ok(createdCategory);
+    }
+
+    @PostMapping("/order-update")
+    public ResponseEntity<String> updateOrderValues(@RequestBody List<OrderUpdateDto> orderedValues) {
+        Boolean result = categoryService.updateOrderValues(orderedValues);
+        String resultMsg = result
+                ? "Kategoriler basariyla siralandi."
+                : "Siralama kaydedilirken bir hata olustu, bos degerleri kontrol edins!";
+        return ResponseEntity.ok(resultMsg);
     }
 
     @GetMapping("/delete/all")

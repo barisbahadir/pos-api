@@ -1,5 +1,6 @@
 package com.bahadir.pos.controller;
 
+import com.bahadir.pos.entity.OrderUpdateDto;
 import com.bahadir.pos.entity.Product;
 import com.bahadir.pos.service.ProductService;
 import org.springframework.http.ResponseEntity;
@@ -36,6 +37,15 @@ public class ProductController {
     public ResponseEntity<Product> updateProduct(@PathVariable Long productId, @RequestBody Product product) {
         Product updatedProduct = productService.updateProduct(productId, product);
         return ResponseEntity.ok(updatedProduct);
+    }
+
+    @PostMapping("/order-update")
+    public ResponseEntity<String> updateOrderValues(@RequestBody List<OrderUpdateDto> orderedValues) {
+        Boolean result = productService.updateOrderValues(orderedValues);
+        String resultMsg = result
+                ? "Urunler basariyla siralandi."
+                : "Siralama kaydedilirken bir hata olustu, bos degerleri kontrol edins!";
+        return ResponseEntity.ok(resultMsg);
     }
 
     // Ürün sil
