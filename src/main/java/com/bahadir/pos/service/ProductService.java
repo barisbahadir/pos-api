@@ -23,6 +23,7 @@ public class ProductService {
 
     // Yeni ürün oluştur
     public Product createProduct(Product product) {
+        product.setOrderValue(1);
         return productRepository.save(product);
     }
 

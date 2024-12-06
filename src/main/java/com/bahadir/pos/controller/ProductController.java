@@ -27,7 +27,6 @@ public class ProductController {
     // Ürün oluştur
     @PostMapping("/add")
     public ResponseEntity<Product> createProduct(@RequestBody Product product) {
-        product.setOrderValue(1);
         Product createdProduct = productService.createProduct(product);
         return ResponseEntity.ok(createdProduct);
     }
