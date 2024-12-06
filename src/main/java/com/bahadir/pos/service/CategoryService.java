@@ -3,6 +3,7 @@ package com.bahadir.pos.service;
 import com.bahadir.pos.entity.Category;
 import com.bahadir.pos.entity.OrderUpdateItemDto;
 import com.bahadir.pos.repository.CategoryRepository;
+import com.bahadir.pos.repository.ProductRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
 import org.springframework.stereotype.Service;
@@ -16,10 +17,12 @@ import java.util.Optional;
 public class CategoryService {
 
     private final CategoryRepository categoryRepository;
+    private final ProductRepository productRepository;
     private final EntityManager entityManager;
 
-    public CategoryService(CategoryRepository categoryRepository, EntityManager entityManager) {
+    public CategoryService(CategoryRepository categoryRepository, ProductRepository productRepository, EntityManager entityManager) {
         this.categoryRepository = categoryRepository;
+        this.productRepository = productRepository;
         this.entityManager = entityManager;
     }
 
@@ -77,13 +80,18 @@ public class CategoryService {
     }
 
     // Kategori silme
-    public void deleteCategory(Long id) {
-        Optional<Category> existingCategoryOpt = categoryRepository.findById(id);
+    public void deleteCategory(Long categoryId) {
+        Optional<Category> existingCategoryOpt = categoryRepository.findById(categoryId);
 
         if (existingCategoryOpt.isPresent()) {
-            categoryRepository.deleteById(id);
+
+            // Kategoriye ait tüm ürünleri sil
+            productRepository.deleteByCategoryId(categoryId);
+
+            // Kategoriyi sil
+            categoryRepository.deleteById(categoryId);
         } else {
-            throw new IllegalArgumentException("Kategori bulunamadı: " + id);
+            throw new IllegalArgumentException("Kategori bulunamadı: " + categoryId);
         }
     }
 
