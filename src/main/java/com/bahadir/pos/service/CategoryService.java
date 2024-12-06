@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class CategoryService {
@@ -62,6 +63,11 @@ public class CategoryService {
                 query.append("WHEN id = ").append(update.getId()).append(" THEN ").append(update.getOrderValue()).append(" ");
                 ids.add(update.getId());
             }
+
+            // Verilmeyen id'ler için order_value'yu 1 olarak ayarlama
+            query.append("WHEN id NOT IN (");
+            query.append(String.join(",", ids.stream().map(String::valueOf).collect(Collectors.toList())));
+            query.append(") THEN 1 ");  // Verilmeyen id'ler için order_value'yu 1 olarak ayarla
 
             query.append("END WHERE id IN (:ids)");
 
