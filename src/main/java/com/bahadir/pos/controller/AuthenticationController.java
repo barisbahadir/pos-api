@@ -3,18 +3,17 @@ package com.bahadir.pos.controller;
 import com.bahadir.pos.entity.user.User;
 import com.bahadir.pos.entity.authentication.AuthenticationRequest;
 import com.bahadir.pos.entity.authentication.AuthenticationResponseDto;
+import com.bahadir.pos.entity.user.UserRole;
 import com.bahadir.pos.exception.ApiException;
 import com.bahadir.pos.security.JwtTokenProvider;
+import com.bahadir.pos.security.SecuredEndpoint;
 import com.bahadir.pos.service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -34,7 +33,7 @@ public class AuthenticationController {
 
     // Kullanıcı kaydı
     @PostMapping("/register")
-    public ResponseEntity<?> registerUser(@RequestBody AuthenticationRequest authenticationRequest) {
+    public ResponseEntity<?> register(@RequestBody AuthenticationRequest authenticationRequest) {
         try {
             userService.registerUser(authenticationRequest.getEmail(), authenticationRequest.getPassword());
             return ResponseEntity.ok().body("User registered successfully");
@@ -47,16 +46,13 @@ public class AuthenticationController {
     @PostMapping("/login")
     public ResponseEntity<AuthenticationResponseDto> login(@RequestBody AuthenticationRequest authenticationRequest) {
 
-        // Kullanıcıyı email ile bul
         User user = userService.findByEmail(authenticationRequest.getEmail())
                 .orElseThrow(() -> new ApiException("User not found with email: " + authenticationRequest.getEmail()));
 
-        // Şifreyi kontrol et
         if (!userService.validatePassword(user, authenticationRequest.getPassword())) {
             throw new ApiException("Invalid password");
         }
 
-        // Kullanıcıyı doğruladıktan sonra, AuthenticationManager ile Authentication oluştur
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(authenticationRequest.getEmail(), authenticationRequest.getPassword())
         );
@@ -67,7 +63,6 @@ public class AuthenticationController {
         // JWT token oluştur
         String jwt = jwtTokenProvider.generateJwtToken(authenticationRequest.getEmail(), List.of(user.getRole().name()));
 
-        // JWT token'ı döndür
         AuthenticationResponseDto dto = AuthenticationResponseDto
                 .builder()
                 .email(authenticationRequest.getEmail())
@@ -76,5 +71,12 @@ public class AuthenticationController {
                 .build();
 
         return ResponseEntity.ok(dto);
+    }
+
+    @SecuredEndpoint(role = UserRole.ADMIN, filter = true)
+    @GetMapping("/delete/all")
+    public ResponseEntity<Boolean> deleteAll() {
+        userService.deleteAllUsers();
+        return ResponseEntity.ok(true);
     }
 }

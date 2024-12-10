@@ -3,6 +3,8 @@ package com.bahadir.pos.controller;
 import com.bahadir.pos.entity.category.Category;
 import com.bahadir.pos.entity.OrderUpdateDto;
 import com.bahadir.pos.entity.product.Product;
+import com.bahadir.pos.entity.user.UserRole;
+import com.bahadir.pos.security.SecuredEndpoint;
 import com.bahadir.pos.service.CategoryService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -72,6 +74,7 @@ public class CategoryController {
         return ResponseEntity.ok(true);
     }
 
+    @SecuredEndpoint(role = UserRole.ADMIN, filter = true)
     @GetMapping("/delete/all")
     public ResponseEntity<Boolean> deleteAll() {
         categoryService.deleteAllCategories();

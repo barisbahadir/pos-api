@@ -2,6 +2,8 @@ package com.bahadir.pos.controller;
 
 import com.bahadir.pos.entity.OrderUpdateDto;
 import com.bahadir.pos.entity.product.Product;
+import com.bahadir.pos.entity.user.UserRole;
+import com.bahadir.pos.security.SecuredEndpoint;
 import com.bahadir.pos.service.ProductService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.ResponseEntity;
@@ -70,6 +72,7 @@ public class ProductController {
         return ResponseEntity.ok(true);
     }
 
+    @SecuredEndpoint(role = UserRole.ADMIN, filter = true)
     @GetMapping("/delete/all")
     public ResponseEntity<Boolean> deleteAll() {
         productService.deleteAllProducts();

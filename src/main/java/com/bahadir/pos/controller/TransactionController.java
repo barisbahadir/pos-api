@@ -20,7 +20,6 @@ public class TransactionController {
         this.transactionService = transactionService;
     }
 
-    // Ürünleri listele
     @SecuredEndpoint(role = UserRole.ADMIN, filter = true)
     @GetMapping("/list")
     public ResponseEntity<List<Transaction>> getAllTransactions() {
@@ -46,6 +45,7 @@ public class TransactionController {
         return transactionService.getTransactionById(id);
     }
 
+    @SecuredEndpoint(role = UserRole.ADMIN, filter = true)
     @GetMapping("/delete/all")
     public ResponseEntity<Boolean> deleteAllTransactions() {
         transactionService.deleteAllTransactions();

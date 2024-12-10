@@ -9,6 +9,9 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Component
 public class ApiInitializer implements CommandLineRunner {
 
@@ -36,12 +39,27 @@ public class ApiInitializer implements CommandLineRunner {
         // Kullanicilar tablosunda kayıt var mı kontrol et
         if (userRepository.count() == 0) {
             // Kayıt yoksa, yeni bir kullanici ekle
-            User user = new User();
-            user.setEmail("bahadir");
-            user.setPassword(passwordEncoder.encode("bahadir"));
-            user.setRole(UserRole.USER);
-            userRepository.save(user);
-            System.out.println("Default user: 'BAHADIR' created!");
+            List<User> defaultUsers = new ArrayList<>();
+            defaultUsers.add(User
+                    .builder()
+                    .email("admin")
+                    .password(passwordEncoder.encode("bb377261"))
+                    .role(UserRole.ADMIN)
+                    .build());
+            defaultUsers.add(User
+                    .builder()
+                    .email("bahadir")
+                    .password(passwordEncoder.encode("bahadir"))
+                    .role(UserRole.USER)
+                    .build());
+            defaultUsers.add(User
+                    .builder()
+                    .email("zeliha")
+                    .password(passwordEncoder.encode("zeliha"))
+                    .role(UserRole.USER)
+                    .build());
+            userRepository.saveAll(defaultUsers);
+            System.out.println("Default users: " + defaultUsers.stream().map(User::getEmail).toList() + " created!");
         }
     }
 }
