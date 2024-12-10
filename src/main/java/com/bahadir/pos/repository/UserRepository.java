@@ -1,6 +1,6 @@
 package com.bahadir.pos.repository;
 
-import com.bahadir.pos.entity.User;
+import com.bahadir.pos.entity.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

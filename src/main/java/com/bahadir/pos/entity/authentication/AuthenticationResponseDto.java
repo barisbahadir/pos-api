@@ -1,6 +1,6 @@
 package com.bahadir.pos.entity.authentication;
 
-import com.bahadir.pos.entity.UserRole;
+import com.bahadir.pos.entity.user.UserRole;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

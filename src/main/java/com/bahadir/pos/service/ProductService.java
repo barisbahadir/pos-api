@@ -1,7 +1,7 @@
 package com.bahadir.pos.service;
 
 import com.bahadir.pos.entity.OrderUpdateItemDto;
-import com.bahadir.pos.entity.Product;
+import com.bahadir.pos.entity.product.Product;
 import com.bahadir.pos.repository.ProductRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;

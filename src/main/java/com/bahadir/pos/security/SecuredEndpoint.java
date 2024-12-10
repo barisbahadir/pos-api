@@ -1,6 +1,6 @@
 package com.bahadir.pos.security;
 
-import com.bahadir.pos.entity.UserRole;
+import com.bahadir.pos.entity.user.UserRole;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

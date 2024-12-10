@@ -1,5 +1,6 @@
-package com.bahadir.pos.entity;
+package com.bahadir.pos.entity.category;
 
+import com.bahadir.pos.entity.product.Product;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;

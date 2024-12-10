@@ -1,7 +1,7 @@
 package com.bahadir.pos.service;
 
-import com.bahadir.pos.entity.User;
-import com.bahadir.pos.entity.UserRole;
+import com.bahadir.pos.entity.user.User;
+import com.bahadir.pos.entity.user.UserRole;
 import com.bahadir.pos.exception.ApiException;
 import com.bahadir.pos.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;

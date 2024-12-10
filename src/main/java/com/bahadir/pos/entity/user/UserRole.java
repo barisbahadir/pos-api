@@ -1,4 +1,4 @@
-package com.bahadir.pos.entity;
+package com.bahadir.pos.entity.user;
 
 public enum UserRole {
     USER,

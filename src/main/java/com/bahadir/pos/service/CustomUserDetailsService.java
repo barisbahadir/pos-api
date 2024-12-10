@@ -1,6 +1,6 @@
 package com.bahadir.pos.service;
 
-import com.bahadir.pos.entity.User;
+import com.bahadir.pos.entity.user.User;
 import com.bahadir.pos.repository.UserRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

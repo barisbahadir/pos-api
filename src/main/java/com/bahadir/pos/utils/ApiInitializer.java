@@ -1,8 +1,8 @@
 package com.bahadir.pos.utils;
 
-import com.bahadir.pos.entity.Category;
-import com.bahadir.pos.entity.User;
-import com.bahadir.pos.entity.UserRole;
+import com.bahadir.pos.entity.category.Category;
+import com.bahadir.pos.entity.user.User;
+import com.bahadir.pos.entity.user.UserRole;
 import com.bahadir.pos.repository.CategoryRepository;
 import com.bahadir.pos.repository.UserRepository;
 import org.springframework.boot.CommandLineRunner;

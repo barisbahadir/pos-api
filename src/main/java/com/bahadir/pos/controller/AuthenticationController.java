@@ -1,6 +1,6 @@
 package com.bahadir.pos.controller;
 
-import com.bahadir.pos.entity.User;
+import com.bahadir.pos.entity.user.User;
 import com.bahadir.pos.entity.authentication.AuthenticationRequest;
 import com.bahadir.pos.entity.authentication.AuthenticationResponseDto;
 import com.bahadir.pos.exception.ApiException;

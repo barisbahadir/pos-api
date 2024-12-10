@@ -1,6 +1,6 @@
 package com.bahadir.pos.service;
 
-import com.bahadir.pos.entity.Category;
+import com.bahadir.pos.entity.category.Category;
 import com.bahadir.pos.entity.OrderUpdateItemDto;
 import com.bahadir.pos.repository.CategoryRepository;
 import com.bahadir.pos.repository.ProductRepository;
