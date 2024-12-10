@@ -2,6 +2,8 @@ package com.bahadir.pos.controller;
 
 import com.bahadir.pos.entity.Transaction;
 import com.bahadir.pos.entity.TransactionFilterDto;
+import com.bahadir.pos.entity.UserRole;
+import com.bahadir.pos.security.SecuredEndpoint;
 import com.bahadir.pos.service.TransactionService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +21,7 @@ public class TransactionController {
     }
 
     // Ürünleri listele
+    @SecuredEndpoint(role = UserRole.ADMIN, filter = true)
     @GetMapping("/list")
     public ResponseEntity<List<Transaction>> getAllTransactions() {
         List<Transaction> transactions = transactionService.getAll();

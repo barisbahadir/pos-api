@@ -3,7 +3,6 @@ package com.bahadir.pos.service;
 import com.bahadir.pos.entity.Transaction;
 import com.bahadir.pos.entity.TransactionItem;
 import com.bahadir.pos.repository.TransactionRepository;
-import com.bahadir.pos.security.SecuredEndpoint;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,7 +16,6 @@ public class TransactionService {
     @Autowired
     private TransactionRepository transactionRepository;
 
-    @SecuredEndpoint(role = "ADMIN", filter = true)
     public List<Transaction> getAll() {
         return transactionRepository.findAll();
     }
@@ -32,13 +30,13 @@ public class TransactionService {
 
     public List<Transaction> getTransactions(String keyword, LocalDateTime startDate, LocalDateTime endDate) {
 
-        if(startDate != null && endDate != null && keyword != null && !keyword.isEmpty()){
+        if (startDate != null && endDate != null && keyword != null && !keyword.isEmpty()) {
             return transactionRepository.findByKeywordAndDateRange(keyword, startDate, endDate);
-        } else if(startDate != null && endDate != null){
+        } else if (startDate != null && endDate != null) {
             return transactionRepository.findByTransactionDateBetween(startDate, endDate);
-        } else if(keyword != null && !keyword.isEmpty()){
+        } else if (keyword != null && !keyword.isEmpty()) {
             return transactionRepository.findByProductNameOrBarcode(keyword);
-        } else{
+        } else {
             return transactionRepository.findAll();
         }
     }

@@ -12,27 +12,25 @@ import org.springframework.stereotype.Component;
 public class SecuredEndpointAspect {
 
     @Around("@annotation(securedEndpoint)")
-    public Object checkSecurityAndFilter(ProceedingJoinPoint joinPoint, SecuredEndpoint securedEndpoint) throws Throwable {
-        // Kullanıcı rolünü al
+    public Object handleSecuredEndpoint(ProceedingJoinPoint joinPoint, SecuredEndpoint securedEndpoint) throws Throwable {
+        // Kullanıcının oturum bilgilerini al
         var authentication = SecurityContextHolder.getContext().getAuthentication();
         var roles = authentication.getAuthorities().stream()
                 .map(auth -> auth.getAuthority().replace("ROLE_", ""))
                 .toList();
 
-        // Role doğrulaması
-        if (!roles.contains(securedEndpoint.role())) {
-            return ResponseEntity.status(403).body("Yetkisiz erisim! (Kullanici rolu bu servisi kullanmak icin yeterli degil)");
+        // Rol kontrolü
+        if (!roles.contains(securedEndpoint.role().name())) {
+            return ResponseEntity.status(403).body("Unauthorized Access");
         }
 
-        // Filtreleme işlemi
+        // Filtreleme
         if (securedEndpoint.filter()) {
             Object[] args = joinPoint.getArgs();
-            // Gerekli argümanları filtrele ve değiştirebilirsiniz
-            // Örneğin: Tarih aralığını varsayılan değerlere çekmek
+            // Gerekirse argümanlar üzerinde işlem yapılabilir
         }
 
-        // Servis metodunu çalıştır
+        // Metodu çalıştır ve sonucu döndür
         return joinPoint.proceed();
     }
 }
-
