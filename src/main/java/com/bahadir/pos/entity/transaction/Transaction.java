@@ -1,4 +1,4 @@
-package com.bahadir.pos.entity;
+package com.bahadir.pos.entity.transaction;
 
 import jakarta.persistence.*;
 import lombok.Data;
@@ -13,18 +13,15 @@ import java.util.List;
 @NoArgsConstructor
 public class Transaction {
 
-    public Transaction(LocalDateTime transactionDate, List<TransactionItem> transactionItems) {
-        this.transactionDate = transactionDate;
-        this.transactionItems = transactionItems;
-        this.totalAmount = calculateTotalAmount(transactionItems);
-    }
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private LocalDateTime transactionDate;
     private BigDecimal totalAmount;
+
+    @Enumerated(EnumType.STRING)
+    private TransactionPaymentType paymentType;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "transaction_id")
@@ -39,5 +36,11 @@ public class Transaction {
         }
 
         return totalPrice;  // Hesaplanan toplam tutarı döndür
+    }
+
+    public Transaction(LocalDateTime transactionDate, List<TransactionItem> transactionItems) {
+        this.transactionDate = transactionDate;
+        this.transactionItems = transactionItems;
+        this.totalAmount = calculateTotalAmount(transactionItems);
     }
 }

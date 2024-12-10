@@ -1,6 +1,6 @@
 package com.bahadir.pos.repository;
 
-import com.bahadir.pos.entity.Transaction;
+import com.bahadir.pos.entity.transaction.Transaction;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

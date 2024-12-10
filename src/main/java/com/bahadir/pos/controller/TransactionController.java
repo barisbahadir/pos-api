@@ -1,8 +1,8 @@
 package com.bahadir.pos.controller;
 
-import com.bahadir.pos.entity.Transaction;
-import com.bahadir.pos.entity.TransactionFilterDto;
 import com.bahadir.pos.entity.UserRole;
+import com.bahadir.pos.entity.transaction.Transaction;
+import com.bahadir.pos.entity.transaction.TransactionFilterDto;
 import com.bahadir.pos.security.SecuredEndpoint;
 import com.bahadir.pos.service.TransactionService;
 import org.springframework.http.ResponseEntity;

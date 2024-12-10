@@ -1,4 +1,4 @@
-package com.bahadir.pos.entity;
+package com.bahadir.pos.entity.transaction;
 
 import jakarta.persistence.*;
 import lombok.Data;

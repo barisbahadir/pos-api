@@ -1,10 +1,8 @@
-package com.bahadir.pos.entity;
+package com.bahadir.pos.entity.transaction;
 
 import lombok.*;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Getter
 @Setter
