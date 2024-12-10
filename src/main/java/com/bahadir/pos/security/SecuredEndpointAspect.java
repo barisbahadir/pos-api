@@ -21,7 +21,7 @@ public class SecuredEndpointAspect {
 
         // Rol kontrolü
         if (!roles.contains(securedEndpoint.role().name())) {
-            return ResponseEntity.status(403).body("Unauthorized Access");
+            return ResponseEntity.status(403).body("Yetkisiz erisim talebi engellendi. (Mevcut rol: " + roles.toString() + ")");
         }
 
         // Filtreleme
