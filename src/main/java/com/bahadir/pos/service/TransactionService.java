@@ -1,7 +1,8 @@
 package com.bahadir.pos.service;
 
-import com.bahadir.pos.entity.Transaction;
-import com.bahadir.pos.entity.TransactionItem;
+import com.bahadir.pos.entity.transaction.Transaction;
+import com.bahadir.pos.entity.transaction.TransactionItem;
+import com.bahadir.pos.entity.transaction.TransactionPaymentType;
 import com.bahadir.pos.repository.TransactionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -46,6 +47,7 @@ public class TransactionService {
         Transaction finalTransaction = new Transaction();
         finalTransaction.setTransactionDate(LocalDateTime.now()); // Satış tarihini şu anki zaman olarak ayarla
         finalTransaction.setTransactionItems(transaction.getTransactionItems()); // Sepetteki ürünleri transaction'a ekle
+        finalTransaction.setPaymentType(transaction.getPaymentType() == null ? TransactionPaymentType.CASH : transaction.getPaymentType());
 
         BigDecimal totalAmount = calculateTotalAmount(transaction.getTransactionItems()); // Sepet toplamı hesapla
         finalTransaction.setTotalAmount(totalAmount); // Hesaplanan tutarı transaction'a ekle
@@ -66,8 +68,7 @@ public class TransactionService {
 
     // Transaction'ı id'ye göre bul
     public Transaction getTransactionById(Long id) {
-        return transactionRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Transaction not found with id: " + id));
+        return transactionRepository.findById(id).orElseThrow(() -> new RuntimeException("Transaction not found with id: " + id));
     }
 
     // Tüm ürünleri sil
