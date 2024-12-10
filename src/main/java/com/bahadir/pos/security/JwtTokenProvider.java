@@ -9,8 +9,6 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.security.KeyFactory;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
@@ -53,10 +51,10 @@ public class JwtTokenProvider {
             getClaimsFromToken(token);
             return true;
         } catch (JwtException | IllegalArgumentException e) {
-            // Token geçersizse false döneriz
-            return false;
+            // Token geçersizse, hata mesajı ve 403 dönebiliriz
+            throw new JwtTokenException("Invalid JWT token", e); // Özel hata fırlatma
         } catch (Exception e) {
-            throw new JwtTokenException("Error validating JWT token", e);
+            throw new JwtTokenException("Error validating JWT token", e); // Genel hata durumunda özel mesaj
         }
     }
 
