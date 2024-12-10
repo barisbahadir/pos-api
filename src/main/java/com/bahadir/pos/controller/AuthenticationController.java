@@ -1,7 +1,7 @@
 package com.bahadir.pos.controller;
 
-import com.bahadir.pos.entity.authentication.AuthenticationRequest;
 import com.bahadir.pos.entity.User;
+import com.bahadir.pos.entity.authentication.AuthenticationRequest;
 import com.bahadir.pos.entity.authentication.AuthenticationResponseDto;
 import com.bahadir.pos.exception.ApiException;
 import com.bahadir.pos.security.JwtTokenProvider;
@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -63,7 +65,7 @@ public class AuthenticationController {
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         // JWT token oluştur
-        String jwt = jwtTokenProvider.generateJwtToken(authenticationRequest.getEmail());
+        String jwt = jwtTokenProvider.generateJwtToken(authenticationRequest.getEmail(), List.of(user.getRole().name()));
 
         // JWT token'ı döndür
         AuthenticationResponseDto dto = AuthenticationResponseDto

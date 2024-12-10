@@ -15,13 +15,19 @@ public class SecuredEndpointAspect {
     public Object handleSecuredEndpoint(ProceedingJoinPoint joinPoint, SecuredEndpoint securedEndpoint) throws Throwable {
         // Kullanıcının oturum bilgilerini al
         var authentication = SecurityContextHolder.getContext().getAuthentication();
+//        var roles = authentication.getAuthorities().stream()
+//                .map(auth -> auth.getAuthority().replace("ROLE_", ""))
+//                .toList();
+
         var roles = authentication.getAuthorities().stream()
-                .map(auth -> auth.getAuthority().replace("ROLE_", ""))
+                .map(auth -> auth.getAuthority())
                 .toList();
 
         // Rol kontrolü
         if (!roles.contains(securedEndpoint.role().name())) {
-            return ResponseEntity.status(403).body("Yetkisiz erisim talebi engellendi. (Mevcut rol: " + roles.toString() + ")");
+            return ResponseEntity
+                    .status(403)
+                    .body("Yetkisiz erisim talebi engellendi. (Mevcut roller: " + roles.toString() + " - Gereken Rol: " + securedEndpoint.role().name() + ")");
         }
 
         // Filtreleme

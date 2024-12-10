@@ -20,6 +20,7 @@ import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
 import java.util.Date;
+import java.util.List;
 
 @Component
 public class JwtTokenProvider {
@@ -30,12 +31,13 @@ public class JwtTokenProvider {
     private static final long JWT_EXPIRATION = 86400000; // 1 gün
 
     // JWT token üretme (RS256 imza algoritması kullanarak)
-    public String generateJwtToken(String username) throws JwtTokenException {
+    public String generateJwtToken(String username, List<String> roles) throws JwtTokenException {
         try {
             PrivateKey privateKey = getPrivateKeyFromFile(PRIVATE_KEY_PATH);
 
             return Jwts.builder()
                     .setSubject(username)
+                    .claim("roles", roles) // Rolleri burada ekliyoruz
                     .setIssuedAt(new Date())
                     .setExpiration(new Date(System.currentTimeMillis() + JWT_EXPIRATION))
                     .signWith(privateKey, SignatureAlgorithm.RS256)  // RS256 kullanarak imzalama
