@@ -3,6 +3,7 @@ package com.bahadir.pos.service;
 import com.bahadir.pos.entity.Transaction;
 import com.bahadir.pos.entity.TransactionItem;
 import com.bahadir.pos.repository.TransactionRepository;
+import com.bahadir.pos.security.SecuredEndpoint;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +17,7 @@ public class TransactionService {
     @Autowired
     private TransactionRepository transactionRepository;
 
+    @SecuredEndpoint(role = "ADMIN", filter = true)
     public List<Transaction> getAll() {
         return transactionRepository.findAll();
     }
