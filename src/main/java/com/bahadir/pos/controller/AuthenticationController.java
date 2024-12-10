@@ -1,5 +1,6 @@
 package com.bahadir.pos.controller;
 
+import com.bahadir.pos.entity.product.Product;
 import com.bahadir.pos.entity.user.User;
 import com.bahadir.pos.entity.authentication.AuthenticationRequest;
 import com.bahadir.pos.entity.authentication.AuthenticationResponseDto;
@@ -15,7 +16,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -29,6 +32,14 @@ public class AuthenticationController {
         this.authenticationManager = authenticationManager;
         this.jwtTokenProvider = jwtTokenProvider;
         this.userService = userService;
+    }
+
+    @GetMapping("/list")
+    public ResponseEntity<List<User>> listAll() {
+        List<User> users = userService.getAllUsers();
+        users.stream()
+                .forEach(user -> user.setPassword(null));
+        return ResponseEntity.ok(users);
     }
 
     // Kullanıcı kaydı
