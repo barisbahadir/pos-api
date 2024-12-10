@@ -2,12 +2,14 @@ package com.bahadir.pos.entity.report;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Data
+@Getter
 @Entity
 @NoArgsConstructor
 public class DailySalesReport {
