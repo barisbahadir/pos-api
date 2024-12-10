@@ -1,6 +1,7 @@
 package com.bahadir.pos.controller;
 
 import com.bahadir.pos.entity.Transaction;
+import com.bahadir.pos.entity.TransactionFilterDto;
 import com.bahadir.pos.service.TransactionService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +23,13 @@ public class TransactionController {
     public ResponseEntity<List<Transaction>> getAllTransactions() {
         List<Transaction> transactions = transactionService.getAll();
         return ResponseEntity.ok(transactions);
+    }
+
+    @PostMapping("/filter")
+    public ResponseEntity<List<Transaction>> getTransactions(@RequestBody TransactionFilterDto filterDto) {
+        List<Transaction> filteredTransactions =
+                transactionService.getTransactions(filterDto.getSearchText(), filterDto.getStartDate(), filterDto.getEndDate());
+        return ResponseEntity.ok(filteredTransactions);
     }
 
     @PostMapping("/add")

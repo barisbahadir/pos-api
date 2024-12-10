@@ -1,6 +1,5 @@
 package com.bahadir.pos.service;
 
-import com.bahadir.pos.entity.Product;
 import com.bahadir.pos.entity.Transaction;
 import com.bahadir.pos.entity.TransactionItem;
 import com.bahadir.pos.repository.TransactionRepository;
@@ -20,6 +19,28 @@ public class TransactionService {
     public List<Transaction> getAll() {
         return transactionRepository.findAll();
     }
+
+    public List<Transaction> getTransactionsByProductNameOrBarcode(String keyword) {
+        return transactionRepository.findByProductNameOrBarcode(keyword);
+    }
+
+    public List<Transaction> getTransactionsByDateRange(LocalDateTime startDate, LocalDateTime endDate) {
+        return transactionRepository.findByTransactionDateBetween(startDate, endDate);
+    }
+
+    public List<Transaction> getTransactions(String keyword, LocalDateTime startDate, LocalDateTime endDate) {
+
+        if(startDate != null && endDate != null && !keyword.isEmpty()){
+            return transactionRepository.findByKeywordAndDateRange(keyword, startDate, endDate);
+        } else if(startDate != null && endDate != null){
+            return transactionRepository.findByTransactionDateBetween(startDate, endDate);
+        } else if(keyword != null){
+            return transactionRepository.findByProductNameOrBarcode(keyword);
+        } else{
+            return transactionRepository.findAll();
+        }
+    }
+
 
     public Transaction createTransaction(Transaction transaction) {
         Transaction finalTransaction = new Transaction();
