@@ -30,11 +30,11 @@ public class TransactionService {
 
     public List<Transaction> getTransactions(String keyword, LocalDateTime startDate, LocalDateTime endDate) {
 
-        if(startDate != null && endDate != null && keyword != null){
+        if(startDate != null && endDate != null && keyword != null && !keyword.isEmpty()){
             return transactionRepository.findByKeywordAndDateRange(keyword, startDate, endDate);
         } else if(startDate != null && endDate != null){
             return transactionRepository.findByTransactionDateBetween(startDate, endDate);
-        } else if(keyword != null){
+        } else if(keyword != null && !keyword.isEmpty()){
             return transactionRepository.findByProductNameOrBarcode(keyword);
         } else{
             return transactionRepository.findAll();
