@@ -17,14 +17,14 @@ public class DailySalesReport {
     private Long id;
 
     private LocalDate reportDate;
-    private BigDecimal totalCardSales;
-    private BigDecimal totalCashSales;
+    private BigDecimal cardSales;
+    private BigDecimal cashSales;
     private BigDecimal totalAmount;
 
-    public DailySalesReport(LocalDate reportDate, BigDecimal totalCardSales, BigDecimal totalCashSales, BigDecimal totalAmount) {
+    public DailySalesReport(LocalDate reportDate, BigDecimal cardSales, BigDecimal cashSales, BigDecimal totalAmount) {
         this.reportDate = reportDate;
-        this.totalCardSales = totalCardSales;
-        this.totalCashSales = totalCashSales;
+        this.cardSales = cardSales;
+        this.cashSales = cashSales;
         this.totalAmount = totalAmount;
     }
 }
