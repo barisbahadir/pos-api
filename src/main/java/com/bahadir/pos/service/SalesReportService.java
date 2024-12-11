@@ -105,4 +105,8 @@ public class SalesReportService {
         DailySalesReport report = new DailySalesReport(date, totalCardSales, totalCashSales, totalAmount);
         dailySalesReportRepository.save(report);
     }
+
+    public void deleteAllReports() {
+        dailySalesReportRepository.deleteAll();
+    }
 }

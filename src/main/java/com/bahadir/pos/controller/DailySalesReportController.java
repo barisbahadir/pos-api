@@ -1,10 +1,11 @@
 package com.bahadir.pos.controller;
 
-import com.bahadir.pos.entity.report.DailySalesReport;
 import com.bahadir.pos.entity.DataFilterDto;
-import com.bahadir.pos.service.SalesReportService;
+import com.bahadir.pos.entity.report.DailySalesReport;
 import com.bahadir.pos.repository.DailySalesReportRepository;
+import com.bahadir.pos.service.SalesReportService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -43,5 +44,12 @@ public class DailySalesReportController {
     public String generateDailySalesReport() {
         salesReportService.generateDailySalesReport();
         return "Daily Sales Report Generated Successfully";
+    }
+
+    //    @SecuredEndpoint(role = UserRole.ADMIN, filter = true)
+    @GetMapping("/delete/all")
+    public ResponseEntity<Boolean> deleteAllTransactions() {
+        salesReportService.deleteAllReports();
+        return ResponseEntity.ok(true);
     }
 }

@@ -71,7 +71,6 @@ public class TransactionService {
         return transactionRepository.findById(id).orElseThrow(() -> new RuntimeException("Transaction not found with id: " + id));
     }
 
-    // Tüm ürünleri sil
     public void deleteAllTransactions() {
         transactionRepository.deleteAll();
     }
