@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.List;
 
 @RestController
@@ -23,13 +24,23 @@ public class DailySalesReportController {
 
     // Günlük satış raporlarını tüm listeyi döndüren endpoint
     @GetMapping("/list")
-    public List<DailySalesReport> getAllDailyReports() {
-        return dailySalesReportRepository.findAll();
+    public ResponseEntity<List<DailySalesReport>> getAllDailyReports() {
+        List<DailySalesReport> reports = dailySalesReportRepository.findAll();
+        List<DailySalesReport> sortedItems = reports.stream()
+                .sorted(Comparator.comparing(DailySalesReport::getReportDate))
+                .toList();
+
+        return ResponseEntity.ok(sortedItems);
     }
 
     @PostMapping("/filter")
-    public List<DailySalesReport> filterAllDailyReports(@RequestBody DataFilterDto filterDto) {
-        return dailySalesReportRepository.findByReportDateBetween(filterDto.getStartOnlyDate(), filterDto.getEndOnlyDate());
+    public ResponseEntity<List<DailySalesReport>> filterAllDailyReports(@RequestBody DataFilterDto filterDto) {
+        List<DailySalesReport> reports = dailySalesReportRepository.findByReportDateBetween(filterDto.getStartOnlyDate(), filterDto.getEndOnlyDate());
+        List<DailySalesReport> sortedItems = reports.stream()
+                .sorted(Comparator.comparing(DailySalesReport::getReportDate))
+                .toList();
+
+        return ResponseEntity.ok(sortedItems);
     }
 
     // Belirli bir tarihe ait satış raporunu döndüren endpoint

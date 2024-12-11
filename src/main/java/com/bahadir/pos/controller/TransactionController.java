@@ -8,6 +8,7 @@ import com.bahadir.pos.service.TransactionService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Comparator;
 import java.util.List;
 
 @RestController
@@ -24,14 +25,22 @@ public class TransactionController {
     @GetMapping("/list")
     public ResponseEntity<List<Transaction>> getAllTransactions() {
         List<Transaction> transactions = transactionService.getAll();
-        return ResponseEntity.ok(transactions);
+        List<Transaction> sortedItems = transactions.stream()
+                .sorted(Comparator.comparing(Transaction::getTransactionDate))
+                .toList();
+
+        return ResponseEntity.ok(sortedItems);
     }
 
     @PostMapping("/filter")
     public ResponseEntity<List<Transaction>> getTransactions(@RequestBody DataFilterDto filterDto) {
         List<Transaction> filteredTransactions =
                 transactionService.getTransactions(filterDto.getSearchText(), filterDto.getStartDate(), filterDto.getEndDate());
-        return ResponseEntity.ok(filteredTransactions);
+        List<Transaction> sortedItems = filteredTransactions.stream()
+                .sorted(Comparator.comparing(Transaction::getTransactionDate))
+                .toList();
+
+        return ResponseEntity.ok(sortedItems);
     }
 
     @PostMapping("/add")
