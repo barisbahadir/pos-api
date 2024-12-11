@@ -10,11 +10,16 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(JwtTokenException.class)
     public ResponseEntity<?> handleJwtTokenException(JwtTokenException ex) {
-        return new ResponseEntity<>(new ErrorResponse(ex.getMessage()), HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity<>(new ErrorResponse("(JWT) " + ex.getMessage()), HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(ApiException.class)
+    public ResponseEntity<?> handleJwtTokenException(ApiException ex) {
+        return new ResponseEntity<>(new ErrorResponse("(API) " + ex.getMessage()), HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<?> handleGenericException(Exception ex) {
-        return new ResponseEntity<>(new ErrorResponse(ex.getMessage()), HttpStatus.FORBIDDEN);
+        return new ResponseEntity<>(new ErrorResponse("(EXC) " + ex.getMessage()), HttpStatus.FORBIDDEN);
     }
 }

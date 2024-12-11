@@ -1,8 +1,8 @@
 package com.bahadir.pos.controller;
 
-import com.bahadir.pos.entity.user.UserRole;
+import com.bahadir.pos.entity.DataFilterDto;
 import com.bahadir.pos.entity.transaction.Transaction;
-import com.bahadir.pos.entity.transaction.TransactionFilterDto;
+import com.bahadir.pos.entity.user.UserRole;
 import com.bahadir.pos.security.SecuredEndpoint;
 import com.bahadir.pos.service.TransactionService;
 import org.springframework.http.ResponseEntity;
@@ -28,7 +28,7 @@ public class TransactionController {
     }
 
     @PostMapping("/filter")
-    public ResponseEntity<List<Transaction>> getTransactions(@RequestBody TransactionFilterDto filterDto) {
+    public ResponseEntity<List<Transaction>> getTransactions(@RequestBody DataFilterDto filterDto) {
         List<Transaction> filteredTransactions =
                 transactionService.getTransactions(filterDto.getSearchText(), filterDto.getStartDate(), filterDto.getEndDate());
         return ResponseEntity.ok(filteredTransactions);

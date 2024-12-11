@@ -1,6 +1,7 @@
 package com.bahadir.pos.controller;
 
 import com.bahadir.pos.entity.report.DailySalesReport;
+import com.bahadir.pos.entity.DataFilterDto;
 import com.bahadir.pos.service.SalesReportService;
 import com.bahadir.pos.repository.DailySalesReportRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,17 +26,16 @@ public class DailySalesReportController {
         return dailySalesReportRepository.findAll();
     }
 
+    @PostMapping("/filter")
+    public List<DailySalesReport> filterAllDailyReports(@RequestBody DataFilterDto filterDto) {
+        return dailySalesReportRepository.findByReportDateBetween(filterDto.getStartOnlyDate(), filterDto.getEndOnlyDate());
+    }
+
     // Belirli bir tarihe ait satış raporunu döndüren endpoint
     @GetMapping("/list/{date}")
     public DailySalesReport getDailyReportByDate(@PathVariable LocalDate date) {
         return dailySalesReportRepository.findByReportDate(date)
                 .orElseThrow(() -> new RuntimeException("Report not found for date: " + date));
-    }
-
-    // Raporları belirli bir tarih aralığına göre döndüren endpoint
-    @GetMapping("/list/range")
-    public List<DailySalesReport> getReportsInRange(@RequestParam LocalDate startDate, @RequestParam LocalDate endDate) {
-        return dailySalesReportRepository.findByReportDateBetween(startDate, endDate);
     }
 
     // Günlük raporları manuel olarak tetikleyen endpoint
