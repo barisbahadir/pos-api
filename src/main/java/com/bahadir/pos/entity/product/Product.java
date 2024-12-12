@@ -1,23 +1,21 @@
 package com.bahadir.pos.entity.product;
 
+import com.bahadir.pos.entity.BaseEntity;
 import com.bahadir.pos.entity.category.Category;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.math.BigDecimal;
 
-@Data
+@Getter
+@Setter
 @Entity
 @NoArgsConstructor
-public class Product {
+public class Product extends BaseEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    private String name;
     private String barcode;
     private BigDecimal price;
     private Integer stockQuantity;

@@ -1,23 +1,22 @@
 package com.bahadir.pos.entity.category;
 
+import com.bahadir.pos.entity.BaseEntity;
 import com.bahadir.pos.entity.product.Product;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import jakarta.persistence.*;
-import lombok.Data;
+import jakarta.persistence.Entity;
+import jakarta.persistence.OneToMany;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.List;
 
-@Data
+@Getter
+@Setter
 @Entity
 @NoArgsConstructor
-public class Category {
+public class Category extends BaseEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    private String name;
     private Integer orderValue;
 
     @OneToMany(mappedBy = "category")
