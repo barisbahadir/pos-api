@@ -3,6 +3,7 @@ package com.bahadir.pos.service;
 import com.bahadir.pos.entity.OrderUpdateItemDto;
 import com.bahadir.pos.entity.product.Product;
 import com.bahadir.pos.repository.ProductRepository;
+import com.bahadir.pos.utils.ImageUtils;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
 import org.springframework.stereotype.Service;
@@ -31,6 +32,7 @@ public class ProductService {
     // Yeni ürün oluştur
     public Product createProduct(Product product) {
         product.setOrderValue(1);
+        product.setImage(ImageUtils.compressImage(product.getImage()));
         return productRepository.save(product);
     }
 
@@ -44,6 +46,7 @@ public class ProductService {
             existingProduct.setName(updatedProduct.getName());
             existingProduct.setPrice(updatedProduct.getPrice());
             existingProduct.setStockQuantity(updatedProduct.getStockQuantity());
+            existingProduct.setImage(ImageUtils.compressImage(updatedProduct.getImage()));
             existingProduct.setCategory(updatedProduct.getCategory());
             // Diğer gerekli alanları da güncelleyebilirsiniz.
 
