@@ -21,12 +21,8 @@ public class Product extends BaseEntity {
     private Integer stockQuantity;
     private Integer orderValue;
 
-    // BYTEA ile görüntü verisini saklıyoruz
-    @Column(name = "image", columnDefinition = "BYTEA")
-    private byte[] image;
-
-    @Transient
-    private String imageBase64;
+    @Column(columnDefinition = "TEXT")
+    private String image;  // Base64 formatında string
 
     @ManyToOne
     @JoinColumn(name = "category_id")

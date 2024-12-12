@@ -39,12 +39,6 @@ public class ProductController {
     // Ürün oluştur
     @PostMapping("/add")
     public ResponseEntity<Product> add(@RequestBody Product product) {
-
-        if(product.getImageBase64() != null && !StringUtils.isBlank(product.getImageBase64())){
-            byte[] imageBytes = Base64.getDecoder().decode(product.getImageBase64().split(",")[1]);
-            product.setImage(imageBytes);
-        }
-
         Product createdProduct = productService.createProduct(product);
         return ResponseEntity.ok(createdProduct);
     }
