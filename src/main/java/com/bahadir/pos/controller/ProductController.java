@@ -3,15 +3,15 @@ package com.bahadir.pos.controller;
 import com.bahadir.pos.entity.OrderUpdateDto;
 import com.bahadir.pos.entity.product.Product;
 import com.bahadir.pos.entity.user.UserRole;
+import com.bahadir.pos.exception.ApiException;
 import com.bahadir.pos.security.SecuredEndpoint;
 import com.bahadir.pos.service.ProductService;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Base64;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
@@ -34,6 +34,15 @@ public class ProductController {
                 .collect(Collectors.toList());
 
         return ResponseEntity.ok(sortedCategories);
+    }
+
+    @GetMapping("/list/{productId}")
+    public ResponseEntity<Product> listById(@PathVariable Long productId) {
+        Optional<Product> productResult = productService.getProductById(productId);
+        if (!productResult.isPresent()) {
+            throw new ApiException("Urun bulunamadi!");
+        }
+        return ResponseEntity.ok(productResult.get());
     }
 
     // Ürün oluştur

@@ -4,6 +4,7 @@ import com.bahadir.pos.entity.category.Category;
 import com.bahadir.pos.entity.OrderUpdateDto;
 import com.bahadir.pos.entity.product.Product;
 import com.bahadir.pos.entity.user.UserRole;
+import com.bahadir.pos.exception.ApiException;
 import com.bahadir.pos.security.SecuredEndpoint;
 import com.bahadir.pos.service.CategoryService;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
@@ -43,6 +45,15 @@ public class CategoryController {
 
 
         return ResponseEntity.ok(sortedCategories);
+    }
+
+    @GetMapping("/list/{categoryId}")
+    public ResponseEntity<Category> listById(@PathVariable Long categoryId) {
+        Optional<Category> categoryResult = categoryService.getCategoryById(categoryId);
+        if(!categoryResult.isPresent()){
+            throw new ApiException("Kategori bulunamadi!");
+        }
+        return ResponseEntity.ok(categoryResult.get());
     }
 
     // Yeni kategori oluştur

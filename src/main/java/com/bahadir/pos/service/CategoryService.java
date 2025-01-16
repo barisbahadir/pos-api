@@ -31,6 +31,12 @@ public class CategoryService {
         return categoryRepository.findAll();
     }
 
+    public Optional<Category> getCategoryById(Long categoryId) {
+        Optional<Category> category = categoryRepository.findById(categoryId);
+        category.ifPresent(value -> value.setProducts(null));
+        return category;
+    }
+
     // Yeni kategori oluştur
     public Category createCategory(Category category) {
         category.setOrderValue(1);

@@ -29,6 +29,10 @@ public class ProductService {
         return productRepository.findAll();
     }
 
+    public Optional<Product> getProductById(Long productId) {
+        return productRepository.findById(productId);
+    }
+
     // Yeni ürün oluştur
     public Product createProduct(Product product) {
         product.setOrderValue(1);

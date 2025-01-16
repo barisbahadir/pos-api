@@ -1,11 +1,12 @@
 package com.bahadir.pos.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 
 import java.time.LocalDateTime;
+
+import static com.bahadir.pos.utils.DateTimeUtils.DEFAULT_DATE_FORMAT;
 
 @Data
 @MappedSuperclass
@@ -16,7 +17,11 @@ public abstract class BaseEntity {
     private Long id;
 
     private String name;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DEFAULT_DATE_FORMAT)
     private LocalDateTime createdDate;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DEFAULT_DATE_FORMAT)
     private LocalDateTime lastUpdatedDate;
 
     @PrePersist
