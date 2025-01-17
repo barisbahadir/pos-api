@@ -1,23 +1,27 @@
 package com.bahadir.pos.entity.transaction;
 
+import com.bahadir.pos.entity.BaseEntity;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Data
+import static com.bahadir.pos.utils.DateTimeUtils.DEFAULT_DATE_FORMAT;
+
+@Getter
+@Setter
 @Entity
 @NoArgsConstructor
-public class Transaction {
+public class Transaction extends BaseEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DEFAULT_DATE_FORMAT)
     private LocalDateTime transactionDate;
+
     private BigDecimal totalAmount;
 
     @Enumerated(EnumType.STRING)
@@ -26,7 +30,7 @@ public class Transaction {
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "transaction_id")
     private List<TransactionItem> transactionItems;
-    
+
     private BigDecimal calculateTotalAmount(List<TransactionItem> items) {
         BigDecimal totalPrice = BigDecimal.ZERO;
 
