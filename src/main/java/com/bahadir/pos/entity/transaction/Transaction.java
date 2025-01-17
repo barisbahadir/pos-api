@@ -11,7 +11,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static com.bahadir.pos.utils.DateTimeUtils.DEFAULT_DATE_FORMAT;
+import static com.bahadir.pos.utils.DateTimeUtils.DEFAULT_DATE_TIME_FORMAT;
 
 @Getter
 @Setter
@@ -19,7 +19,7 @@ import static com.bahadir.pos.utils.DateTimeUtils.DEFAULT_DATE_FORMAT;
 @NoArgsConstructor
 public class Transaction extends BaseEntity {
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DEFAULT_DATE_FORMAT)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DEFAULT_DATE_TIME_FORMAT)
     private LocalDateTime transactionDate;
 
     private BigDecimal totalAmount;
