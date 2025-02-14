@@ -19,6 +19,9 @@ public abstract class BaseEntity {
     private String name;
     private String description;
 
+    @Enumerated(EnumType.STRING)
+    private BaseStatus status = BaseStatus.ENABLE;
+
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DEFAULT_DATE_FORMAT)
     private LocalDateTime createdDate;
 

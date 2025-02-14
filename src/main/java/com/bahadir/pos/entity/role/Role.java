@@ -17,7 +17,7 @@ import java.util.List;
 public class Role extends BaseEntity {
 
     private String label;
-    private RoleStatus status;
+
     private Integer orderValue;
 
     @ManyToMany

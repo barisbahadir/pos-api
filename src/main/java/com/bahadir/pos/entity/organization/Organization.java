@@ -17,7 +17,6 @@ import java.util.List;
 @AllArgsConstructor
 public class Organization extends BaseEntity {
 
-    private OrganizationStatus status;
     private Integer orderValue;
 
     @ManyToOne

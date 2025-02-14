@@ -27,7 +27,6 @@ public class Permission extends BaseEntity {
     private String frameSrc;
     private boolean hide;
     private boolean hideTab;
-    private String status;
     private boolean newFeature;
 
     @ManyToOne
