@@ -17,6 +17,7 @@ public abstract class BaseEntity {
     private Long id;
 
     private String name;
+    private String description;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DEFAULT_DATE_FORMAT)
     private LocalDateTime createdDate;

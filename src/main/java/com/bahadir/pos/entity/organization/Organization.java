@@ -1,0 +1,36 @@
+package com.bahadir.pos.entity.organization;
+
+import com.bahadir.pos.entity.BaseEntity;
+import com.bahadir.pos.entity.company.Company;
+import com.bahadir.pos.entity.user.User;
+import jakarta.persistence.*;
+import lombok.*;
+
+import java.util.List;
+
+@Getter
+@Setter
+@Builder
+@Entity
+//@Table(name = "organizations")
+@NoArgsConstructor
+@AllArgsConstructor
+public class Organization extends BaseEntity {
+
+    private OrganizationStatus status;
+    private Integer orderValue;
+
+    @ManyToOne
+    @JoinColumn(name = "company_id")
+    private Company company;
+
+    @ManyToOne
+    @JoinColumn(name = "parent_id")
+    private Organization parent;
+
+    @OneToMany(mappedBy = "parent")
+    private List<Organization> children;
+
+    @OneToMany(mappedBy = "organization")
+    private List<User> users;
+}
