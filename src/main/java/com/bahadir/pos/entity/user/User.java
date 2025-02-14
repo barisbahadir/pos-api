@@ -5,6 +5,7 @@ import com.bahadir.pos.entity.organization.Organization;
 import com.bahadir.pos.entity.permission.Permission;
 import com.bahadir.pos.entity.role.Role;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -44,6 +45,7 @@ public class User extends BaseEntity {
     @JoinTable(name = "user_permissions",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "permission_id"))
+    @JsonIgnore
     private List<Permission> permissions; // Detaylı izinler
 
     @Enumerated(EnumType.STRING)
