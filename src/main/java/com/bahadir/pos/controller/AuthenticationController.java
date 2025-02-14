@@ -1,12 +1,14 @@
 package com.bahadir.pos.controller;
 
-import com.bahadir.pos.entity.user.User;
 import com.bahadir.pos.entity.authentication.AuthenticationRequest;
 import com.bahadir.pos.entity.authentication.AuthenticationResponseDto;
+import com.bahadir.pos.entity.permission.Permission;
 import com.bahadir.pos.entity.user.AuthRole;
+import com.bahadir.pos.entity.user.User;
 import com.bahadir.pos.exception.ApiException;
 import com.bahadir.pos.security.JwtTokenProvider;
 import com.bahadir.pos.security.SecuredEndpoint;
+import com.bahadir.pos.service.PermissionService;
 import com.bahadir.pos.service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -15,6 +17,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
 
 @RestController
@@ -23,11 +27,16 @@ public class AuthenticationController {
 
     private final AuthenticationManager authenticationManager;
     private final JwtTokenProvider jwtTokenProvider;
+    private final PermissionService permissionService;
     private final UserService userService;
 
-    public AuthenticationController(AuthenticationManager authenticationManager, JwtTokenProvider jwtTokenProvider, UserService userService) {
+    public AuthenticationController(AuthenticationManager authenticationManager,
+                                    JwtTokenProvider jwtTokenProvider,
+                                    PermissionService permissionService,
+                                    UserService userService) {
         this.authenticationManager = authenticationManager;
         this.jwtTokenProvider = jwtTokenProvider;
+        this.permissionService = permissionService;
         this.userService = userService;
     }
 
@@ -71,11 +80,23 @@ public class AuthenticationController {
         // JWT token oluştur
         String jwt = jwtTokenProvider.generateJwtToken(authenticationRequest.getEmail(), List.of(user.getAuthRole().name()));
 
+        List<Permission> sortedPermissions = new ArrayList<>();
+
+        if (user.getRole().getPermissions() != null) {
+            sortedPermissions = permissionService.getSortedPermissions(new ArrayList<>(user.getRole().getPermissions()));
+            user.getRole().setPermissions(new LinkedHashSet<>(sortedPermissions));
+        }
+
         AuthenticationResponseDto dto = AuthenticationResponseDto
                 .builder()
                 .email(authenticationRequest.getEmail())
-                .role(user.getAuthRole())
+                .username(user.getUsername())
+                .role(user.getRole())
+                .permissions(sortedPermissions)
                 .token(jwt)
+                .avatar(null)
+                .id(user.getId())
+                .status(user.getStatus().name())
                 .build();
 
         return ResponseEntity.ok(dto);

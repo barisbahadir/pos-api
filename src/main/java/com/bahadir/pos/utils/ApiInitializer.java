@@ -79,7 +79,6 @@ public class ApiInitializer implements CommandLineRunner {
             System.out.println("Default organizations created!");
         }
 
-        // İzinler (Tamamlandı)
         if (permissionRepository.count() == 0) {
             // Dashboard İzinleri
             Permission dashboard = Permission.builder().name("Dashboard").label("sys.menu.dashboard").icon("ic-analysis").type(PermissionType.CATALOGUE).route("dashboard").orderValue(1).build();
@@ -89,9 +88,10 @@ public class ApiInitializer implements CommandLineRunner {
 
             // Management İzinleri
             Permission management = Permission.builder().name("Management").label("sys.menu.management").icon("ic-management").type(PermissionType.CATALOGUE).route("management").orderValue(2).build();
-            Permission userIndex = Permission.builder().name("User").label("sys.menu.user.index").type(PermissionType.CATALOGUE).route("user").orderValue(1).parent(management).build();
+            Permission userIndex = Permission.builder().name("User Info").label("sys.menu.user.index").type(PermissionType.CATALOGUE).route("userinfo").orderValue(1).parent(management).build();
             Permission userProfile = Permission.builder().name("Profile").label("sys.menu.user.profile").type(PermissionType.MENU).route("profile").component("/management/user/profile/index.tsx").orderValue(1).parent(userIndex).build();
             Permission userAccount = Permission.builder().name("Account").label("sys.menu.user.account").type(PermissionType.MENU).route("account").component("/management/user/account/index.tsx").orderValue(2).parent(userIndex).build();
+
             Permission systemIndex = Permission.builder().name("System").label("sys.menu.system.index").type(PermissionType.CATALOGUE).route("system").orderValue(2).parent(management).build();
             Permission systemOrganization = Permission.builder().name("Organization").label("sys.menu.system.organization").type(PermissionType.MENU).route("organization").component("/management/system/organization/index.tsx").orderValue(1).parent(systemIndex).build();
             Permission systemPermission = Permission.builder().name("Permission").label("sys.menu.system.permission").type(PermissionType.MENU).route("permission").component("/management/system/permission/index.tsx").orderValue(2).parent(systemIndex).build();
@@ -99,16 +99,65 @@ public class ApiInitializer implements CommandLineRunner {
             Permission systemUser = Permission.builder().name("User").label("sys.menu.system.user").type(PermissionType.MENU).route("user").component("/management/system/user/index.tsx").orderValue(4).parent(systemIndex).build();
             Permission systemUserDetail = Permission.builder().name("User Detail").label("sys.menu.system.user_detail").type(PermissionType.MENU).route("user/:id").component("/management/system/user/detail.tsx").hide(true).orderValue(5).parent(systemIndex).build();
 
-            // Diğer İzinler (COMPONENTS, FUNCTIONS, MENU_LEVEL, ERRORS, OTHERS) - Buraya ekleyin
+            // Components İzinleri
+            Permission components = Permission.builder().name("Components").label("sys.menu.components").icon("solar:widget-5-bold-duotone").type(PermissionType.CATALOGUE).route("components").orderValue(3).build();
+            Permission icon = Permission.builder().name("Icon").label("sys.menu.icon").type(PermissionType.MENU).route("icon").component("/components/icon/index.tsx").orderValue(1).parent(components).build();
+            Permission animate = Permission.builder().name("Animate").label("sys.menu.animate").type(PermissionType.MENU).route("animate").component("/components/animate/index.tsx").orderValue(2).parent(components).build();
+            Permission scroll = Permission.builder().name("Scroll").label("sys.menu.scroll").type(PermissionType.MENU).route("scroll").component("/components/scroll/index.tsx").orderValue(3).parent(components).build();
+            Permission markdown = Permission.builder().name("Markdown").label("sys.menu.markdown").type(PermissionType.MENU).route("markdown").component("/components/markdown/index.tsx").orderValue(4).parent(components).build();
+            Permission editor = Permission.builder().name("Editor").label("sys.menu.editor").type(PermissionType.MENU).route("editor").component("/components/editor/index.tsx").orderValue(5).parent(components).build();
+            Permission multiLanguage = Permission.builder().name("Multi Language").label("sys.menu.i18n").type(PermissionType.MENU).route("i18n").component("/components/multi-language/index.tsx").orderValue(6).parent(components).build();
+            Permission upload = Permission.builder().name("Upload").label("sys.menu.upload").type(PermissionType.MENU).route("upload").component("/components/upload/index.tsx").orderValue(7).parent(components).build();
+            Permission chart = Permission.builder().name("Chart").label("sys.menu.chart").type(PermissionType.MENU).route("chart").component("/components/chart/index.tsx").orderValue(8).parent(components).build();
+            Permission toast = Permission.builder().name("Toast").label("sys.menu.toast").type(PermissionType.MENU).route("toast").component("/components/toast/index.tsx").orderValue(9).parent(components).build();
 
-            permissionRepository.saveAll(List.of(
-                    dashboard, welcome, analysis, workbench,
-                    management, userIndex, userProfile, userAccount, systemIndex,
-                    systemOrganization, systemPermission, systemRole, systemUser, systemUserDetail
-                    // Diğer izinleri buraya ekleyin
-            ));
-            System.out.println("Default permissions created!");
+            // Functions İzinleri
+            Permission functions = Permission.builder().name("Functions").label("sys.menu.functions").icon("solar:plain-2-bold-duotone").type(PermissionType.CATALOGUE).route("functions").orderValue(4).build();
+            Permission clipboard = Permission.builder().name("Clipboard").label("sys.menu.clipboard").type(PermissionType.MENU).route("clipboard").component("/functions/clipboard/index.tsx").orderValue(1).parent(functions).build();
+            Permission tokenExpired = Permission.builder().name("Token Expired").label("sys.menu.token_expired").type(PermissionType.MENU).route("token-expired").component("/functions/token-expired/index.tsx").orderValue(2).parent(functions).build();
+
+            // Menu Level İzinleri
+            Permission menuLevel = Permission.builder().name("Menu Level").label("sys.menu.menulevel.index").icon("ic-menulevel").type(PermissionType.CATALOGUE).route("menu-level").orderValue(5).build();
+            Permission menuLevel1a = Permission.builder().name("Menu Level 1a").label("sys.menu.menulevel.1a").type(PermissionType.MENU).route("menu-level-1a").component("/menu-level/menu-level-1a/index.tsx").orderValue(1).parent(menuLevel).build();
+            Permission menuLevel1b = Permission.builder().name("Menu Level 1b").label("sys.menu.menulevel.1b.index").type(PermissionType.CATALOGUE).route("menu-level-1b").orderValue(2).parent(menuLevel).build();
+            Permission menuLevel2a = Permission.builder().name("Menu Level 2a").label("sys.menu.menulevel.1b.2a").type(PermissionType.MENU).route("menu-level-2a").component("/menu-level/menu-level-1b/menu-level-2a/index.tsx").orderValue(1).parent(menuLevel1b).build();
+            Permission menuLevel2b = Permission.builder().name("Menu Level 2b").label("sys.menu.menulevel.1b.2b.index").type(PermissionType.CATALOGUE).route("menu-level-2b").orderValue(2).parent(menuLevel1b).build();
+            Permission menuLevel3a = Permission.builder().name("Menu Level 3a").label("sys.menu.menulevel.1b.2b.3a").type(PermissionType.MENU).route("menu-level-3a").component("/menu-level/menu-level-1b/menu-level-2b/menu-level-3a/index.tsx").orderValue(1).parent(menuLevel2b).build();
+            Permission menuLevel3b = Permission.builder().name("Menu Level 3b").label("sys.menu.menulevel.1b.2b.3b").type(PermissionType.MENU).route("menu-level-3b").component("/menu-level/menu-level-1b/menu-level-2b/menu-level-3b/index.tsx").orderValue(2).parent(menuLevel2b).build();
+
+            permissionRepository.saveAll(List.of(dashboard, welcome, analysis, workbench, management, userIndex, userProfile, userAccount, systemIndex, systemOrganization, systemPermission, systemRole, systemUser, systemUserDetail, components, icon, animate, scroll, markdown, editor, multiLanguage, upload, chart, toast, functions, clipboard, tokenExpired, menuLevel, menuLevel1a, menuLevel1b, menuLevel2a, menuLevel2b, menuLevel3a, menuLevel3b));
         }
+
+//        // İzinler (Tamamlandı)
+//        if (permissionRepository.count() == 0) {
+//            // Dashboard İzinleri
+//            Permission dashboard = Permission.builder().name("Dashboard").label("sys.menu.dashboard").icon("ic-analysis").type(PermissionType.CATALOGUE).route("dashboard").orderValue(1).build();
+//            Permission welcome = Permission.builder().name("Welcome").label("sys.menu.welcome").type(PermissionType.MENU).route("dashboard/welcome").component("/dashboard/welcome/index.tsx").orderValue(1).parent(dashboard).build();
+//            Permission analysis = Permission.builder().name("Analysis").label("sys.menu.analysis").type(PermissionType.MENU).route("/dashboard/analysis").component("/dashboard/analysis/index.tsx").orderValue(2).parent(dashboard).build();
+//            Permission workbench = Permission.builder().name("Workbench").label("sys.menu.workbench").type(PermissionType.MENU).route("dashboard/workbench").component("/dashboard/workbench/index.tsx").orderValue(3).parent(dashboard).build();
+//
+//            // Management İzinleri
+//            Permission management = Permission.builder().name("Management").label("sys.menu.management").icon("ic-management").type(PermissionType.CATALOGUE).route("management").orderValue(2).build();
+//            Permission userIndex = Permission.builder().name("User").label("sys.menu.user.index").type(PermissionType.CATALOGUE).route("user").orderValue(1).parent(management).build();
+//            Permission userProfile = Permission.builder().name("Profile").label("sys.menu.user.profile").type(PermissionType.MENU).route("profile").component("/management/user/profile/index.tsx").orderValue(1).parent(userIndex).build();
+//            Permission userAccount = Permission.builder().name("Account").label("sys.menu.user.account").type(PermissionType.MENU).route("account").component("/management/user/account/index.tsx").orderValue(2).parent(userIndex).build();
+//            Permission systemIndex = Permission.builder().name("System").label("sys.menu.system.index").type(PermissionType.CATALOGUE).route("system").orderValue(2).parent(management).build();
+//            Permission systemOrganization = Permission.builder().name("Organization").label("sys.menu.system.organization").type(PermissionType.MENU).route("organization").component("/management/system/organization/index.tsx").orderValue(1).parent(systemIndex).build();
+//            Permission systemPermission = Permission.builder().name("Permission").label("sys.menu.system.permission").type(PermissionType.MENU).route("permission").component("/management/system/permission/index.tsx").orderValue(2).parent(systemIndex).build();
+//            Permission systemRole = Permission.builder().name("Role").label("sys.menu.system.role").type(PermissionType.MENU).route("role").component("/management/system/role/index.tsx").orderValue(3).parent(systemIndex).build();
+//            Permission systemUser = Permission.builder().name("User").label("sys.menu.system.user").type(PermissionType.MENU).route("user").component("/management/system/user/index.tsx").orderValue(4).parent(systemIndex).build();
+//            Permission systemUserDetail = Permission.builder().name("User Detail").label("sys.menu.system.user_detail").type(PermissionType.MENU).route("user/:id").component("/management/system/user/detail.tsx").hide(true).orderValue(5).parent(systemIndex).build();
+//
+//            // Diğer İzinler (COMPONENTS, FUNCTIONS, MENU_LEVEL, ERRORS, OTHERS) - Buraya ekleyin
+//
+//            permissionRepository.saveAll(List.of(
+//                    dashboard, welcome, analysis, workbench,
+//                    management, userIndex, userProfile, userAccount, systemIndex,
+//                    systemOrganization, systemPermission, systemRole, systemUser, systemUserDetail
+//                    // Diğer izinleri buraya ekleyin
+//            ));
+//            System.out.println("Default permissions created!");
+//        }
 
         // Roller (Örnek: Admin ve Test)
         if (roleRepository.count() == 0) {

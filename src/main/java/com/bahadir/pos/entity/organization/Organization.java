@@ -3,8 +3,17 @@ package com.bahadir.pos.entity.organization;
 import com.bahadir.pos.entity.BaseEntity;
 import com.bahadir.pos.entity.company.Company;
 import com.bahadir.pos.entity.user.User;
-import jakarta.persistence.*;
-import lombok.*;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
 import java.util.List;
@@ -22,15 +31,20 @@ public class Organization extends BaseEntity {
 
     @ManyToOne
     @JoinColumn(name = "company_id")
+    @JsonBackReference // Company içindeki organization listesini yok say
     private Company company;
 
     @ManyToOne
     @JoinColumn(name = "parent_id")
+    @JsonBackReference
     private Organization parent;
 
     @OneToMany(mappedBy = "parent")
+    @JsonManagedReference
     private List<Organization> children;
 
     @OneToMany(mappedBy = "organization")
+    @JsonManagedReference
+    @JsonIgnore
     private List<User> users;
 }

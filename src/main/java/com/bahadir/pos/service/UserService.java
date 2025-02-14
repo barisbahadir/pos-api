@@ -1,7 +1,7 @@
 package com.bahadir.pos.service;
 
-import com.bahadir.pos.entity.user.User;
 import com.bahadir.pos.entity.user.AuthRole;
+import com.bahadir.pos.entity.user.User;
 import com.bahadir.pos.exception.ApiException;
 import com.bahadir.pos.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -25,8 +25,8 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public User registerUser(String email, String password){
-        if(userRepository.findByEmail(email).isPresent()){
+    public User registerUser(String email, String password) {
+        if(userRepository.findByEmail(email).isPresent()) {
             throw new ApiException("Email is already taken!");
         }
 
@@ -41,11 +41,11 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public Optional<User> findByEmail(String email){
+    public Optional<User> findByEmail(String email) {
         return userRepository.findByEmail(email);
     }
 
-    public boolean validatePassword(User user, String rawPassword){
+    public boolean validatePassword(User user, String rawPassword) {
         return passwordEncoder.matches(rawPassword, user.getPassword());
     }
 

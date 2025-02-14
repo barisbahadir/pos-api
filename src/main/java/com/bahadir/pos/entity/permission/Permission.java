@@ -1,9 +1,16 @@
 package com.bahadir.pos.entity.permission;
 
 import com.bahadir.pos.entity.BaseEntity;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.Hibernate;
 
 import java.util.List;
 
@@ -32,8 +39,30 @@ public class Permission extends BaseEntity {
 
     @ManyToOne
     @JoinColumn(name = "parent_id")
+    @JsonBackReference
     private Permission parent;
 
     @OneToMany(mappedBy = "parent")
+    @JsonManagedReference
     private List<Permission> children;
+
+    // Transient alan ile parentId'yi JSON'a ekleme
+    @Transient
+    @JsonProperty("parentId")
+    private String parentId;
+
+    // Parent set edildiğinde parentId de güncellensin
+    public void setParent(Permission parent) {
+        this.parent = parent;
+        this.parentId = (parent != null) ? parent.getId().toString() : null;
+    }
+
+    // JSON içinde parentId'nin görünmesini sağlayan getter
+    public String getParentId() {
+        if (this.parent != null && Hibernate.isInitialized(this.parent)) {
+            return this.parent.getId().toString();
+        }
+        return null;
+    }
+
 }
