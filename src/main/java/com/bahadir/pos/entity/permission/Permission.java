@@ -3,13 +3,14 @@ package com.bahadir.pos.entity.permission;
 import com.bahadir.pos.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import java.util.List;
 
 @Getter
 @Setter
-@Builder
 @Entity
+@SuperBuilder  // Bu, BaseEntity'deki builder'ı kullanır
 //@Table(name = "permissions")
 @NoArgsConstructor
 @AllArgsConstructor

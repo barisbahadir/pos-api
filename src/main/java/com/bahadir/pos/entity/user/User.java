@@ -6,13 +6,14 @@ import com.bahadir.pos.entity.permission.Permission;
 import com.bahadir.pos.entity.role.Role;
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import java.util.List;
 
 @Getter
 @Setter
-@Builder
 @Entity
+@SuperBuilder  // Bu, BaseEntity'deki builder'ı kullanır
 @Table(name = "users")
 @NoArgsConstructor
 @AllArgsConstructor
@@ -20,6 +21,9 @@ public class User extends BaseEntity {
 
     @Column(unique = true)
     private String email;
+
+    @Column(unique = true)
+    private String username;
 
     private String password;
 

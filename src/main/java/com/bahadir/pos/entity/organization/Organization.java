@@ -5,13 +5,14 @@ import com.bahadir.pos.entity.company.Company;
 import com.bahadir.pos.entity.user.User;
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import java.util.List;
 
 @Getter
 @Setter
-@Builder
 @Entity
+@SuperBuilder  // Bu, BaseEntity'deki builder'ı kullanır
 //@Table(name = "organizations")
 @NoArgsConstructor
 @AllArgsConstructor

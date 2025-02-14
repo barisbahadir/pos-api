@@ -4,13 +4,16 @@ import com.bahadir.pos.entity.BaseEntity;
 import com.bahadir.pos.entity.permission.Permission;
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
-@Builder
 @Entity
+@SuperBuilder  // Bu, BaseEntity'deki builder'ı kullanır
 //@Table(name = "roles")
 @NoArgsConstructor
 @AllArgsConstructor
@@ -24,5 +27,5 @@ public class Role extends BaseEntity {
     @JoinTable(name = "role_permissions",
             joinColumns = @JoinColumn(name = "role_id"),
             inverseJoinColumns = @JoinColumn(name = "permission_id"))
-    private List<Permission> permissions;
+    private Set<Permission> permissions = new HashSet<>(); // Set for uniqueness
 }
