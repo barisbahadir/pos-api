@@ -57,17 +57,20 @@ public class ApiInitializer implements CommandLineRunner {
             System.out.println("Default companies created!");
         }
 
+        String branchName1 = "East Turkey Branch";
+        String branchName2 = "South Turkey Branch";
+
         // Organizasyonlar
         if (organizationRepository.count() == 0) {
             Company company1 = companyRepository.findByName(companyName1).orElse(null);
             Company company2 = companyRepository.findByName(companyName2).orElse(null);
 
-            Organization org1 = Organization.builder().name("East China Branch").status(BaseStatus.ENABLE).orderValue(1).company(company1).build();
+            Organization org1 = Organization.builder().name(branchName1).status(BaseStatus.ENABLE).orderValue(1).company(company1).build();
             Organization org1_1 = Organization.builder().name("R&D Department").status(BaseStatus.DISABLE).orderValue(1).parent(org1).company(company1).build();
             Organization org1_2 = Organization.builder().name("Marketing Department").status(BaseStatus.ENABLE).orderValue(2).parent(org1).company(company1).build();
             Organization org1_3 = Organization.builder().name("Finance Department").status(BaseStatus.ENABLE).orderValue(3).parent(org1).company(company1).build();
 
-            Organization org2 = Organization.builder().name("South China Branch").status(BaseStatus.ENABLE).orderValue(2).company(company2).build();
+            Organization org2 = Organization.builder().name(branchName2).status(BaseStatus.ENABLE).orderValue(2).company(company2).build();
             Organization org2_1 = Organization.builder().name("R&D Department").status(BaseStatus.DISABLE).orderValue(1).parent(org2).company(company2).build();
             Organization org2_2 = Organization.builder().name("Marketing Department").status(BaseStatus.ENABLE).orderValue(2).parent(org2).company(company2).build();
             Organization org2_3 = Organization.builder().name("Finance Department").status(BaseStatus.ENABLE).orderValue(3).parent(org2).company(company2).build();
@@ -137,17 +140,33 @@ public class ApiInitializer implements CommandLineRunner {
 
         // Kullanıcılar (Örnek: Admin ve Test)
         if (userRepository.count() == 0) {
-            Role adminRole = roleRepository.findByName("Admin").orElse(null);
-            User adminUser = User.builder().username("admin").password(passwordEncoder.encode("admin")).email("admin").role(adminRole).build();
+            Organization adminOrg = organizationRepository.findByName(branchName1).orElse(null); // Örnek organizasyon
+            Organization testOrg = organizationRepository.findByName(branchName2).orElse(null); // Örnek organizasyon
+
+            Role adminRole = roleRepository.findByName(AuthRole.ADMIN.name()).orElse(null);
+            User adminUser = User.builder()
+                    .username("admin")
+                    .password(passwordEncoder.encode("admin"))
+                    .email("admin")
+                    .role(adminRole)
+                    .authRole(AuthRole.ADMIN)
+                    .organization(adminOrg)
+                    .build();
             userRepository.save(adminUser);
 
-            Role testRole = roleRepository.findByName("Test").orElse(null);
-            User testUser = User.builder().username("zeliha").password(passwordEncoder.encode("zeliha")).email("zeliha").role(testRole).build();
+            Role testRole = roleRepository.findByName(AuthRole.TEST.name()).orElse(null);
+            User testUser = User.builder()
+                    .username("test")
+                    .password(passwordEncoder.encode("test"))
+                    .email("test")
+                    .role(testRole)
+                    .authRole(AuthRole.TEST)
+                    .organization(testOrg)
+                    .build();
             userRepository.save(testUser);
 
             System.out.println("Default users created!");
         }
-
 
         // Kategoriler
         if (categoryRepository.count() == 0) {
@@ -159,31 +178,31 @@ public class ApiInitializer implements CommandLineRunner {
             categoryRepository.save(category);
             System.out.println("Default category: 'POS' created!");
         }
-
-        // Kullanicilar
-        if (userRepository.count() == 0) {
-            // Kayıt yoksa, yeni bir kullanici ekle
-            List<User> defaultUsers = new ArrayList<>();
-            defaultUsers.add(User
-                    .builder()
-                    .email("admin")
-                    .password(passwordEncoder.encode("bb377261"))
-                    .authRole(AuthRole.ADMIN)
-                    .build());
-            defaultUsers.add(User
-                    .builder()
-                    .email("bahadir")
-                    .password(passwordEncoder.encode("bahadir"))
-                    .authRole(AuthRole.USER)
-                    .build());
-            defaultUsers.add(User
-                    .builder()
-                    .email("zeliha")
-                    .password(passwordEncoder.encode("zeliha"))
-                    .authRole(AuthRole.USER)
-                    .build());
-            userRepository.saveAll(defaultUsers);
-            System.out.println("Default users: " + defaultUsers.stream().map(User::getEmail).toList() + " created!");
-        }
+//
+//        // Kullanicilar
+//        if (userRepository.count() == 0) {
+//            // Kayıt yoksa, yeni bir kullanici ekle
+//            List<User> defaultUsers = new ArrayList<>();
+//            defaultUsers.add(User
+//                    .builder()
+//                    .email("admin")
+//                    .password(passwordEncoder.encode("bb377261"))
+//                    .authRole(AuthRole.ADMIN)
+//                    .build());
+//            defaultUsers.add(User
+//                    .builder()
+//                    .email("bahadir")
+//                    .password(passwordEncoder.encode("bahadir"))
+//                    .authRole(AuthRole.USER)
+//                    .build());
+//            defaultUsers.add(User
+//                    .builder()
+//                    .email("zeliha")
+//                    .password(passwordEncoder.encode("zeliha"))
+//                    .authRole(AuthRole.USER)
+//                    .build());
+//            userRepository.saveAll(defaultUsers);
+//            System.out.println("Default users: " + defaultUsers.stream().map(User::getEmail).toList() + " created!");
+//        }
     }
 }
