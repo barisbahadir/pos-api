@@ -14,10 +14,10 @@ import java.util.List;
 //@Table(name = "roles")
 @NoArgsConstructor
 @AllArgsConstructor
-public class PermissionRole extends BaseEntity {
+public class Role extends BaseEntity {
 
     private String label;
-    private String status;
+    private RoleStatus status;
     private Integer orderValue;
 
     @ManyToMany

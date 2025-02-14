@@ -1,6 +1,6 @@
 package com.bahadir.pos.entity.role;
 
-public enum PermissionRoleStatus {
+public enum RoleStatus {
     ENABLE,
     DISABLE
 }

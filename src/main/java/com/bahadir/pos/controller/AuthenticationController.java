@@ -1,10 +1,9 @@
 package com.bahadir.pos.controller;
 
-import com.bahadir.pos.entity.product.Product;
 import com.bahadir.pos.entity.user.User;
 import com.bahadir.pos.entity.authentication.AuthenticationRequest;
 import com.bahadir.pos.entity.authentication.AuthenticationResponseDto;
-import com.bahadir.pos.entity.user.UserRole;
+import com.bahadir.pos.entity.user.AuthRole;
 import com.bahadir.pos.exception.ApiException;
 import com.bahadir.pos.security.JwtTokenProvider;
 import com.bahadir.pos.security.SecuredEndpoint;
@@ -16,9 +15,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -72,19 +69,19 @@ public class AuthenticationController {
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         // JWT token oluştur
-        String jwt = jwtTokenProvider.generateJwtToken(authenticationRequest.getEmail(), List.of(user.getRole().name()));
+        String jwt = jwtTokenProvider.generateJwtToken(authenticationRequest.getEmail(), List.of(user.getAuthRole().name()));
 
         AuthenticationResponseDto dto = AuthenticationResponseDto
                 .builder()
                 .email(authenticationRequest.getEmail())
-                .role(user.getRole())
+                .role(user.getAuthRole())
                 .token(jwt)
                 .build();
 
         return ResponseEntity.ok(dto);
     }
 
-    @SecuredEndpoint(role = UserRole.ADMIN, filter = true)
+    @SecuredEndpoint(role = AuthRole.ADMIN, filter = true)
     @GetMapping("/delete/all")
     public ResponseEntity<Boolean> deleteAll() {
         userService.deleteAllUsers();

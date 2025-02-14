@@ -1,6 +1,6 @@
 package com.bahadir.pos.entity.authentication;
 
-import com.bahadir.pos.entity.user.UserRole;
+import com.bahadir.pos.entity.user.AuthRole;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,6 +13,6 @@ import lombok.NoArgsConstructor;
 public class AuthenticationResponseDto {
 
     private String email;
-    private UserRole role;
+    private AuthRole role;
     private String token;
 }

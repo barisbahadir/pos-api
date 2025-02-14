@@ -1,6 +1,6 @@
 package com.bahadir.pos.security;
 
-import com.bahadir.pos.entity.user.UserRole;
+import com.bahadir.pos.entity.user.AuthRole;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -11,7 +11,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface SecuredEndpoint {
 
-    UserRole role() default UserRole.USER; // Varsayılan rol
+    AuthRole role() default AuthRole.USER; // Varsayılan rol
 
     boolean filter() default false; // Filtreleme seçeneği
 }

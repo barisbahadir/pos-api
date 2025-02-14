@@ -1,7 +1,7 @@
 package com.bahadir.pos.service;
 
 import com.bahadir.pos.entity.user.User;
-import com.bahadir.pos.entity.user.UserRole;
+import com.bahadir.pos.entity.user.AuthRole;
 import com.bahadir.pos.exception.ApiException;
 import com.bahadir.pos.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -35,7 +35,7 @@ public class UserService {
         User user = User.builder()
                 .email(email)
                 .password(encodedPassword)
-                .role(UserRole.USER)
+                .authRole(AuthRole.USER)
                 .build();
 
         return userRepository.save(user);

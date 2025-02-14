@@ -3,7 +3,7 @@ package com.bahadir.pos.entity.user;
 import com.bahadir.pos.entity.BaseEntity;
 import com.bahadir.pos.entity.organization.Organization;
 import com.bahadir.pos.entity.permission.Permission;
-import com.bahadir.pos.entity.role.PermissionRole;
+import com.bahadir.pos.entity.role.Role;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -29,7 +29,7 @@ public class User extends BaseEntity {
 
     @ManyToOne
     @JoinColumn(name = "role_id")
-    private PermissionRole permissionRole; // Temel rol (örn. Admin, Manager, User)
+    private Role role; // Temel rol (örn. Admin, Manager, User)
 
     @ManyToMany
     @JoinTable(name = "user_permissions",
@@ -38,7 +38,7 @@ public class User extends BaseEntity {
     private List<Permission> permissions; // Detaylı izinler
 
     @Enumerated(EnumType.STRING)
-    private UserRole role;
+    private AuthRole authRole;
 
 //    @JsonIgnore  // Döngüsel referansı engelliyoruz
 //    @OneToMany(mappedBy = "user")

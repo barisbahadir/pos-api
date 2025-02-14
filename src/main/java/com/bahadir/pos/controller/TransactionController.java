@@ -2,7 +2,7 @@ package com.bahadir.pos.controller;
 
 import com.bahadir.pos.entity.DataFilterDto;
 import com.bahadir.pos.entity.transaction.Transaction;
-import com.bahadir.pos.entity.user.UserRole;
+import com.bahadir.pos.entity.user.AuthRole;
 import com.bahadir.pos.security.SecuredEndpoint;
 import com.bahadir.pos.service.TransactionService;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +21,7 @@ public class TransactionController {
         this.transactionService = transactionService;
     }
 
-    @SecuredEndpoint(role = UserRole.ADMIN, filter = true)
+    @SecuredEndpoint(role = AuthRole.ADMIN, filter = true)
     @GetMapping("/list")
     public ResponseEntity<List<Transaction>> getAllTransactions() {
         List<Transaction> transactions = transactionService.getAll();
@@ -54,7 +54,7 @@ public class TransactionController {
         return transactionService.getTransactionById(id);
     }
 
-    @SecuredEndpoint(role = UserRole.ADMIN, filter = true)
+    @SecuredEndpoint(role = AuthRole.ADMIN, filter = true)
     @GetMapping("/delete/all")
     public ResponseEntity<Boolean> deleteAllTransactions() {
         transactionService.deleteAllTransactions();

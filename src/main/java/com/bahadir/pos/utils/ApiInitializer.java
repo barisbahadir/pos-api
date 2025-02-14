@@ -2,7 +2,7 @@ package com.bahadir.pos.utils;
 
 import com.bahadir.pos.entity.category.Category;
 import com.bahadir.pos.entity.user.User;
-import com.bahadir.pos.entity.user.UserRole;
+import com.bahadir.pos.entity.user.AuthRole;
 import com.bahadir.pos.repository.CategoryRepository;
 import com.bahadir.pos.repository.UserRepository;
 import org.springframework.boot.CommandLineRunner;
@@ -44,19 +44,19 @@ public class ApiInitializer implements CommandLineRunner {
                     .builder()
                     .email("admin")
                     .password(passwordEncoder.encode("bb377261"))
-                    .role(UserRole.ADMIN)
+                    .authRole(AuthRole.ADMIN)
                     .build());
             defaultUsers.add(User
                     .builder()
                     .email("bahadir")
                     .password(passwordEncoder.encode("bahadir"))
-                    .role(UserRole.USER)
+                    .authRole(AuthRole.USER)
                     .build());
             defaultUsers.add(User
                     .builder()
                     .email("zeliha")
                     .password(passwordEncoder.encode("zeliha"))
-                    .role(UserRole.USER)
+                    .authRole(AuthRole.USER)
                     .build());
             userRepository.saveAll(defaultUsers);
             System.out.println("Default users: " + defaultUsers.stream().map(User::getEmail).toList() + " created!");
