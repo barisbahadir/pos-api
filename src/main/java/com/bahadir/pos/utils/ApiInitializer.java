@@ -87,7 +87,7 @@ public class ApiInitializer implements CommandLineRunner {
 
             // Management İzinleri
             Permission management = Permission.builder().name("Management").label("sys.menu.management").icon("ic-management").type(PermissionType.CATALOGUE).route("management").orderValue(2).build();
-            Permission userIndex = Permission.builder().name("User Info").label("sys.menu.user.index").type(PermissionType.CATALOGUE).route("userinfo").orderValue(1).parent(management).build();
+            Permission userIndex = Permission.builder().name("User Info").label("sys.menu.user.index").type(PermissionType.CATALOGUE).route("user").orderValue(1).parent(management).build();
             Permission userProfile = Permission.builder().name("Profile").label("sys.menu.user.profile").type(PermissionType.MENU).route("profile").component("/management/user/profile/index.tsx").orderValue(1).parent(userIndex).build();
             Permission userAccount = Permission.builder().name("Account").label("sys.menu.user.account").type(PermissionType.MENU).route("account").component("/management/user/account/index.tsx").orderValue(2).parent(userIndex).build();
 
