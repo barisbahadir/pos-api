@@ -1,8 +1,8 @@
 package com.bahadir.pos.entity.user;
 
-public enum AuthRole {
-    TEST,
+public enum UserRole {
     USER,
+    TEST,
     MANAGER,
     ADMIN
 }

@@ -3,7 +3,7 @@ package com.bahadir.pos.controller;
 import com.bahadir.pos.entity.category.Category;
 import com.bahadir.pos.entity.OrderUpdateDto;
 import com.bahadir.pos.entity.product.Product;
-import com.bahadir.pos.entity.user.AuthRole;
+import com.bahadir.pos.entity.user.UserRole;
 import com.bahadir.pos.exception.ApiException;
 import com.bahadir.pos.security.SecuredEndpoint;
 import com.bahadir.pos.service.CategoryService;
@@ -85,7 +85,7 @@ public class CategoryController {
         return ResponseEntity.ok(true);
     }
 
-    @SecuredEndpoint(role = AuthRole.ADMIN, filter = true)
+    @SecuredEndpoint(role = UserRole.ADMIN, filter = true)
     @GetMapping("/delete/all")
     public ResponseEntity<Boolean> deleteAll() {
         categoryService.deleteAllCategories();

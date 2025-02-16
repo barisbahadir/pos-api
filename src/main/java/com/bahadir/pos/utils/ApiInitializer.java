@@ -7,7 +7,7 @@ import com.bahadir.pos.entity.organization.Organization;
 import com.bahadir.pos.entity.permission.Permission;
 import com.bahadir.pos.entity.permission.PermissionType;
 import com.bahadir.pos.entity.role.Role;
-import com.bahadir.pos.entity.user.AuthRole;
+import com.bahadir.pos.entity.user.UserRole;
 import com.bahadir.pos.entity.user.User;
 import com.bahadir.pos.repository.*;
 import org.springframework.boot.CommandLineRunner;
@@ -216,8 +216,8 @@ public class ApiInitializer implements CommandLineRunner {
         // Roller (Örnek: Admin ve Test)
         if (roleRepository.count() == 0) {
             Role adminRole = Role.builder()
-                    .name(AuthRole.ADMIN.name())
-                    .label(AuthRole.ADMIN.name())
+                    .name(UserRole.ADMIN.name())
+                    .label(UserRole.ADMIN.name())
                     .status(BaseStatus.ENABLE)
                     .orderValue(1)
                     .description("Super Admin")
@@ -227,8 +227,8 @@ public class ApiInitializer implements CommandLineRunner {
             roleRepository.save(adminRole);
 
             Role testRole = Role.builder()
-                    .name(AuthRole.TEST.name())
-                    .label(AuthRole.TEST.name())
+                    .name(UserRole.TEST.name())
+                    .label(UserRole.TEST.name())
                     .status(BaseStatus.ENABLE)
                     .orderValue(2)
                     .description("Test User")
@@ -246,24 +246,24 @@ public class ApiInitializer implements CommandLineRunner {
             Organization adminOrg = organizationRepository.findByName(branchName1).orElse(null); // Örnek organizasyon
             Organization testOrg = organizationRepository.findByName(branchName2).orElse(null); // Örnek organizasyon
 
-            Role adminRole = roleRepository.findByName(AuthRole.ADMIN.name()).orElse(null);
+            Role adminRole = roleRepository.findByName(UserRole.ADMIN.name()).orElse(null);
             User adminUser = User.builder()
                     .username("admin")
                     .password(passwordEncoder.encode("admin"))
                     .email("admin")
                     .role(adminRole)
-                    .authRole(AuthRole.ADMIN)
+                    .userRole(UserRole.ADMIN)
                     .organization(adminOrg)
                     .build();
             userRepository.save(adminUser);
 
-            Role testRole = roleRepository.findByName(AuthRole.TEST.name()).orElse(null);
+            Role testRole = roleRepository.findByName(UserRole.TEST.name()).orElse(null);
             User testUser = User.builder()
                     .username("test")
                     .password(passwordEncoder.encode("test"))
                     .email("test")
                     .role(testRole)
-                    .authRole(AuthRole.TEST)
+                    .userRole(UserRole.TEST)
                     .organization(testOrg)
                     .build();
             userRepository.save(testUser);

@@ -3,7 +3,7 @@ package com.bahadir.pos.controller;
 import com.bahadir.pos.entity.authentication.AuthenticationRequest;
 import com.bahadir.pos.entity.authentication.AuthenticationResponseDto;
 import com.bahadir.pos.entity.permission.Permission;
-import com.bahadir.pos.entity.user.AuthRole;
+import com.bahadir.pos.entity.user.UserRole;
 import com.bahadir.pos.entity.user.User;
 import com.bahadir.pos.exception.ApiException;
 import com.bahadir.pos.security.JwtTokenProvider;
@@ -78,7 +78,7 @@ public class AuthenticationController {
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         // JWT token oluştur
-        String jwt = jwtTokenProvider.generateJwtToken(authenticationRequest.getEmail(), List.of(user.getAuthRole().name()));
+        String jwt = jwtTokenProvider.generateJwtToken(authenticationRequest.getEmail(), List.of(user.getUserRole().name()));
 
         List<Permission> sortedPermissions = new ArrayList<>();
 
@@ -102,7 +102,7 @@ public class AuthenticationController {
         return ResponseEntity.ok(dto);
     }
 
-    @SecuredEndpoint(role = AuthRole.ADMIN, filter = true)
+    @SecuredEndpoint(role = UserRole.ADMIN, filter = true)
     @GetMapping("/delete/all")
     public ResponseEntity<Boolean> deleteAll() {
         userService.deleteAllUsers();

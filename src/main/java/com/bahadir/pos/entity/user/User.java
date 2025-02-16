@@ -4,7 +4,6 @@ import com.bahadir.pos.entity.BaseEntity;
 import com.bahadir.pos.entity.organization.Organization;
 import com.bahadir.pos.entity.permission.Permission;
 import com.bahadir.pos.entity.role.Role;
-import com.bahadir.pos.entity.user.settings.UserSettings;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
@@ -50,7 +49,7 @@ public class User extends BaseEntity {
     private List<Permission> permissions; // Detaylı izinler
 
     @Enumerated(EnumType.STRING)
-    private AuthRole authRole;
+    private UserRole userRole;
 
 //    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
 //    @JoinColumn(name = "user_settings_id")
