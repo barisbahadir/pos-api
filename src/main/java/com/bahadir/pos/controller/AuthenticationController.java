@@ -52,7 +52,7 @@ public class AuthenticationController {
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody AuthenticationRequest authenticationRequest) {
         try {
-            userService.registerUser(authenticationRequest.getEmail(), authenticationRequest.getPassword());
+            userService.registerUser(authenticationRequest.getEmail(), authenticationRequest.getUsername(), authenticationRequest.getPassword());
             return ResponseEntity.ok().body("User registered successfully");
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body("Email already taken");
@@ -63,8 +63,8 @@ public class AuthenticationController {
     @PostMapping("/login")
     public ResponseEntity<AuthenticationResponseDto> login(@RequestBody AuthenticationRequest authenticationRequest) {
 
-        User user = userService.findByEmail(authenticationRequest.getEmail())
-                .orElseThrow(() -> new ApiException("User not found with email: " + authenticationRequest.getEmail()));
+        User user = userService.findByEmailWithDetails(authenticationRequest.getEmail())
+                .orElseThrow(() -> new ApiException("User can't found with email: " + authenticationRequest.getEmail()));
 
         if (!userService.validatePassword(user, authenticationRequest.getPassword())) {
             throw new ApiException("Invalid password");
@@ -78,7 +78,7 @@ public class AuthenticationController {
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         // JWT token oluştur
-        String jwt = jwtTokenProvider.generateJwtToken(authenticationRequest.getEmail(), List.of(user.getUserRole().name()));
+        String jwt = jwtTokenProvider.generateJwtToken(authenticationRequest.getEmail(), List.of(user.getAuthRole().name()));
 
         List<Permission> sortedPermissions = new ArrayList<>();
 

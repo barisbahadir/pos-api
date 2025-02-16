@@ -33,6 +33,5 @@ public class Role extends BaseEntity {
     @JoinTable(name = "role_permissions",
             joinColumns = @JoinColumn(name = "role_id"),
             inverseJoinColumns = @JoinColumn(name = "permission_id"))
-    @JsonManagedReference
-    private Set<Permission> permissions = new LinkedHashSet<>(); // Set for uniqueness
+    private Set<Permission> permissions = new LinkedHashSet<>();
 }

@@ -1,6 +1,7 @@
 package com.bahadir.pos.entity.permission;
 
 import com.bahadir.pos.entity.BaseEntity;
+import com.bahadir.pos.entity.role.Role;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -13,6 +14,7 @@ import lombok.experimental.SuperBuilder;
 import org.hibernate.Hibernate;
 
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -39,12 +41,16 @@ public class Permission extends BaseEntity {
 
     @ManyToOne
     @JoinColumn(name = "parent_id")
-    @JsonBackReference
+    @JsonBackReference // Parent bilgisinin serileştirilmesini engelle
     private Permission parent;
 
     @OneToMany(mappedBy = "parent")
-    @JsonManagedReference
+    @JsonManagedReference // Children listesinin serileştirilmesine izin ver
     private List<Permission> children;
+
+    @ManyToMany(mappedBy = "permissions")
+    @JsonBackReference // Roles bilgisinin serileştirilmesini engelle
+    private Set<Role> roles;
 
     // Transient alan ile parentId'yi JSON'a ekleme
     @Transient

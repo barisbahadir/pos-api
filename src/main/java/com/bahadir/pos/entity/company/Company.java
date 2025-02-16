@@ -25,6 +25,5 @@ public class Company extends BaseEntity {
     private Integer orderValue;
 
     @OneToMany(mappedBy = "company")
-    @JsonManagedReference
     private List<Organization> organizations;
 }

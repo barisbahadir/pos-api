@@ -31,20 +31,19 @@ public class Organization extends BaseEntity {
 
     @ManyToOne
     @JoinColumn(name = "company_id")
-    @JsonBackReference // Company içindeki organization listesini yok say
+    @JsonBackReference // Company bilgisinin serileştirilmesini engelle
     private Company company;
 
     @ManyToOne
     @JoinColumn(name = "parent_id")
-    @JsonBackReference
+    @JsonBackReference // Parent bilgisinin serileştirilmesini engelle
     private Organization parent;
 
     @OneToMany(mappedBy = "parent")
-    @JsonManagedReference
+    @JsonManagedReference // Children listesinin serileştirilmesine izin ver
     private List<Organization> children;
 
     @OneToMany(mappedBy = "organization")
-    @JsonManagedReference
-    @JsonIgnore
+    @JsonManagedReference // Users listesinin serileştirilmesine izin ver
     private List<User> users;
 }

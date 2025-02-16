@@ -252,7 +252,7 @@ public class ApiInitializer implements CommandLineRunner {
                     .password(passwordEncoder.encode("admin"))
                     .email("admin")
                     .role(adminRole)
-                    .userRole(UserRole.ADMIN)
+                    .authRole(UserRole.ADMIN)
                     .organization(adminOrg)
                     .build();
             userRepository.save(adminUser);
@@ -263,7 +263,7 @@ public class ApiInitializer implements CommandLineRunner {
                     .password(passwordEncoder.encode("test"))
                     .email("test")
                     .role(testRole)
-                    .userRole(UserRole.TEST)
+                    .authRole(UserRole.TEST)
                     .organization(testOrg)
                     .build();
             userRepository.save(testUser);

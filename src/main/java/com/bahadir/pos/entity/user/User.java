@@ -6,6 +6,7 @@ import com.bahadir.pos.entity.permission.Permission;
 import com.bahadir.pos.entity.role.Role;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -34,22 +35,23 @@ public class User extends BaseEntity {
 
     @ManyToOne
     @JoinColumn(name = "organization_id")
-    @JsonBackReference
+    @JsonBackReference // Organization bilgisinin serileştirilmesini engelle
     private Organization organization;
 
     @ManyToOne
     @JoinColumn(name = "role_id")
-    private Role role; // Temel rol (örn. Admin, Manager, User)
+    @JsonManagedReference // Role bilgisinin serileştirilmesine izin ver
+    private Role role;
 
-    @ManyToMany
-    @JoinTable(name = "user_permissions",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "permission_id"))
-    @JsonIgnore
-    private List<Permission> permissions; // Detaylı izinler
+//    @ManyToMany
+//    @JoinTable(name = "user_permissions",
+//            joinColumns = @JoinColumn(name = "user_id"),
+//            inverseJoinColumns = @JoinColumn(name = "permission_id"))
+//    @JsonIgnore
+//    private List<Permission> permissions; // Detaylı izinler
 
     @Enumerated(EnumType.STRING)
-    private UserRole userRole;
+    private UserRole authRole;
 
 //    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
 //    @JoinColumn(name = "user_settings_id")
