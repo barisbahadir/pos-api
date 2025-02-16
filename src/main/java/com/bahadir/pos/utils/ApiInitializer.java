@@ -77,8 +77,12 @@ public class ApiInitializer implements CommandLineRunner {
             Permission analysis = Permission.builder().name("Analysis").label("sys.menu.analysis").type(PermissionType.MENU).route("analysis").component("/dashboard/analysis/index.tsx").orderValue(2).parent(dashboard).build();
             Permission workbench = Permission.builder().name("Workbench").label("sys.menu.workbench").type(PermissionType.MENU).route("workbench").component("/dashboard/workbench/index.tsx").orderValue(3).parent(dashboard).build();
 
+            // Dashboard İzinleri
+            Permission sales = Permission.builder().name("Sales").label("sys.menu.sale").icon("ic-analysis").type(PermissionType.GROUP).route("sale").orderValue(3).build();
+            Permission pos = Permission.builder().name("Sale").label("sys.menu.pos").type(PermissionType.MENU).route("pos").component("/sale/pos/index.tsx").orderValue(1).parent(sales).build();
+
             // Management İzinleri
-            Permission management = Permission.builder().name("Management").label("sys.menu.management").icon("ic-management").type(PermissionType.GROUP).route("management").orderValue(2).build();
+            Permission management = Permission.builder().name("Management").label("sys.menu.management").icon("ic-management").type(PermissionType.GROUP).route("management").orderValue(5).build();
             Permission userIndex = Permission.builder().name("User Info").label("sys.menu.user.index").type(PermissionType.GROUP).route("user").orderValue(1).parent(management).build();
             Permission userProfile = Permission.builder().name("Profile").label("sys.menu.user.profile").type(PermissionType.MENU).route("profile").component("/management/user/profile/index.tsx").orderValue(1).parent(userIndex).build();
             Permission userAccount = Permission.builder().name("Account").label("sys.menu.user.account").type(PermissionType.MENU).route("account").component("/management/user/account/index.tsx").orderValue(2).parent(userIndex).build();
@@ -91,7 +95,7 @@ public class ApiInitializer implements CommandLineRunner {
             Permission systemUserDetail = Permission.builder().name("User Detail").label("sys.menu.system.user_detail").type(PermissionType.MENU).route("user/:id").component("/management/system/user/detail.tsx").hide(true).orderValue(5).parent(systemIndex).build();
 
             // Components İzinleri
-            Permission components = Permission.builder().name("Components").label("sys.menu.components").icon("solar:widget-5-bold-duotone").type(PermissionType.GROUP).route("components").orderValue(3).build();
+            Permission components = Permission.builder().name("Components").label("sys.menu.components").icon("solar:widget-5-bold-duotone").type(PermissionType.GROUP).route("components").orderValue(7).build();
             Permission icon = Permission.builder().name("Icon").label("sys.menu.icon").type(PermissionType.MENU).route("icon").component("/components/icon/index.tsx").orderValue(1).parent(components).build();
             Permission animate = Permission.builder().name("Animate").label("sys.menu.animate").type(PermissionType.MENU).route("animate").component("/components/animate/index.tsx").orderValue(2).parent(components).build();
             Permission scroll = Permission.builder().name("Scroll").label("sys.menu.scroll").type(PermissionType.MENU).route("scroll").component("/components/scroll/index.tsx").orderValue(3).parent(components).build();
@@ -103,12 +107,12 @@ public class ApiInitializer implements CommandLineRunner {
             Permission toast = Permission.builder().name("Toast").label("sys.menu.toast").type(PermissionType.MENU).route("toast").component("/components/toast/index.tsx").orderValue(9).parent(components).build();
 
             // Functions İzinleri
-            Permission functions = Permission.builder().name("Functions").label("sys.menu.functions").icon("solar:plain-2-bold-duotone").type(PermissionType.GROUP).route("functions").orderValue(4).build();
+            Permission functions = Permission.builder().name("Functions").label("sys.menu.functions").icon("solar:plain-2-bold-duotone").type(PermissionType.GROUP).route("functions").orderValue(8).build();
             Permission clipboard = Permission.builder().name("Clipboard").label("sys.menu.clipboard").type(PermissionType.MENU).route("clipboard").component("/functions/clipboard/index.tsx").orderValue(1).parent(functions).build();
             Permission tokenExpired = Permission.builder().name("Token Expired").label("sys.menu.token_expired").type(PermissionType.MENU).route("token-expired").component("/functions/token-expired/index.tsx").orderValue(2).parent(functions).build();
 
             // Menu Level İzinleri
-            Permission menuLevel = Permission.builder().name("Menu Level").label("sys.menu.menulevel.index").icon("ic-menulevel").type(PermissionType.GROUP).route("menu-level").orderValue(5).build();
+            Permission menuLevel = Permission.builder().name("Menu Level").label("sys.menu.menulevel.index").icon("ic-menulevel").type(PermissionType.GROUP).route("menu-level").orderValue(9).build();
             Permission menuLevel1a = Permission.builder().name("Menu Level 1a").label("sys.menu.menulevel.1a").type(PermissionType.MENU).route("menu-level-1a").component("/menu-level/menu-level-1a/index.tsx").orderValue(1).parent(menuLevel).build();
             Permission menuLevel1b = Permission.builder().name("Menu Level 1b").label("sys.menu.menulevel.1b.index").type(PermissionType.GROUP).route("menu-level-1b").orderValue(2).parent(menuLevel).build();
             Permission menuLevel2a = Permission.builder().name("Menu Level 2a").label("sys.menu.menulevel.1b.2a").type(PermissionType.MENU).route("menu-level-2a").component("/menu-level/menu-level-1b/menu-level-2a/index.tsx").orderValue(1).parent(menuLevel1b).build();
@@ -122,8 +126,8 @@ public class ApiInitializer implements CommandLineRunner {
                     .icon("solar:calendar-bold-duotone")
                     .type(PermissionType.MENU)
                     .route("calendar")
-                    .component("/sys/others/calendar/index.tsx")
-                    .orderValue(6)
+                    .component("/system/others/calendar/index.tsx")
+                    .orderValue(10)
                     .build();
 
             Permission kanban = Permission.builder()
@@ -132,7 +136,7 @@ public class ApiInitializer implements CommandLineRunner {
                     .icon("solar:clipboard-bold-duotone")
                     .type(PermissionType.MENU)
                     .route("kanban")
-                    .component("/sys/others/kanban/index.tsx")
+                    .component("/system/others/kanban/index.tsx")
                     .orderValue(7)
                     .build();
 
@@ -143,8 +147,8 @@ public class ApiInitializer implements CommandLineRunner {
                     .type(PermissionType.MENU)
                     .route("disabled")
                     .status(BaseStatus.DISABLE)
-                    .component("/sys/others/calendar/index.tsx")
-                    .orderValue(8)
+                    .component("/system/others/calendar/index.tsx")
+                    .orderValue(11)
                     .build();
 
             Permission label = Permission.builder()
@@ -154,8 +158,8 @@ public class ApiInitializer implements CommandLineRunner {
                     .type(PermissionType.MENU)
                     .route("label")
                     .newFeature(true)
-                    .component("/sys/others/blank.tsx")
-                    .orderValue(9)
+                    .component("/system/others/blank.tsx")
+                    .orderValue(12)
                     .build();
 
             Permission frame = Permission.builder()
@@ -164,7 +168,7 @@ public class ApiInitializer implements CommandLineRunner {
                     .icon("ic_external")
                     .type(PermissionType.GROUP)
                     .route("frame")
-                    .orderValue(10)
+                    .orderValue(13)
                     .build();
 
             Permission externalLink = Permission.builder()
@@ -173,10 +177,10 @@ public class ApiInitializer implements CommandLineRunner {
                     .type(PermissionType.MENU)
                     .route("external_link")
                     .hideTab(true)
-                    .component("/sys/others/iframe/external-link.tsx")
+                    .component("/system/others/iframe/external-link.tsx")
                     .frameSrc("https://ant.design/")
                     .parent(frame)
-                    .orderValue(11)
+                    .orderValue(14)
                     .build();
 
             Permission iframe = Permission.builder()
@@ -184,10 +188,10 @@ public class ApiInitializer implements CommandLineRunner {
                     .label("sys.menu.iframe")
                     .type(PermissionType.MENU)
                     .route("frame")
-                    .component("/sys/others/iframe/index.tsx")
+                    .component("/system/others/iframe/index.tsx")
                     .frameSrc("https://ant.design/")
                     .parent(frame)
-                    .orderValue(12)
+                    .orderValue(15)
                     .build();
 
             Permission blank = Permission.builder()
@@ -196,11 +200,11 @@ public class ApiInitializer implements CommandLineRunner {
                     .icon("ic_blank")
                     .type(PermissionType.MENU)
                     .route("blank")
-                    .component("/sys/others/blank.tsx")
-                    .orderValue(13)
+                    .component("/system/others/blank.tsx")
+                    .orderValue(16)
                     .build();
 
-            permissionRepository.saveAll(List.of(dashboard, welcome, analysis, workbench, management, userIndex, userProfile, userAccount, systemIndex, systemOrganization, systemPermission, systemRole, systemUser, systemUserDetail, components, icon, animate, scroll, markdown, editor, multiLanguage, upload, chart, toast, functions, clipboard, tokenExpired, menuLevel, menuLevel1a, menuLevel1b, menuLevel2a, menuLevel2b, menuLevel3a, menuLevel3b, calendar, kanban, disabled, label, frame, externalLink, iframe, blank));
+            permissionRepository.saveAll(List.of(dashboard, welcome, analysis, workbench, sales, pos, management, userIndex, userProfile, userAccount, systemIndex, systemOrganization, systemPermission, systemRole, systemUser, systemUserDetail, components, icon, animate, scroll, markdown, editor, multiLanguage, upload, chart, toast, functions, clipboard, tokenExpired, menuLevel, menuLevel1a, menuLevel1b, menuLevel2a, menuLevel2b, menuLevel3a, menuLevel3b, calendar, kanban, disabled, label, frame, externalLink, iframe, blank));
 
             System.out.println("Default permissions created!");
         }
