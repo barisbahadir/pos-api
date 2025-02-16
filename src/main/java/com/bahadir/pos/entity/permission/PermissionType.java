@@ -1,7 +1,7 @@
 package com.bahadir.pos.entity.permission;
 
 public enum PermissionType {
-    CATALOGUE,
+    GROUP,
     MENU,
     BUTTON
 }

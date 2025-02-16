@@ -46,52 +46,44 @@ public class ApiInitializer implements CommandLineRunner {
     public void run(String... args) throws Exception {
 
         String companyName1 = "ANADOLUBANK AS";
-        String companyName2 = "BARIS KIRTASIYE";
 
         // Şirketler
         if (companyRepository.count() == 0) {
             Company company1 = Company.builder().name(companyName1).status(BaseStatus.ENABLE).orderValue(1).build();
-            Company company2 = Company.builder().name(companyName2).status(BaseStatus.ENABLE).orderValue(2).build();
-            companyRepository.saveAll(List.of(company1, company2));
+            companyRepository.save(company1);
             System.out.println("Default companies created!");
         }
-
-        String branchName1 = "East Turkey Branch";
-        String branchName2 = "South Turkey Branch";
 
         // Organizasyonlar
         if (organizationRepository.count() == 0) {
             Company company1 = companyRepository.findByName(companyName1).orElse(null);
-            Company company2 = companyRepository.findByName(companyName2).orElse(null);
+//            Company company2 = companyRepository.findByName(companyName2).orElse(null);
 
-            Organization org1 = Organization.builder().name(branchName1).status(BaseStatus.ENABLE).orderValue(1).company(company1).build();
-            Organization org1_1 = Organization.builder().name("R&D Department").status(BaseStatus.DISABLE).orderValue(1).parent(org1).company(company1).build();
-            Organization org1_2 = Organization.builder().name("Marketing Department").status(BaseStatus.ENABLE).orderValue(2).parent(org1).company(company1).build();
-            Organization org1_3 = Organization.builder().name("Finance Department").status(BaseStatus.ENABLE).orderValue(3).parent(org1).company(company1).build();
+            Organization org1 = Organization.builder().name("Yazilim Gelistirme Departmani").status(BaseStatus.ENABLE).orderValue(1).company(company1).build();
+            Organization org1_1 = Organization.builder().name("Internet Department").status(BaseStatus.ENABLE).orderValue(1).parent(org1).company(company1).build();
+            Organization org1_2 = Organization.builder().name("Mobile Department").status(BaseStatus.ENABLE).orderValue(2).parent(org1).company(company1).build();
+            Organization org1_3 = Organization.builder().name("ATM Department").status(BaseStatus.ENABLE).orderValue(3).parent(org1).company(company1).build();
 
-            Organization org2 = Organization.builder().name(branchName2).status(BaseStatus.ENABLE).orderValue(2).company(company2).build();
-            Organization org2_1 = Organization.builder().name("R&D Department").status(BaseStatus.DISABLE).orderValue(1).parent(org2).company(company2).build();
-            Organization org2_2 = Organization.builder().name("Marketing Department").status(BaseStatus.ENABLE).orderValue(2).parent(org2).company(company2).build();
-            Organization org2_3 = Organization.builder().name("Finance Department").status(BaseStatus.ENABLE).orderValue(3).parent(org2).company(company2).build();
+            Organization org2 = Organization.builder().name("Insan Kaynaklari Departmani").status(BaseStatus.ENABLE).orderValue(2).company(company1).build();
 
-            organizationRepository.saveAll(List.of(org1, org1_1, org1_2, org1_3, org2, org2_1, org2_2, org2_3));
+            organizationRepository.saveAll(List.of(org1, org1_1, org1_2, org1_3, org2));
             System.out.println("Default organizations created!");
         }
 
         if (permissionRepository.count() == 0) {
             // Dashboard İzinleri
-            Permission dashboard = Permission.builder().name("Dashboard").label("sys.menu.dashboard").icon("ic-analysis").type(PermissionType.CATALOGUE).route("dashboard").orderValue(1).build();
+            Permission dashboard = Permission.builder().name("Dashboard").label("sys.menu.dashboard").icon("ic-analysis").type(PermissionType.GROUP).route("dashboard").orderValue(1).build();
             Permission welcome = Permission.builder().name("Welcome").label("sys.menu.welcome").type(PermissionType.MENU).route("welcome").component("/dashboard/welcome/index.tsx").orderValue(1).parent(dashboard).build();
             Permission analysis = Permission.builder().name("Analysis").label("sys.menu.analysis").type(PermissionType.MENU).route("analysis").component("/dashboard/analysis/index.tsx").orderValue(2).parent(dashboard).build();
             Permission workbench = Permission.builder().name("Workbench").label("sys.menu.workbench").type(PermissionType.MENU).route("workbench").component("/dashboard/workbench/index.tsx").orderValue(3).parent(dashboard).build();
 
             // Management İzinleri
-            Permission management = Permission.builder().name("Management").label("sys.menu.management").icon("ic-management").type(PermissionType.CATALOGUE).route("management").orderValue(2).build();
-            Permission userIndex = Permission.builder().name("User Info").label("sys.menu.user.index").type(PermissionType.CATALOGUE).route("user").orderValue(1).parent(management).build();
+            Permission management = Permission.builder().name("Management").label("sys.menu.management").icon("ic-management").type(PermissionType.GROUP).route("management").orderValue(2).build();
+            Permission userIndex = Permission.builder().name("User Info").label("sys.menu.user.index").type(PermissionType.GROUP).route("user").orderValue(1).parent(management).build();
             Permission userProfile = Permission.builder().name("Profile").label("sys.menu.user.profile").type(PermissionType.MENU).route("profile").component("/management/user/profile/index.tsx").orderValue(1).parent(userIndex).build();
             Permission userAccount = Permission.builder().name("Account").label("sys.menu.user.account").type(PermissionType.MENU).route("account").component("/management/user/account/index.tsx").orderValue(2).parent(userIndex).build();
 
-            Permission systemIndex = Permission.builder().name("System").label("sys.menu.system.index").type(PermissionType.CATALOGUE).route("system").orderValue(2).parent(management).build();
+            Permission systemIndex = Permission.builder().name("System").label("sys.menu.system.index").type(PermissionType.GROUP).route("system").orderValue(2).parent(management).build();
             Permission systemOrganization = Permission.builder().name("Organization").label("sys.menu.system.organization").type(PermissionType.MENU).route("organization").component("/management/system/organization/index.tsx").orderValue(1).parent(systemIndex).build();
             Permission systemPermission = Permission.builder().name("Permission").label("sys.menu.system.permission").type(PermissionType.MENU).route("permission").component("/management/system/permission/index.tsx").orderValue(2).parent(systemIndex).build();
             Permission systemRole = Permission.builder().name("Role").label("sys.menu.system.role").type(PermissionType.MENU).route("role").component("/management/system/role/index.tsx").orderValue(3).parent(systemIndex).build();
@@ -99,7 +91,7 @@ public class ApiInitializer implements CommandLineRunner {
             Permission systemUserDetail = Permission.builder().name("User Detail").label("sys.menu.system.user_detail").type(PermissionType.MENU).route("user/:id").component("/management/system/user/detail.tsx").hide(true).orderValue(5).parent(systemIndex).build();
 
             // Components İzinleri
-            Permission components = Permission.builder().name("Components").label("sys.menu.components").icon("solar:widget-5-bold-duotone").type(PermissionType.CATALOGUE).route("components").orderValue(3).build();
+            Permission components = Permission.builder().name("Components").label("sys.menu.components").icon("solar:widget-5-bold-duotone").type(PermissionType.GROUP).route("components").orderValue(3).build();
             Permission icon = Permission.builder().name("Icon").label("sys.menu.icon").type(PermissionType.MENU).route("icon").component("/components/icon/index.tsx").orderValue(1).parent(components).build();
             Permission animate = Permission.builder().name("Animate").label("sys.menu.animate").type(PermissionType.MENU).route("animate").component("/components/animate/index.tsx").orderValue(2).parent(components).build();
             Permission scroll = Permission.builder().name("Scroll").label("sys.menu.scroll").type(PermissionType.MENU).route("scroll").component("/components/scroll/index.tsx").orderValue(3).parent(components).build();
@@ -111,16 +103,16 @@ public class ApiInitializer implements CommandLineRunner {
             Permission toast = Permission.builder().name("Toast").label("sys.menu.toast").type(PermissionType.MENU).route("toast").component("/components/toast/index.tsx").orderValue(9).parent(components).build();
 
             // Functions İzinleri
-            Permission functions = Permission.builder().name("Functions").label("sys.menu.functions").icon("solar:plain-2-bold-duotone").type(PermissionType.CATALOGUE).route("functions").orderValue(4).build();
+            Permission functions = Permission.builder().name("Functions").label("sys.menu.functions").icon("solar:plain-2-bold-duotone").type(PermissionType.GROUP).route("functions").orderValue(4).build();
             Permission clipboard = Permission.builder().name("Clipboard").label("sys.menu.clipboard").type(PermissionType.MENU).route("clipboard").component("/functions/clipboard/index.tsx").orderValue(1).parent(functions).build();
             Permission tokenExpired = Permission.builder().name("Token Expired").label("sys.menu.token_expired").type(PermissionType.MENU).route("token-expired").component("/functions/token-expired/index.tsx").orderValue(2).parent(functions).build();
 
             // Menu Level İzinleri
-            Permission menuLevel = Permission.builder().name("Menu Level").label("sys.menu.menulevel.index").icon("ic-menulevel").type(PermissionType.CATALOGUE).route("menu-level").orderValue(5).build();
+            Permission menuLevel = Permission.builder().name("Menu Level").label("sys.menu.menulevel.index").icon("ic-menulevel").type(PermissionType.GROUP).route("menu-level").orderValue(5).build();
             Permission menuLevel1a = Permission.builder().name("Menu Level 1a").label("sys.menu.menulevel.1a").type(PermissionType.MENU).route("menu-level-1a").component("/menu-level/menu-level-1a/index.tsx").orderValue(1).parent(menuLevel).build();
-            Permission menuLevel1b = Permission.builder().name("Menu Level 1b").label("sys.menu.menulevel.1b.index").type(PermissionType.CATALOGUE).route("menu-level-1b").orderValue(2).parent(menuLevel).build();
+            Permission menuLevel1b = Permission.builder().name("Menu Level 1b").label("sys.menu.menulevel.1b.index").type(PermissionType.GROUP).route("menu-level-1b").orderValue(2).parent(menuLevel).build();
             Permission menuLevel2a = Permission.builder().name("Menu Level 2a").label("sys.menu.menulevel.1b.2a").type(PermissionType.MENU).route("menu-level-2a").component("/menu-level/menu-level-1b/menu-level-2a/index.tsx").orderValue(1).parent(menuLevel1b).build();
-            Permission menuLevel2b = Permission.builder().name("Menu Level 2b").label("sys.menu.menulevel.1b.2b.index").type(PermissionType.CATALOGUE).route("menu-level-2b").orderValue(2).parent(menuLevel1b).build();
+            Permission menuLevel2b = Permission.builder().name("Menu Level 2b").label("sys.menu.menulevel.1b.2b.index").type(PermissionType.GROUP).route("menu-level-2b").orderValue(2).parent(menuLevel1b).build();
             Permission menuLevel3a = Permission.builder().name("Menu Level 3a").label("sys.menu.menulevel.1b.2b.3a").type(PermissionType.MENU).route("menu-level-3a").component("/menu-level/menu-level-1b/menu-level-2b/menu-level-3a/index.tsx").orderValue(1).parent(menuLevel2b).build();
             Permission menuLevel3b = Permission.builder().name("Menu Level 3b").label("sys.menu.menulevel.1b.2b.3b").type(PermissionType.MENU).route("menu-level-3b").component("/menu-level/menu-level-1b/menu-level-2b/menu-level-3b/index.tsx").orderValue(2).parent(menuLevel2b).build();
 
@@ -170,7 +162,7 @@ public class ApiInitializer implements CommandLineRunner {
                     .name("Frame")
                     .label("sys.menu.frame")
                     .icon("ic_external")
-                    .type(PermissionType.CATALOGUE)
+                    .type(PermissionType.GROUP)
                     .route("frame")
                     .orderValue(10)
                     .build();
@@ -243,8 +235,8 @@ public class ApiInitializer implements CommandLineRunner {
 
         // Kullanıcılar (Örnek: Admin ve Test)
         if (userRepository.count() == 0) {
-            Organization adminOrg = organizationRepository.findByName(branchName1).orElse(null); // Örnek organizasyon
-            Organization testOrg = organizationRepository.findByName(branchName2).orElse(null); // Örnek organizasyon
+            Organization adminOrg = organizationRepository.findByName("Internet Department").orElse(null); // Örnek organizasyon
+            Organization testOrg = organizationRepository.findByName("Insan Kaynaklari Departmani").orElse(null); // Örnek organizasyon
 
             Role adminRole = roleRepository.findByName(UserRole.ADMIN.name()).orElse(null);
             User adminUser = User.builder()

@@ -45,5 +45,6 @@ public class Organization extends BaseEntity {
 
     @OneToMany(mappedBy = "organization")
     @JsonManagedReference // Users listesinin serileştirilmesine izin ver
+    @JsonIgnore
     private List<User> users;
 }
