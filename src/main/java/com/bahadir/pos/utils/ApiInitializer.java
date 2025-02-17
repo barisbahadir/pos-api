@@ -72,13 +72,13 @@ public class ApiInitializer implements CommandLineRunner {
 
         if (permissionRepository.count() == 0) {
             // Dashboard İzinleri
-            Permission dashboard = Permission.builder().name("Dashboard").label("sys.menu.dashboard").icon("ic-analysis").type(PermissionType.GROUP).route("dashboard").orderValue(1).build();
+            Permission dashboard = Permission.builder().name("Dashboard").label("sys.menu.dashboard").icon("solar:home-outline").type(PermissionType.GROUP).route("dashboard").orderValue(1).build();
             Permission welcome = Permission.builder().name("Welcome").label("sys.menu.welcome").type(PermissionType.MENU).route("welcome").component("/dashboard/welcome/index.tsx").orderValue(1).parent(dashboard).build();
             Permission analysis = Permission.builder().name("Analysis").label("sys.menu.analysis").type(PermissionType.MENU).route("analysis").component("/dashboard/analysis/index.tsx").orderValue(2).parent(dashboard).build();
             Permission workbench = Permission.builder().name("Workbench").label("sys.menu.workbench").type(PermissionType.MENU).route("workbench").component("/dashboard/workbench/index.tsx").orderValue(3).parent(dashboard).build();
 
             // Dashboard İzinleri
-            Permission sales = Permission.builder().name("Sales").label("sys.menu.sale").icon("ic-analysis").type(PermissionType.GROUP).route("sale").orderValue(3).build();
+            Permission sales = Permission.builder().name("Sales").label("sys.menu.sale").icon("solar:sale-outline").type(PermissionType.GROUP).route("sale").orderValue(3).build();
             Permission pos = Permission.builder().name("Sale").label("sys.menu.pos").type(PermissionType.MENU).route("pos").component("/sale/pos/index.tsx").orderValue(1).parent(sales).build();
 
             // Management İzinleri
