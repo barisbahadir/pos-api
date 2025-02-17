@@ -78,8 +78,8 @@ public class ApiInitializer implements CommandLineRunner {
             Permission workbench = Permission.builder().name("Workbench").label("sys.menu.workbench").type(PermissionType.MENU).route("workbench").component("/dashboard/workbench/index.tsx").orderValue(3).parent(dashboard).build();
 
             // Dashboard İzinleri
-            Permission sales = Permission.builder().name("Sales").label("sys.menu.sale").icon("solar:sale-outline").type(PermissionType.GROUP).route("sale").orderValue(3).build();
-            Permission pos = Permission.builder().name("Sale").label("sys.menu.pos").type(PermissionType.MENU).route("pos").component("/sale/pos/index.tsx").orderValue(1).parent(sales).build();
+            Permission sales = Permission.builder().name("Point of Sale").label("sys.menu.pos.index").icon("solar:sale-outline").type(PermissionType.GROUP).route("pos").orderValue(3).build();
+            Permission pos = Permission.builder().name("Sale").label("sys.menu.pos.sale").type(PermissionType.MENU).route("sale").component("/pos/sale/index.tsx").orderValue(1).parent(sales).build();
 
             // Management İzinleri
             Permission management = Permission.builder().name("Management").label("sys.menu.management").icon("ic-management").type(PermissionType.GROUP).route("management").orderValue(5).build();
