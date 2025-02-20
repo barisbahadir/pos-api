@@ -3,9 +3,11 @@ package com.bahadir.pos.service;
 import com.bahadir.pos.entity.session.Session;
 import com.bahadir.pos.entity.user.User;
 import com.bahadir.pos.repository.SessionRepository;
-import org.springframework.stereotype.Service;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.stereotype.Service;
+
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class SessionService {
@@ -16,38 +18,58 @@ public class SessionService {
         this.sessionRepository = sessionRepository;
     }
 
-    public Session createSession(User user, HttpServletRequest request, String token) {
+    public List<Session> getAllSessions() {
+        return sessionRepository.findAllByOrderByLoginDateDesc();
+    }
+
+    public List<Session> getActiveSessions() {
+        return sessionRepository.findByLogoutDateIsNullOrderByLoginDateDesc();
+    }
+
+    public List<Session> getPassiveSessions() {
+        return sessionRepository.findByLogoutDateIsNotNullOrderByLoginDateDesc();
+    }
+
+    public Session createSession(User user, LocalDateTime tokenExpireDate, HttpServletRequest request, String token) {
         Session session = new Session();
-        session.setUser(user);
-        session.setLoginTime(LocalDateTime.now());
+        session.setToken(token);
+        session.setUsername(user.getUsername());
+        session.setEmail(user.getEmail());
         session.setUserRole(user.getAuthRole().name());
+        session.setLoginDate(LocalDateTime.now());
+        session.setLastAccessDate(LocalDateTime.now());
+        session.setTokenExpireDate(tokenExpireDate);
         session.setIpAddress(request.getRemoteAddr());
         session.setUserAgent(request.getHeader("User-Agent"));
-        session.setToken(token);
-        session.setLastAccessTime(LocalDateTime.now());
         return sessionRepository.save(session);
     }
 
     public void closeSessionByToken(String token) {
         Session session = sessionRepository.findByToken(token)
                 .orElseThrow(() -> new RuntimeException("Session not found for token"));
-        session.setLogoutTime(LocalDateTime.now());
+        LocalDateTime now = LocalDateTime.now();
+        session.setLogoutDate(now);
+        session.setLastAccessDate(now);
         sessionRepository.save(session);
     }
 
     public void validateAndUpdateSession(String token) {
         Session session = sessionRepository.findByToken(token)
                 .orElseThrow(() -> new RuntimeException("Session not found for token"));
-        session.setLastAccessTime(LocalDateTime.now());
+        session.setLastAccessDate(LocalDateTime.now());
         sessionRepository.save(session);
     }
 
     public Session findSessionById(Long sessionId) {
         return sessionRepository.findById(sessionId)
-            .orElseThrow(() -> new RuntimeException("Session not found"));
+                .orElseThrow(() -> new RuntimeException("Session not found"));
     }
 
     public void deleteSession(Long sessionId) {
         sessionRepository.deleteById(sessionId);
+    }
+
+    public void deleteAllPassiveSessions() {
+        sessionRepository.deleteByLogoutDateIsNull();
     }
 }

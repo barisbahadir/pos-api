@@ -1,6 +1,7 @@
 package com.bahadir.pos.utils;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
@@ -29,5 +30,11 @@ public class DateTimeUtils {
     // String to LocalDateTime
     public static LocalDateTime parseToLocalDateTime(String dateTimeString) {
         return dateTimeString != null ? LocalDateTime.parse(dateTimeString, DATE_TIME_FORMATTER) : null;
+    }
+
+    public static LocalDateTime convertDateToLocalDateTime(Date date) {
+        return date != null ? date.toInstant()
+                .atZone(ZoneId.systemDefault()) // Varsayılan sistem zaman dilimi
+                .toLocalDateTime() : null;
     }
 }

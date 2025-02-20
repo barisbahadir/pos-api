@@ -16,20 +16,24 @@ public class Session {
     @Column(columnDefinition = "TEXT", nullable = false, unique = true)
     private String token;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    @Column(nullable = false)
+    private String username;  // Kullanıcı adı
 
     @Column(nullable = false)
-    private LocalDateTime loginTime;
-
-    @Column(nullable = false)
-    private LocalDateTime lastAccessTime;
-
-    private LocalDateTime logoutTime;
+    private String email;  // Kullanıcı e-posta adresi
 
     @Column(nullable = false)
     private String userRole;
+
+    @Column(nullable = false)
+    private LocalDateTime loginDate;
+
+    @Column(nullable = false)
+    private LocalDateTime lastAccessDate;
+
+    private LocalDateTime tokenExpireDate;
+
+    private LocalDateTime logoutDate;
 
     private String ipAddress;
 

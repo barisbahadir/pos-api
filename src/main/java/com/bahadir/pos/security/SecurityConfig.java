@@ -44,7 +44,12 @@ public class SecurityConfig {
         http.csrf().disable()
                 .cors().and()  // CORS desteğini etkinleştiriyoruz
                 .authorizeHttpRequests()
-                .requestMatchers("/api/auth/login", "/api/auth/register", "/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**")
+                .requestMatchers(
+                        "/api/auth/login",
+                        "/api/auth/register",
+                        "/swagger-ui.html",
+                        "/swagger-ui/**",
+                        "/v3/api-docs/**")
                 .permitAll()
                 .anyRequest().authenticated()
                 .and()
