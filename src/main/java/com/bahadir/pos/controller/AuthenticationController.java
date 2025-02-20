@@ -3,7 +3,6 @@ package com.bahadir.pos.controller;
 import com.bahadir.pos.entity.authentication.AuthenticationRequest;
 import com.bahadir.pos.entity.authentication.AuthenticationResponseDto;
 import com.bahadir.pos.entity.permission.Permission;
-import com.bahadir.pos.entity.session.Session;
 import com.bahadir.pos.entity.user.User;
 import com.bahadir.pos.entity.user.UserRole;
 import com.bahadir.pos.exception.ApiException;
@@ -12,6 +11,7 @@ import com.bahadir.pos.security.SecuredEndpoint;
 import com.bahadir.pos.service.PermissionService;
 import com.bahadir.pos.service.SessionService;
 import com.bahadir.pos.service.UserService;
+import com.bahadir.pos.utils.JwtUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -32,15 +32,18 @@ public class AuthenticationController {
     private final JwtTokenProvider jwtTokenProvider;
     private final PermissionService permissionService;
     private final UserService userService;
+    private final SessionService sessionService;
 
     public AuthenticationController(AuthenticationManager authenticationManager,
                                     JwtTokenProvider jwtTokenProvider,
                                     PermissionService permissionService,
-                                    UserService userService) {
+                                    UserService userService,
+                                    SessionService sessionService) {
         this.authenticationManager = authenticationManager;
         this.jwtTokenProvider = jwtTokenProvider;
         this.permissionService = permissionService;
         this.userService = userService;
+        this.sessionService = sessionService;
     }
 
     @GetMapping("/list")
@@ -111,4 +114,16 @@ public class AuthenticationController {
         userService.deleteAllUsers();
         return ResponseEntity.ok(true);
     }
+
+    @PostMapping("/logout")
+    public ResponseEntity<Boolean> logout(HttpServletRequest request) {
+        SecurityContextHolder.clearContext();
+        request.getSession().invalidate();   // Session'ı öldür
+
+        String token = JwtUtils.extractToken(request);
+        sessionService.closeSessionByToken(token);
+
+        return ResponseEntity.ok(true);
+    }
+
 }
