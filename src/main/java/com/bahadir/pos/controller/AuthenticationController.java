@@ -3,13 +3,16 @@ package com.bahadir.pos.controller;
 import com.bahadir.pos.entity.authentication.AuthenticationRequest;
 import com.bahadir.pos.entity.authentication.AuthenticationResponseDto;
 import com.bahadir.pos.entity.permission.Permission;
-import com.bahadir.pos.entity.user.UserRole;
+import com.bahadir.pos.entity.session.Session;
 import com.bahadir.pos.entity.user.User;
+import com.bahadir.pos.entity.user.UserRole;
 import com.bahadir.pos.exception.ApiException;
 import com.bahadir.pos.security.JwtTokenProvider;
 import com.bahadir.pos.security.SecuredEndpoint;
 import com.bahadir.pos.service.PermissionService;
+import com.bahadir.pos.service.SessionService;
 import com.bahadir.pos.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -61,7 +64,7 @@ public class AuthenticationController {
 
     // Kullanıcı girişi (JWT token ile)
     @PostMapping("/login")
-    public ResponseEntity<AuthenticationResponseDto> login(@RequestBody AuthenticationRequest authenticationRequest) {
+    public ResponseEntity<AuthenticationResponseDto> login(@RequestBody AuthenticationRequest authenticationRequest, HttpServletRequest request) {
 
         User user = userService.findByEmailWithDetails(authenticationRequest.getEmail())
                 .orElseThrow(() -> new ApiException("User can't found with email: " + authenticationRequest.getEmail()));
@@ -78,7 +81,7 @@ public class AuthenticationController {
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         // JWT token oluştur
-        String jwt = jwtTokenProvider.generateJwtToken(authenticationRequest.getEmail(), List.of(user.getAuthRole().name()));
+        String jwt = jwtTokenProvider.generateJwtToken(user, request);
 
         List<Permission> sortedPermissions = new ArrayList<>();
 

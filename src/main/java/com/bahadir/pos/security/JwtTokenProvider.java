@@ -1,10 +1,16 @@
 package com.bahadir.pos.security;
 
+import com.bahadir.pos.entity.user.User;
 import com.bahadir.pos.exception.JwtTokenException;
+import com.bahadir.pos.service.PermissionService;
+import com.bahadir.pos.service.SessionService;
+import com.bahadir.pos.service.UserService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -23,23 +29,34 @@ import java.util.List;
 @Component
 public class JwtTokenProvider {
 
+    private final SessionService sessionService;
+
+    public JwtTokenProvider(SessionService sessionService) {
+        this.sessionService = sessionService;
+    }
+
     private final String PRIVATE_KEY_PATH = "keys/private.key";  // Private key dosyası
     private final String PUBLIC_KEY_PATH = "keys/public.key";    // Public key dosyası
 
     private static final long JWT_EXPIRATION = 86400000; // 1 gün
 
     // JWT token üretme (RS256 imza algoritması kullanarak)
-    public String generateJwtToken(String username, List<String> roles) throws JwtTokenException {
+    public String generateJwtToken(User user, HttpServletRequest request) throws JwtTokenException {
         try {
             PrivateKey privateKey = getPrivateKeyFromFile(PRIVATE_KEY_PATH);
 
-            return Jwts.builder()
-                    .setSubject(username)
-                    .claim("roles", roles) // Rolleri burada ekliyoruz
+            String jwtToken = Jwts.builder()
+                    .setSubject(user.getEmail())
+                    .claim("roles", List.of(user.getAuthRole().name())) // Rolleri burada ekliyoruz
                     .setIssuedAt(new Date())
                     .setExpiration(new Date(System.currentTimeMillis() + JWT_EXPIRATION))
                     .signWith(privateKey, SignatureAlgorithm.RS256)  // RS256 kullanarak imzalama
                     .compact();
+
+            // Session oluştur
+            sessionService.createSession(user, request, jwtToken);
+
+            return jwtToken;
         } catch (Exception e) {
             throw new JwtTokenException("Error generating JWT token", e);
         }
@@ -48,9 +65,15 @@ public class JwtTokenProvider {
     // JWT token doğrulama
     public boolean validateJwtToken(String token) {
         try {
-            getClaimsFromToken(token);
+            Claims claims = getClaimsFromToken(token);
+            // Token geçerliyse, session'ı kontrol et ve güncelle
+            sessionService.validateAndUpdateSession(token);
+
             return true;
         } catch (JwtException | IllegalArgumentException e) {
+            // Token geçersizse, ilgili session'ı kapat
+            sessionService.closeSessionByToken(token);
+
             // Token geçersizse, hata mesajı ve 403 dönebiliriz
             throw new JwtTokenException("Invalid JWT token", e); // Özel hata fırlatma
         } catch (Exception e) {
