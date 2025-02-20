@@ -1,8 +1,10 @@
 package com.bahadir.pos.security;
 
+import com.bahadir.pos.utils.ApiResponse;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -25,9 +27,8 @@ public class SecuredEndpointAspect {
 
         // Rol kontrolü
         if (!roles.contains(securedEndpoint.role().name())) {
-            return ResponseEntity
-                    .status(403)
-                    .body("Yetkisiz erisim talebi engellendi. (Mevcut roller: " + roles.toString() + " - Gereken Rol: " + securedEndpoint.role().name() + ")");
+            ApiResponse<Void> response = ApiResponse.error(HttpStatus.FORBIDDEN.value(), "Yetkisiz erisim talebi engellendi. (Mevcut roller: " + roles.toString() + " - Gereken Rol: " + securedEndpoint.role().name() + ")");
+            return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
         }
 
         // Filtreleme

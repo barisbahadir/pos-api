@@ -5,6 +5,7 @@ import com.bahadir.pos.entity.user.User;
 import com.bahadir.pos.repository.SessionRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -30,7 +31,10 @@ public class SessionService {
         return sessionRepository.findByLogoutDateIsNotNullOrderByLoginDateDesc();
     }
 
+    @Transactional
     public Session createSession(User user, LocalDateTime tokenExpireDate, HttpServletRequest request, String token) {
+        expireOldSessions(user.getEmail());
+
         Session session = new Session();
         session.setToken(token);
         session.setUsername(user.getUsername());
@@ -44,6 +48,7 @@ public class SessionService {
         return sessionRepository.save(session);
     }
 
+    @Transactional
     public void closeSessionByToken(String token) {
         Session session = sessionRepository.findByToken(token)
                 .orElseThrow(() -> new RuntimeException("Session not found for token"));
@@ -53,11 +58,17 @@ public class SessionService {
         sessionRepository.save(session);
     }
 
-    public void validateAndUpdateSession(String token) {
-        Session session = sessionRepository.findByToken(token)
-                .orElseThrow(() -> new RuntimeException("Session not found for token"));
-        session.setLastAccessDate(LocalDateTime.now());
-        sessionRepository.save(session);
+    @Transactional
+    public void updateSessionLastAccessDate(String token) {
+        sessionRepository.updateLastAccessDate(token, LocalDateTime.now());
+    }
+
+    public void expireOldSessions(String email) {
+        sessionRepository.expireOldSessions(email, LocalDateTime.now());
+    }
+
+    public boolean existsByTokenAndLogoutDateIsNotNull(String token) {
+        return sessionRepository.existsByTokenAndLogoutDateIsNotNull(token);
     }
 
     public Session findSessionById(Long sessionId) {
@@ -65,10 +76,12 @@ public class SessionService {
                 .orElseThrow(() -> new RuntimeException("Session not found"));
     }
 
+    @Transactional
     public void deleteSession(Long sessionId) {
         sessionRepository.deleteById(sessionId);
     }
 
+    @Transactional
     public void deleteAllPassiveSessions() {
         sessionRepository.deleteByLogoutDateIsNull();
     }

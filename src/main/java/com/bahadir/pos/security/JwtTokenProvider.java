@@ -65,7 +65,7 @@ public class JwtTokenProvider {
         try {
             Claims claims = getClaimsFromToken(token);
             // Token geçerliyse, session'ı kontrol et ve güncelle
-            // sessionService.validateAndUpdateSession(token);
+            // sessionService.updateSessionLastAccessDate(token);
 
             return true;
         } catch (JwtException | IllegalArgumentException e) {
