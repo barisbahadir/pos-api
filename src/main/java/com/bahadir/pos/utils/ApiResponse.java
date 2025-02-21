@@ -7,6 +7,7 @@ import lombok.Setter;
 import org.springframework.http.HttpStatus;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -19,20 +20,32 @@ public class ApiResponse<T> implements Serializable {
     private static final String SUCCESS_STATUS_MESSAGE = "OK";
     private static final int SUCCESS_STATUS_CODE = HttpStatus.OK.value();
 
-    private int status;
-    private String message;
+    @Builder.Default
+    private int status = SUCCESS_STATUS_CODE;
+
+    @Builder.Default
+    private String message = SUCCESS_STATUS_MESSAGE;
+
     private T data;
+
+    private boolean isSuccess;
+
+    @Builder.Default
+    private String date = DateTimeUtils.formatLocalDateTime(LocalDateTime.now());
 
     // Varsayılan başarılı yanıt (sadece status ve message ile)
     public ApiResponse() {
+        this.isSuccess = true;
         this.status = SUCCESS_STATUS_CODE;
         this.message = SUCCESS_STATUS_MESSAGE;
+        this.date = DateTimeUtils.formatLocalDateTime(LocalDateTime.now());
     }
 
     // Başarılı yanıt oluşturma
     public static <T> ApiResponse<T> success(T data) {
         return ApiResponse.<T>builder()
-                .status(SUCCESS_STATUS_CODE)
+                .isSuccess(true)
+                .status(HttpStatus.OK.value())
                 .message(SUCCESS_STATUS_MESSAGE)
                 .data(data)
                 .build();
@@ -40,6 +53,7 @@ public class ApiResponse<T> implements Serializable {
 
     public static <T> ApiResponse<T> error(String message) {
         return ApiResponse.<T>builder()
+                .isSuccess(false)
                 .status(HttpStatus.FORBIDDEN.value())  // Hata durumları için 500 veya başka bir uygun kod
                 .message(message)
                 .data(null)
@@ -48,6 +62,7 @@ public class ApiResponse<T> implements Serializable {
 
     public static <T> ApiResponse<T> error(int errorCode, String message) {
         return ApiResponse.<T>builder()
+                .isSuccess(false)
                 .status(errorCode)  // Hata durumları için 500 veya başka bir uygun kod
                 .message(message)
                 .data(null)

@@ -71,8 +71,13 @@ public class JwtTokenProvider {
             Claims claims = getClaimsFromToken(token);
             // Token geçerliyse, session'ı kontrol et ve güncelle
             // sessionService.updateSessionLastAccessDate(token);
+            if (sessionService.existsByTokenAndLogoutDateIsNotNull(token)) {
+                throw new JwtTokenException("Hesabınızda yeni bir giriş tespit edildi. Güvenlik nedeniyle bu cihazın oturumu sonlandırıldı. Lütfen tekrar giriş yapın.");
+            }
 
             return true;
+        } catch (JwtTokenException e) {
+            throw new JwtTokenException(e.getMessage(), e);
         } catch (JwtException | IllegalArgumentException e) {
             // Token geçersizse, ilgili session'ı kapat
             sessionService.closeSessionByToken(token);

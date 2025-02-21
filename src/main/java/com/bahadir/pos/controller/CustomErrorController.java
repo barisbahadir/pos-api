@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.text.MessageFormat;
+
 @RestController
 @RequestMapping("/error")
 public class CustomErrorController {
@@ -16,9 +18,11 @@ public class CustomErrorController {
     public ResponseEntity<ApiResponse<?>> handleError(HttpServletRequest request) {
         Throwable exception = (Throwable) request.getAttribute("jakarta.servlet.error.exception");
         int statusCode = (int) request.getAttribute("jakarta.servlet.error.status_code");
+        HttpStatus defaultHttpStatus = HttpStatus.FORBIDDEN;
 
-        ApiResponse<Void> response = ApiResponse.error(statusCode, (exception != null) ? exception.getMessage() : "Unknown error");
-        return new ResponseEntity<>(response, HttpStatus.valueOf(statusCode));
+        ApiResponse<Void> response = ApiResponse.error(defaultHttpStatus.value(), "(GLOBAL): " + MessageFormat.format("{0}", exception != null ? exception.getMessage() : "Unknown error"));
+
+        return new ResponseEntity<>(response, defaultHttpStatus);
     }
 }
 
