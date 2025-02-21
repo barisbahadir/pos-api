@@ -24,7 +24,7 @@ public class ApiLogService {
     }
 
     public void saveApiLog(String token, String email, String requestUri,
-                           String method, String requestBody, String responseBody,
+                           String method, String responseBody,
                            int responseStatus) {
 
         String userSessionId = sessionService.findSessionIdByToken(token);
@@ -34,8 +34,7 @@ public class ApiLogService {
         apiLog.setEmail(email);
         apiLog.setRequestUri(requestUri);
         apiLog.setMethod(method);
-        apiLog.setRequestBody(requestBody);
-        apiLog.setResponseBody(responseBody);
+        apiLog.setResponse(responseBody.length() > 500 ? responseBody.substring(0, 500) + "..." : responseBody); // Uzun response'ları kısalteBody);
         apiLog.setResponseStatus(responseStatus);
         apiLog.setDate(LocalDateTime.now());  // Zaman damgası ekliyoruz
 

@@ -25,10 +25,7 @@ public class ApiLog {
     private String method;
 
     @Column(columnDefinition = "TEXT")
-    private String requestBody;
-
-    @Column(columnDefinition = "TEXT")
-    private String responseBody;
+    private String response;
     private int responseStatus;
 
     @Column(nullable = false)
