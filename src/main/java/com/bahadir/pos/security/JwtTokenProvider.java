@@ -72,7 +72,7 @@ public class JwtTokenProvider {
             // Token geçerliyse, session'ı kontrol et ve güncelle
             // sessionService.updateSessionLastAccessDate(token);
             if (sessionService.existsByTokenAndLogoutDateIsNotNull(token)) {
-                throw new JwtTokenException("Hesabınızda yeni bir giriş tespit edildigi icin, oturumunuz sonlandırıldı. Tekrar giriş yapın.");
+                throw new JwtTokenException("Hesabınızda yeni bir giriş tespit edildiği için oturumunuz sonlandırıldı. Tekrar giriş yapınız.");
             }
 
             return true;
