@@ -98,7 +98,7 @@ public class AuthenticationController {
                 .builder()
                 .email(authenticationRequest.getEmail())
                 .username(user.getUsername())
-                .role(user.getRole())
+                .role(user.getAuthRole())
                 .permissions(sortedPermissions)
                 .token(jwtResponse.getJwtToken())
                 .activeSessionId(jwtResponse.getSessionId())

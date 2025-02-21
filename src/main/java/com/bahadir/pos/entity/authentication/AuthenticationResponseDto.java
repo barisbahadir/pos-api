@@ -1,7 +1,7 @@
 package com.bahadir.pos.entity.authentication;
 
 import com.bahadir.pos.entity.permission.Permission;
-import com.bahadir.pos.entity.role.Role;
+import com.bahadir.pos.entity.user.UserRole;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,7 +18,7 @@ public class AuthenticationResponseDto {
     private Long id;
     private String email;
     private String username;
-    private Role role;
+    private UserRole role;
     private String token;
     private String avatar;
     private String status;
