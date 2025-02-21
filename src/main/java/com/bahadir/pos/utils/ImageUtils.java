@@ -8,7 +8,6 @@ import javax.imageio.ImageWriter;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.util.Base64;
 
 public class ImageUtils {
@@ -18,7 +17,7 @@ public class ImageUtils {
         float quality = 0.8F;
 
         try {
-            if(quality == 1F || base64Image == null || StringUtils.isBlank(base64Image)){
+            if (base64Image == null || StringUtils.isBlank(base64Image)) {
                 return base64Image;
             }
 
