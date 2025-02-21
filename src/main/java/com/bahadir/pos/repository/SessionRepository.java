@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface SessionRepository extends JpaRepository<Session, Long> {
+public interface SessionRepository extends JpaRepository<Session, String> {
 
     // Kullanıcının eski oturumlarını kapat
     @Modifying
@@ -43,4 +43,6 @@ public interface SessionRepository extends JpaRepository<Session, Long> {
 
     Optional<Session> findByToken(String token);
 
+    @Query("SELECT s.id FROM Session s WHERE s.token = :token")
+    String findSessionIdByToken(String token);
 }

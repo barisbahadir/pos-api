@@ -70,13 +70,21 @@ public class SessionService {
         return sessionRepository.existsByTokenAndLogoutDateIsNotNull(token);
     }
 
-    public Session findSessionById(Long sessionId) {
+    public Session findSessionById(String sessionId) {
         return sessionRepository.findById(sessionId)
                 .orElseThrow(() -> new RuntimeException("Session not found"));
     }
 
+    public String findSessionIdByToken(String token) {
+        try{
+            return sessionRepository.findSessionIdByToken(token);
+        }catch (Exception e){
+            return null;
+        }
+    }
+
     @Transactional
-    public void deleteSession(Long sessionId) {
+    public void deleteSession(String sessionId) {
         sessionRepository.deleteById(sessionId);
     }
 
