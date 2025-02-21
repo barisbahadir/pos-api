@@ -22,6 +22,7 @@ public class AuthenticationResponseDto {
     private String token;
     private String avatar;
     private String status;
+    private String activeSessionId;
     private List<Permission> permissions;
 
 }

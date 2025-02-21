@@ -1,5 +1,7 @@
 package com.bahadir.pos.security;
 
+import com.bahadir.pos.entity.JwtTokenResponse;
+import com.bahadir.pos.entity.session.Session;
 import com.bahadir.pos.entity.user.User;
 import com.bahadir.pos.exception.JwtTokenException;
 import com.bahadir.pos.service.SessionService;
@@ -39,7 +41,7 @@ public class JwtTokenProvider {
     private static final long JWT_EXPIRATION = 86400000; // 1 gün
 
     // JWT token üretme (RS256 imza algoritması kullanarak)
-    public String generateJwtToken(User user, HttpServletRequest request) throws JwtTokenException {
+    public JwtTokenResponse generateJwtToken(User user, HttpServletRequest request) throws JwtTokenException {
         try {
             PrivateKey privateKey = getPrivateKeyFromFile(PRIVATE_KEY_PATH);
             Date expirationTime = new Date(System.currentTimeMillis() + JWT_EXPIRATION);
@@ -52,9 +54,12 @@ public class JwtTokenProvider {
                     .compact();
 
             // Session oluştur
-            sessionService.createSession(user, DateTimeUtils.convertDateToLocalDateTime(expirationTime), request, jwtToken);
+            Session activeSession = sessionService.createSession(user, DateTimeUtils.convertDateToLocalDateTime(expirationTime), request, jwtToken);
 
-            return jwtToken;
+            return JwtTokenResponse.builder()
+                    .jwtToken(jwtToken)
+                    .sessionId(activeSession.getId())
+                    .build();
         } catch (Exception e) {
             throw new JwtTokenException("Error generating JWT token", e);
         }

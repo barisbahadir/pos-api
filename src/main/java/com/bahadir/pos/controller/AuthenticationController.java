@@ -1,5 +1,6 @@
 package com.bahadir.pos.controller;
 
+import com.bahadir.pos.entity.JwtTokenResponse;
 import com.bahadir.pos.entity.authentication.AuthenticationRequest;
 import com.bahadir.pos.entity.authentication.AuthenticationResponseDto;
 import com.bahadir.pos.entity.permission.Permission;
@@ -84,7 +85,7 @@ public class AuthenticationController {
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         // JWT token oluştur
-        String jwt = jwtTokenProvider.generateJwtToken(user, request);
+        JwtTokenResponse jwtResponse = jwtTokenProvider.generateJwtToken(user, request);
 
         List<Permission> sortedPermissions = new ArrayList<>();
 
@@ -99,7 +100,8 @@ public class AuthenticationController {
                 .username(user.getUsername())
                 .role(user.getRole())
                 .permissions(sortedPermissions)
-                .token(jwt)
+                .token(jwtResponse.getJwtToken())
+                .activeSessionId(jwtResponse.getSessionId())
                 .avatar(null)
                 .id(user.getId())
                 .status(user.getStatus().name())

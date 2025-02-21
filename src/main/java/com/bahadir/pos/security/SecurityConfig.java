@@ -45,6 +45,7 @@ public class SecurityConfig {
                 .cors().and()  // CORS desteğini etkinleştiriyoruz
                 .authorizeHttpRequests()
                 .requestMatchers(
+                        "/error",
                         "/api/auth/login",
                         "/api/auth/register",
                         "/swagger-ui.html",
