@@ -120,7 +120,7 @@ public class AuthenticationController {
         SecurityContextHolder.clearContext();
         request.getSession().invalidate();   // Session'ı öldür
 
-        String token = JwtUtils.extractToken(request);
+        String token = JwtUtils.getJwtFromRequest(request);
         sessionService.closeSessionByToken(token);
 
         return ResponseEntity.ok(true);

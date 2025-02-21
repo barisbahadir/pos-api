@@ -1,13 +1,15 @@
-package com.bahadir.pos.exception;
+package com.bahadir.pos.security;
 
+import com.bahadir.pos.exception.ApiException;
+import com.bahadir.pos.exception.JwtTokenException;
 import com.bahadir.pos.utils.ApiResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-@ControllerAdvice
+@RestControllerAdvice
 public class GlobalExceptionHandler {
 
     // Genel Exception Handler

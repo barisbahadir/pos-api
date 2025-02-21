@@ -58,7 +58,6 @@ public class SessionService {
         sessionRepository.save(session);
     }
 
-    @Transactional
     public void updateSessionLastAccessDate(String token) {
         sessionRepository.updateLastAccessDate(token, LocalDateTime.now());
     }

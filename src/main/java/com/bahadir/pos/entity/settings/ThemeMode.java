@@ -1,4 +1,4 @@
-package com.bahadir.pos.entity.user.settings;
+package com.bahadir.pos.entity.settings;
 
 public enum ThemeMode {
     LIGHT("light"),
