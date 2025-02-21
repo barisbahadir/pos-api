@@ -13,14 +13,6 @@ import java.util.Base64;
 
 public class ImageUtils {
 
-    /**
-     * Base64 formatındaki bir resmi sıkıştırarak yeniden Base64 formatına çevirir.
-     *
-     * @param base64Image Sıkıştırılacak Base64 formatındaki resim
-//     * @param quality     Resim kalitesi (0.0 - 1.0 arası, 1.0 en yüksek kalite)
-     * @return Sıkıştırılmış ve Base64 formatında dönen resim
-     * @throws IOException
-     */
     public static String compressImage(String base64Image) {
         String image;
         float quality = 0.8F;
