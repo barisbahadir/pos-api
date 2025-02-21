@@ -69,22 +69,16 @@ public class PermissionService {
         }
 
         // Parent-Child ilişkisini kuruyoruz
-        Set<Long> processedPermissions = new HashSet<>(); // İşlenmiş öğeleri takip etmek için
         List<Permission> rootPermissions = new ArrayList<>();
 
         for (Permission permission : permissions) {
-            if (!processedPermissions.contains(permission.getId())) {
-                if (permission.getParent() == null) {
-                    // Root elementleri ekliyoruz
-                    rootPermissions.add(permission);
-                } else {
-                    Permission parent = permissionMap.get(permission.getParent().getId());
-                    if (parent != null) {
-                        // Child öğeyi parent'a bağlıyoruz
-                        parent.getChildren().add(permission);
-                    }
+            if (permission.getParent() == null) {
+                rootPermissions.add(permission); // Root elementleri alıyoruz
+            } else {
+                Permission parent = permissionMap.get(permission.getParent().getId());
+                if (parent != null) {
+                    parent.getChildren().add(permission); // Child öğeyi parent'a bağlıyoruz
                 }
-                processedPermissions.add(permission.getId()); // İşlenmiş olarak işaretliyoruz
             }
         }
 

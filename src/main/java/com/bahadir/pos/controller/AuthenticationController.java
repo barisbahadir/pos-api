@@ -22,9 +22,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Set;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -88,8 +87,12 @@ public class AuthenticationController {
         // JWT token oluştur
         JwtTokenResponse jwtResponse = jwtTokenProvider.generateJwtToken(user, request);
 
-        Set<Permission> uniquePermissions = new HashSet<>(user.getRole().getPermissions());
-        List<Permission> sortedPermissions = permissionService.getSortedPermissions(new ArrayList<>(uniquePermissions));
+        List<Permission> sortedPermissions = new ArrayList<>();
+
+        if (user.getRole().getPermissions() != null) {
+            sortedPermissions = permissionService.getSortedPermissions(new ArrayList<>(user.getRole().getPermissions()));
+            user.getRole().setPermissions(new LinkedHashSet<>(sortedPermissions));
+        }
 
         AuthenticationResponseDto dto = AuthenticationResponseDto
                 .builder()
