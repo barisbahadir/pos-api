@@ -20,41 +20,41 @@ public class GlobalExceptionHandler {
     // JWT Token hatası için özel handler
     @ExceptionHandler(JwtTokenException.class)
     public ResponseEntity<ApiResponse<?>> handleJwtTokenException(JwtTokenException exc) {
-        ApiResponse<Void> response = ApiResponse.error(authApiStatus.value(), "(JWT): " + exc.getMessage());
+        ApiResponse<Void> response = ApiResponse.error(authApiStatus.value(), exc, "JWT");
         return new ResponseEntity<>(response, authApiStatus);
     }
 
     @ExceptionHandler(AuthenticationException.class)
     public ResponseEntity<ApiResponse<?>> handleAuthenticationException(AuthenticationException exc) {
-        ApiResponse<Void> response = ApiResponse.error(authApiStatus.value(), "(AUTH): " + exc.getMessage());
+        ApiResponse<Void> response = ApiResponse.error(authApiStatus.value(), exc, "AUTH");
         return new ResponseEntity<>(response, authApiStatus);
     }
 
     // ApiException hatası için özel handler
     @ExceptionHandler(ApiException.class)
     public ResponseEntity<ApiResponse<?>> handleApiException(ApiException exc) {
-        ApiResponse<Void> response = ApiResponse.error(defaultApiStatus.value(), "(API): " + exc.getMessage());
+        ApiResponse<Void> response = ApiResponse.error(defaultApiStatus.value(), exc, "API");
         return new ResponseEntity<>(response, defaultApiStatus);
     }
 
     // AccessDeniedException (403) hatası için özel handler
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<ApiResponse<?>> handleAccessDeniedException(AccessDeniedException exc) {
-        ApiResponse<Void> response = ApiResponse.error(defaultApiStatus.value(), "(DENIED): " + exc.getMessage());
+        ApiResponse<Void> response = ApiResponse.error(defaultApiStatus.value(), exc, "ACCESS_DENIED");
         return new ResponseEntity<>(response, defaultApiStatus);
     }
 
     // Genel Exception Handler
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiResponse<?>> handleGeneralException(Exception exc) {
-        ApiResponse<Void> response = ApiResponse.error(defaultApiStatus.value(), "(EX): " + exc.getMessage());
+        ApiResponse<Void> response = ApiResponse.error(defaultApiStatus.value(), exc, "EXCEPTION");
         return new ResponseEntity<>(response, defaultApiStatus);
     }
 
     // Diğer tüm hatalar için genel handler
     @ExceptionHandler(Throwable.class)
     public ResponseEntity<ApiResponse<?>> handleThrowable(Throwable exc) {
-        ApiResponse<Void> response = ApiResponse.error(defaultApiStatus.value(), "(THROW): " + exc.getMessage());
+        ApiResponse<Void> response = ApiResponse.error(defaultApiStatus.value(), exc, "THROWABLE");
         return new ResponseEntity<>(response, defaultApiStatus);
     }
 }

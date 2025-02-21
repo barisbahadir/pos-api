@@ -12,7 +12,7 @@ import com.bahadir.pos.security.SecuredEndpoint;
 import com.bahadir.pos.service.PermissionService;
 import com.bahadir.pos.service.SessionService;
 import com.bahadir.pos.service.UserService;
-import com.bahadir.pos.utils.JwtUtils;
+import com.bahadir.pos.utils.ApiUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -122,7 +122,7 @@ public class AuthenticationController {
         SecurityContextHolder.clearContext();
         request.getSession().invalidate();   // Session'ı öldür
 
-        String token = JwtUtils.getJwtFromRequest(request);
+        String token = ApiUtils.getJwtFromRequest(request);
         sessionService.closeSessionByToken(token);
 
         return ResponseEntity.ok(true);

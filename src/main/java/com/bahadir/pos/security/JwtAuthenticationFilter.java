@@ -1,6 +1,6 @@
 package com.bahadir.pos.security;
 
-import com.bahadir.pos.utils.JwtUtils;
+import com.bahadir.pos.utils.ApiUtils;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -25,7 +25,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
-        String jwtToken = JwtUtils.getJwtFromRequest(request);
+        String jwtToken = ApiUtils.getJwtFromRequest(request);
 
         if (jwtToken != null && jwtTokenProvider.validateJwtToken(jwtToken)) {
             Claims claims = jwtTokenProvider.getClaimsFromToken(jwtToken);

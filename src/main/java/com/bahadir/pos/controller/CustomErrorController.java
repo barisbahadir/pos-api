@@ -27,7 +27,7 @@ public class CustomErrorController {
             httpStatus = HttpStatus.FORBIDDEN;
         }
 
-        ApiResponse<Void> response = ApiResponse.error(httpStatus.value(), exception != null ? exception.getMessage() : "(GLOBAL): Unknown error");
+        ApiResponse<Void> response = ApiResponse.error(httpStatus.value(), exception, "SECURITY");
 
         return new ResponseEntity<>(response, httpStatus);
     }

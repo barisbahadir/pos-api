@@ -27,7 +27,7 @@ public class SecuredEndpointAspect {
 
         // Rol kontrolü
         if (!roles.contains(securedEndpoint.role().name())) {
-            ApiResponse<Void> response = ApiResponse.error(HttpStatus.FORBIDDEN.value(), "Yetkisiz erisim talebi engellendi. (Mevcut roller: " + roles.toString() + " - Gereken Rol: " + securedEndpoint.role().name() + ")");
+            ApiResponse<Void> response = ApiResponse.error(HttpStatus.FORBIDDEN.value(), new Throwable("Yetkisiz erisim talebi engellendi. (Mevcut roller: " + roles.toString() + " - Gereken Rol: " + securedEndpoint.role().name() + ")"), "API");
             return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
         }
 

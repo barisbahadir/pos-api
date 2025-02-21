@@ -26,6 +26,9 @@ public class ApiResponse<T> implements Serializable {
     @Builder.Default
     private String message = SUCCESS_STATUS_MESSAGE;
 
+    private String errorSource;
+    private String detailedMessage;
+
     private T data;
 
     private boolean isSuccess;
@@ -51,22 +54,14 @@ public class ApiResponse<T> implements Serializable {
                 .build();
     }
 
-    public static <T> ApiResponse<T> error(String message) {
+    public static <T> ApiResponse<T> error(int errorCode, Throwable exception, String errorSource) {
         return ApiResponse.<T>builder()
                 .isSuccess(false)
-                .status(HttpStatus.FORBIDDEN.value())  // Hata durumları için 500 veya başka bir uygun kod
-                .message(message)
+                .status(errorCode)
+                .message(exception.getMessage())
+                .detailedMessage(ApiUtils.getStackTraceMessage(exception))
+                .errorSource(errorSource)
                 .data(null)
                 .build();
     }
-
-    public static <T> ApiResponse<T> error(int errorCode, String message) {
-        return ApiResponse.<T>builder()
-                .isSuccess(false)
-                .status(errorCode)  // Hata durumları için 500 veya başka bir uygun kod
-                .message(message)
-                .data(null)
-                .build();
-    }
-
 }
