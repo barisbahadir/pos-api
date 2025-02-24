@@ -20,12 +20,14 @@ public class TransactionItem {
     private String barcode;
     private BigDecimal price;
     private Integer quantity;
+    private Integer discount;
 
     // Constructor
-    public TransactionItem(Long productId, String productName, BigDecimal price, Integer quantity) {
+    public TransactionItem(Long productId, String productName, BigDecimal price, Integer quantity, Integer discount) {
         this.productId = productId;
         this.productName = productName;
         this.price = price;
         this.quantity = quantity;
+        this.discount = discount;
     }
 }
