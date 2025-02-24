@@ -1,5 +1,6 @@
 package com.bahadir.pos.controller;
 
+import com.bahadir.pos.entity.BaseStatus;
 import com.bahadir.pos.entity.JwtTokenResponse;
 import com.bahadir.pos.entity.authentication.AuthenticationRequest;
 import com.bahadir.pos.entity.authentication.AuthenticationResponseDto;
@@ -75,6 +76,10 @@ public class AuthenticationController {
 
         if (!userService.validatePassword(user, authenticationRequest.getPassword())) {
             throw new ApiException("Invalid password");
+        }
+
+        if (user.getStatus() == BaseStatus.DISABLE) {
+            throw new ApiException("Kullanıcı aktif değildir, lütfen yöneticinizle görüşün.");
         }
 
         Authentication authentication = authenticationManager.authenticate(

@@ -43,7 +43,6 @@ public class Product extends BaseEntity {
     private Double height;  // Ürün yüksekliği (cm)
     private Double depth;  // Ürün derinliği (cm)
 
-    private Boolean isActive;  // Ürün aktif mi?
     private Boolean isFeatured;  // Öne çıkan ürün mü?
 
     private Integer viewCount;  // Görüntülenme sayısı
@@ -64,7 +63,6 @@ public class Product extends BaseEntity {
         LocalDateTime now = LocalDateTime.now();
         this.setCreatedDate(now);
         this.setLastUpdatedDate(now);
-        this.isActive = true;  // Varsayılan olarak aktif
         this.viewCount = 0;  // Yeni ürün için başlangıç görüntülenme sayısı
         this.soldCount = 0;  // Yeni ürün için başlangıç satılma sayısı
     }

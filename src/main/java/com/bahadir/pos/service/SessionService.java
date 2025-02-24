@@ -4,6 +4,7 @@ import com.bahadir.pos.entity.session.Session;
 import com.bahadir.pos.entity.user.User;
 import com.bahadir.pos.repository.SessionRepository;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -12,6 +13,9 @@ import java.util.List;
 
 @Service
 public class SessionService {
+
+    @Value("${single-device-session}") // Burada bayrağı alıyoruz
+    private boolean isSingleDeviceSession;
 
     private final SessionRepository sessionRepository;
 
@@ -33,7 +37,10 @@ public class SessionService {
 
     @Transactional
     public Session createSession(User user, LocalDateTime tokenExpireDate, HttpServletRequest request, String token) {
-        expireOldSessions(user.getEmail());
+
+        if(isSingleDeviceSession){
+            expireOldSessions(user.getEmail());
+        }
 
         Session session = new Session();
         session.setToken(token);

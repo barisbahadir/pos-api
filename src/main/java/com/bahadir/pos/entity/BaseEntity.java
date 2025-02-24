@@ -2,6 +2,7 @@ package com.bahadir.pos.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Data;
 import lombok.experimental.SuperBuilder;
 
@@ -21,8 +22,10 @@ public abstract class BaseEntity {
     private String name;
     private String description;
 
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private BaseStatus status;
+    @Builder.Default
+    private BaseStatus status = BaseStatus.ENABLE;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DEFAULT_DATE_FORMAT)
     private LocalDateTime createdDate;
@@ -36,7 +39,9 @@ public abstract class BaseEntity {
         this.createdDate = now; // Oluşturulma tarihi
         this.lastUpdatedDate = now; // İlk kayıtta lastUpdatedDate de ayarlanır
 
-        this.status = BaseStatus.ENABLE;
+        if (this.status == null) {
+            this.status = BaseStatus.ENABLE; // Status null ise, default değeri ata
+        }
     }
 
     @PreUpdate

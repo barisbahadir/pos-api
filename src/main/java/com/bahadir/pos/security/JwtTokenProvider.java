@@ -11,6 +11,7 @@ import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -28,6 +29,9 @@ import java.util.List;
 
 @Component
 public class JwtTokenProvider {
+
+    @Value("${single-device-session}") // Burada bayrağı alıyoruz
+    private boolean isSingleDeviceSession;
 
     private final SessionService sessionService;
 
@@ -71,7 +75,8 @@ public class JwtTokenProvider {
             Claims claims = getClaimsFromToken(token);
             // Token geçerliyse, session'ı kontrol et ve güncelle
             // sessionService.updateSessionLastAccessDate(token);
-            if (sessionService.existsByTokenAndLogoutDateIsNotNull(token)) {
+            if (isSingleDeviceSession)
+                if(sessionService.existsByTokenAndLogoutDateIsNotNull(token)) {
                 throw new JwtTokenException("Hesabınızda yeni bir giriş tespit edildiği için oturumunuz sonlandırıldı. Tekrar giriş yapınız.");
             }
 
