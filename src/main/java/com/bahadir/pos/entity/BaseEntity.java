@@ -22,7 +22,6 @@ public abstract class BaseEntity {
     private String name;
     private String description;
 
-    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     @Builder.Default
     private BaseStatus status = BaseStatus.ENABLE;

@@ -1,5 +1,6 @@
 package com.bahadir.pos.service;
 
+import com.bahadir.pos.entity.BaseStatus;
 import com.bahadir.pos.entity.category.Category;
 import com.bahadir.pos.entity.OrderUpdateItemDto;
 import com.bahadir.pos.repository.CategoryRepository;
@@ -40,6 +41,7 @@ public class CategoryService {
     // Yeni kategori oluştur
     public Category createCategory(Category category) {
         category.setOrderValue(1);
+        category.setStatus(BaseStatus.ENABLE);
         return categoryRepository.save(category);
     }
 
@@ -50,6 +52,8 @@ public class CategoryService {
         if (existingCategoryOpt.isPresent()) {
             Category existingCategory = existingCategoryOpt.get();
             existingCategory.setName(updatedCategory.getName()); // Diğer alanlar için de benzer şekilde setter kullanabilirsiniz
+            existingCategory.setDescription(updatedCategory.getDescription());
+            existingCategory.setStatus(updatedCategory.getStatus() != null ? updatedCategory.getStatus() : BaseStatus.ENABLE);
             return categoryRepository.save(existingCategory);
         } else {
             throw new IllegalArgumentException("Kategori bulunamadı: " + id);

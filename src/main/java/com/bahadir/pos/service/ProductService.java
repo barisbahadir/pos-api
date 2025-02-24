@@ -1,5 +1,6 @@
 package com.bahadir.pos.service;
 
+import com.bahadir.pos.entity.BaseStatus;
 import com.bahadir.pos.entity.OrderUpdateItemDto;
 import com.bahadir.pos.entity.product.Product;
 import com.bahadir.pos.repository.ProductRepository;
@@ -37,6 +38,7 @@ public class ProductService {
     public Product createProduct(Product product) {
         product.setOrderValue(1);
         product.setImage(ImageUtils.compressImage(product.getImage()));
+        product.setStatus(BaseStatus.ENABLE);
         return productRepository.save(product);
     }
 
@@ -52,6 +54,7 @@ public class ProductService {
             existingProduct.setStockQuantity(updatedProduct.getStockQuantity());
             existingProduct.setImage(ImageUtils.compressImage(updatedProduct.getImage()));
             existingProduct.setCategory(updatedProduct.getCategory());
+            existingProduct.setStatus(updatedProduct.getStatus() != null ? updatedProduct.getStatus() : BaseStatus.ENABLE);
             // Diğer gerekli alanları da güncelleyebilirsiniz.
 
             return productRepository.save(existingProduct);

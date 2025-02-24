@@ -1,5 +1,6 @@
 package com.bahadir.pos.service;
 
+import com.bahadir.pos.entity.BaseStatus;
 import com.bahadir.pos.entity.transaction.Transaction;
 import com.bahadir.pos.entity.transaction.TransactionItem;
 import com.bahadir.pos.entity.transaction.TransactionPaymentType;
@@ -48,6 +49,7 @@ public class TransactionService {
         finalTransaction.setTransactionDate(LocalDateTime.now()); // Satış tarihini şu anki zaman olarak ayarla
         finalTransaction.setTransactionItems(transaction.getTransactionItems()); // Sepetteki ürünleri transaction'a ekle
         finalTransaction.setPaymentType(transaction.getPaymentType() == null ? TransactionPaymentType.CASH : transaction.getPaymentType());
+        finalTransaction.setStatus(BaseStatus.ENABLE);
 
         BigDecimal totalAmount = calculateTotalAmount(transaction.getTransactionItems()); // Sepet toplamı hesapla
         finalTransaction.setTotalAmount(totalAmount); // Hesaplanan tutarı transaction'a ekle
