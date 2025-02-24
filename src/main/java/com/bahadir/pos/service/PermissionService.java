@@ -17,7 +17,9 @@ public class PermissionService {
 
     // İzinleri listele
     public List<Permission> getAllPermissions() {
-        return permissionRepository.findAll();
+        List<Permission> permissions = permissionRepository.findAll();
+
+        return getSortedPermissions(permissions);
     }
 
     public Optional<Permission> getPermissionById(Long permissionId) {
