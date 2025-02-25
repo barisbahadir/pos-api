@@ -8,6 +8,9 @@ import com.bahadir.pos.utils.ApiUtils;
 import com.bahadir.pos.utils.ImageUtils;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,15 +30,18 @@ public class ProductService {
     }
 
     // Ürünleri listele
+    @Cacheable(value = "products", key = "'all_products'")
     public List<Product> getAllProducts() {
         return productRepository.findAll();
     }
 
+    @Cacheable(value = "products", key = "#productId")
     public Optional<Product> getProductById(Long productId) {
         return productRepository.findById(productId);
     }
 
     // Yeni ürün oluştur
+    @CachePut(value = "products", key = "#product.id")
     public Product createProduct(Product product) {
         product.setOrderValue(1);
 
@@ -50,6 +56,7 @@ public class ProductService {
     }
 
     // Ürün güncelle
+    @CachePut(value = "products", key = "#updatedProduct.id")
     public Product updateProduct(Long productId, Product updatedProduct) {
         Optional<Product> existingProductOpt = productRepository.findById(productId);
 
@@ -106,6 +113,7 @@ public class ProductService {
     }
 
     // Ürün sil
+    @CacheEvict(value = "products", key = "#productId")
     public void deleteProduct(Long productId) {
         Optional<Product> existingProductOpt = productRepository.findById(productId);
 
@@ -117,6 +125,7 @@ public class ProductService {
     }
 
     // Tüm ürünleri sil
+    @CacheEvict(value = "products", allEntries = true)
     public void deleteAllProducts() {
         productRepository.deleteAll();
     }
