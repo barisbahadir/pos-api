@@ -4,6 +4,7 @@ import com.bahadir.pos.entity.BaseStatus;
 import com.bahadir.pos.entity.OrderUpdateItemDto;
 import com.bahadir.pos.entity.product.Product;
 import com.bahadir.pos.repository.ProductRepository;
+import com.bahadir.pos.utils.ApiUtils;
 import com.bahadir.pos.utils.ImageUtils;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
@@ -37,7 +38,13 @@ public class ProductService {
     // Yeni ürün oluştur
     public Product createProduct(Product product) {
         product.setOrderValue(1);
-        product.setImage(ImageUtils.compressImage(product.getImage()));
+
+        if(product.getBarcode() == null || product.getBarcode().isEmpty())
+            product.setBarcode(ApiUtils.generateBarcode());
+
+        if(product.getImage() != null && !product.getImage().isEmpty())
+            product.setImage(ImageUtils.compressImage(product.getImage()));
+
         product.setStatus(BaseStatus.ENABLE);
         return productRepository.save(product);
     }
@@ -48,14 +55,19 @@ public class ProductService {
 
         if (existingProductOpt.isPresent()) {
             Product existingProduct = existingProductOpt.get();
-            // Güncelleme işlemini gerçekleştirebiliriz, örneğin:
+
             existingProduct.setName(updatedProduct.getName());
-            existingProduct.setPrice(updatedProduct.getPrice());
-            existingProduct.setStockQuantity(updatedProduct.getStockQuantity());
-            existingProduct.setImage(ImageUtils.compressImage(updatedProduct.getImage()));
             existingProduct.setCategory(updatedProduct.getCategory());
+
+            existingProduct.setPurchasePrice(updatedProduct.getPurchasePrice());
+            existingProduct.setProfitMargin(updatedProduct.getProfitMargin());
+            existingProduct.setTaxRate(updatedProduct.getTaxRate());
+            existingProduct.setPrice(updatedProduct.getPrice());
+
+            existingProduct.setStockQuantity(updatedProduct.getStockQuantity());
+            existingProduct.setBarcode(updatedProduct.getBarcode());
+            existingProduct.setImage(updatedProduct.getImage());
             existingProduct.setStatus(updatedProduct.getStatus() != null ? updatedProduct.getStatus() : BaseStatus.ENABLE);
-            // Diğer gerekli alanları da güncelleyebilirsiniz.
 
             return productRepository.save(existingProduct);
         } else {

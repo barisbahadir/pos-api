@@ -3,6 +3,7 @@ package com.bahadir.pos.controller;
 import com.bahadir.pos.entity.company.Company;
 import com.bahadir.pos.exception.ApiException;
 import com.bahadir.pos.service.CompanyService;
+import com.bahadir.pos.utils.ApiUtils;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,9 +28,9 @@ public class CompanyController {
     }
 
     // Şirket bilgisi al
-    @GetMapping("/list/{companyId}")
-    public ResponseEntity<Company> listById(@PathVariable Long companyId) {
-        Optional<Company> companyResult = companyService.getCompanyById(companyId);
+    @GetMapping("/list/{id}")
+    public ResponseEntity<Company> listById(@PathVariable String id) {
+        Optional<Company> companyResult = companyService.getCompanyById(ApiUtils.getPathId(id));
         if (!companyResult.isPresent()) {
             throw new ApiException("Şirket bulunamadi!");
         }
@@ -44,16 +45,16 @@ public class CompanyController {
     }
 
     // Şirket güncelle
-    @PostMapping("/update/{companyId}")
-    public ResponseEntity<Company> update(@PathVariable Long companyId, @RequestBody Company company) {
-        Company updatedCompany = companyService.updateCompany(companyId, company);
+    @PostMapping("/update/{id}")
+    public ResponseEntity<Company> update(@PathVariable String id, @RequestBody Company company) {
+        Company updatedCompany = companyService.updateCompany(ApiUtils.getPathId(id), company);
         return ResponseEntity.ok(updatedCompany);
     }
 
     // Şirket sil
-    @PostMapping("/delete/{companyId}")
-    public ResponseEntity<Boolean> delete(@PathVariable Long companyId) {
-        companyService.deleteCompany(companyId);
+    @PostMapping("/delete/{id}")
+    public ResponseEntity<Boolean> delete(@PathVariable String id) {
+        companyService.deleteCompany(ApiUtils.getPathId(id));
         return ResponseEntity.ok(true);
     }
 

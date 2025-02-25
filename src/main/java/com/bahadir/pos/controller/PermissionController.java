@@ -3,6 +3,7 @@ package com.bahadir.pos.controller;
 import com.bahadir.pos.entity.permission.Permission;
 import com.bahadir.pos.exception.ApiException;
 import com.bahadir.pos.service.PermissionService;
+import com.bahadir.pos.utils.ApiUtils;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,9 +27,9 @@ public class PermissionController {
         return ResponseEntity.ok(permissions);
     }
 
-    @GetMapping("/list/{permissionId}")
-    public ResponseEntity<Permission> listById(@PathVariable Long permissionId) {
-        Optional<Permission> permissionResult = permissionService.getPermissionById(permissionId);
+    @GetMapping("/list/{id}")
+    public ResponseEntity<Permission> listById(@PathVariable String id) {
+        Optional<Permission> permissionResult = permissionService.getPermissionById(ApiUtils.getPathId(id));
         if (!permissionResult.isPresent()) {
             throw new ApiException("İzin bulunamadi!");
         }
@@ -43,16 +44,16 @@ public class PermissionController {
     }
 
     // İzin güncelle
-    @PostMapping("/update/{permissionId}")
-    public ResponseEntity<Permission> update(@PathVariable Long permissionId, @RequestBody Permission permission) {
-        Permission updatedPermission = permissionService.updatePermission(permissionId, permission);
+    @PostMapping("/update/{id}")
+    public ResponseEntity<Permission> update(@PathVariable String id, @RequestBody Permission permission) {
+        Permission updatedPermission = permissionService.updatePermission(ApiUtils.getPathId(id), permission);
         return ResponseEntity.ok(updatedPermission);
     }
 
     // İzin sil
-    @PostMapping("/delete/{permissionId}")
-    public ResponseEntity<Boolean> delete(@PathVariable Long permissionId) {
-        permissionService.deletePermission(permissionId);
+    @PostMapping("/delete/{id}")
+    public ResponseEntity<Boolean> delete(@PathVariable String id) {
+        permissionService.deletePermission(ApiUtils.getPathId(id));
         return ResponseEntity.ok(true);
     }
 

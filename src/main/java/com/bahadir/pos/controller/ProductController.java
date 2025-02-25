@@ -6,6 +6,7 @@ import com.bahadir.pos.entity.user.UserRole;
 import com.bahadir.pos.exception.ApiException;
 import com.bahadir.pos.security.SecuredEndpoint;
 import com.bahadir.pos.service.ProductService;
+import com.bahadir.pos.utils.ApiUtils;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,9 +37,9 @@ public class ProductController {
         return ResponseEntity.ok(sortedCategories);
     }
 
-    @GetMapping("/list/{productId}")
-    public ResponseEntity<Product> listById(@PathVariable Long productId) {
-        Optional<Product> productResult = productService.getProductById(productId);
+    @GetMapping("/list/{id}")
+    public ResponseEntity<Product> listById(@PathVariable String id) {
+        Optional<Product> productResult = productService.getProductById(ApiUtils.getPathId(id));
         if (!productResult.isPresent()) {
             throw new ApiException("Urun bulunamadi!");
         }
@@ -53,9 +54,9 @@ public class ProductController {
     }
 
     // Ürün güncelle
-    @PostMapping("/update/{productId}")
-    public ResponseEntity<Product> update(@PathVariable Long productId, @RequestBody Product product) {
-        Product updatedProduct = productService.updateProduct(productId, product);
+    @PostMapping("/update/{id}")
+    public ResponseEntity<Product> update(@PathVariable String id, @RequestBody Product product) {
+        Product updatedProduct = productService.updateProduct(ApiUtils.getPathId(id), product);
         return ResponseEntity.ok(updatedProduct);
     }
 

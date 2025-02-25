@@ -46,10 +46,14 @@ public class TransactionService {
 
     public Transaction createTransaction(Transaction transaction) {
         Transaction finalTransaction = new Transaction();
-        finalTransaction.setTransactionDate(LocalDateTime.now()); // Satış tarihini şu anki zaman olarak ayarla
-        finalTransaction.setTransactionItems(transaction.getTransactionItems()); // Sepetteki ürünleri transaction'a ekle
-        finalTransaction.setPaymentType(transaction.getPaymentType() == null ? TransactionPaymentType.CASH : transaction.getPaymentType());
+        finalTransaction.setName(transaction.getName());
+        finalTransaction.setDescription(transaction.getDescription());
+
+        finalTransaction.setPaymentType(transaction.getPaymentType() != null ? transaction.getPaymentType() : TransactionPaymentType.CASH);
+        finalTransaction.setTransactionItems(transaction.getTransactionItems());
+
         finalTransaction.setStatus(BaseStatus.ENABLE);
+        finalTransaction.setTransactionDate(LocalDateTime.now()); // Satış tarihini şu anki zaman olarak ayarla
 
         BigDecimal totalAmount = calculateTotalAmount(transaction.getTransactionItems()); // Sepet toplamı hesapla
         finalTransaction.setTotalAmount(totalAmount); // Hesaplanan tutarı transaction'a ekle

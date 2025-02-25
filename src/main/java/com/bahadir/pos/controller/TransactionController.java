@@ -5,6 +5,7 @@ import com.bahadir.pos.entity.transaction.Transaction;
 import com.bahadir.pos.entity.user.UserRole;
 import com.bahadir.pos.security.SecuredEndpoint;
 import com.bahadir.pos.service.TransactionService;
+import com.bahadir.pos.utils.ApiUtils;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -50,8 +51,8 @@ public class TransactionController {
 
     // Bir transaction'ı id'ye göre al
     @GetMapping("/{id}")
-    public Transaction getTransactionById(@PathVariable Long id) {
-        return transactionService.getTransactionById(id);
+    public Transaction getTransactionById(@PathVariable String id) {
+        return transactionService.getTransactionById(ApiUtils.getPathId(id));
     }
 
     @SecuredEndpoint(role = UserRole.ADMIN, filter = true)

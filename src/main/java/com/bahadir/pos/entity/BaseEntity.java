@@ -20,7 +20,9 @@ public abstract class BaseEntity {
     private Long id;
 
     private String name;
-    private String description;
+
+    @Column(columnDefinition = "TEXT")
+    private String description;  // Ürün açıklaması
 
     @Enumerated(EnumType.STRING)
     @Builder.Default

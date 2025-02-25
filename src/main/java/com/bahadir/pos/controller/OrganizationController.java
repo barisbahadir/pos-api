@@ -3,6 +3,7 @@ package com.bahadir.pos.controller;
 import com.bahadir.pos.entity.organization.Organization;
 import com.bahadir.pos.exception.ApiException;
 import com.bahadir.pos.service.OrganizationService;
+import com.bahadir.pos.utils.ApiUtils;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,9 +28,9 @@ public class OrganizationController {
     }
 
     // Organizasyon bilgisi al
-    @GetMapping("/list/{organizationId}")
-    public ResponseEntity<Organization> listById(@PathVariable Long organizationId) {
-        Optional<Organization> organizationResult = organizationService.getOrganizationById(organizationId);
+    @GetMapping("/list/{id}")
+    public ResponseEntity<Organization> listById(@PathVariable String id) {
+        Optional<Organization> organizationResult = organizationService.getOrganizationById(ApiUtils.getPathId(id));
         if (!organizationResult.isPresent()) {
             throw new ApiException("Organizasyon bulunamadi!");
         }
@@ -44,16 +45,16 @@ public class OrganizationController {
     }
 
     // Organizasyon güncelle
-    @PostMapping("/update/{organizationId}")
-    public ResponseEntity<Organization> update(@PathVariable Long organizationId, @RequestBody Organization organization) {
-        Organization updatedOrganization = organizationService.updateOrganization(organizationId, organization);
+    @PostMapping("/update/{id}")
+    public ResponseEntity<Organization> update(@PathVariable String id, @RequestBody Organization organization) {
+        Organization updatedOrganization = organizationService.updateOrganization(ApiUtils.getPathId(id), organization);
         return ResponseEntity.ok(updatedOrganization);
     }
 
     // Organizasyon sil
-    @PostMapping("/delete/{organizationId}")
-    public ResponseEntity<Boolean> delete(@PathVariable Long organizationId) {
-        organizationService.deleteOrganization(organizationId);
+    @PostMapping("/delete/{id}")
+    public ResponseEntity<Boolean> delete(@PathVariable String id) {
+        organizationService.deleteOrganization(ApiUtils.getPathId(id));
         return ResponseEntity.ok(true);
     }
 

@@ -3,6 +3,7 @@ package com.bahadir.pos.controller;
 import com.bahadir.pos.entity.role.Role;
 import com.bahadir.pos.exception.ApiException;
 import com.bahadir.pos.service.RoleService;
+import com.bahadir.pos.utils.ApiUtils;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,9 +28,9 @@ public class RoleController {
     }
 
     // Rol bilgisi al
-    @GetMapping("/list/{roleId}")
-    public ResponseEntity<Role> listById(@PathVariable Long roleId) {
-        Optional<Role> roleResult = roleService.getRoleById(roleId);
+    @GetMapping("/list/{id}")
+    public ResponseEntity<Role> listById(@PathVariable String id) {
+        Optional<Role> roleResult = roleService.getRoleById(ApiUtils.getPathId(id));
         if (!roleResult.isPresent()) {
             throw new ApiException("Rol bulunamadi!");
         }
@@ -44,16 +45,16 @@ public class RoleController {
     }
 
     // Rol güncelle
-    @PostMapping("/update/{roleId}")
-    public ResponseEntity<Role> update(@PathVariable Long roleId, @RequestBody Role role) {
-        Role updatedRole = roleService.updateRole(roleId, role);
+    @PostMapping("/update/{id}")
+    public ResponseEntity<Role> update(@PathVariable String id, @RequestBody Role role) {
+        Role updatedRole = roleService.updateRole(ApiUtils.getPathId(id), role);
         return ResponseEntity.ok(updatedRole);
     }
 
     // Rol sil
-    @PostMapping("/delete/{roleId}")
-    public ResponseEntity<Boolean> delete(@PathVariable Long roleId) {
-        roleService.deleteRole(roleId);
+    @PostMapping("/delete/{id}")
+    public ResponseEntity<Boolean> delete(@PathVariable String id) {
+        roleService.deleteRole(ApiUtils.getPathId(id));
         return ResponseEntity.ok(true);
     }
 

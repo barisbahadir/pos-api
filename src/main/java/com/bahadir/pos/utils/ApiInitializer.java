@@ -76,15 +76,17 @@ public class ApiInitializer implements CommandLineRunner {
             Permission home = Permission.builder().name("Home").label("sys.menu.home").icon("solar:home-outline").type(PermissionType.MENU).route("home").component("/home/index.tsx").orderValue(1).build();
             Permission pos = Permission.builder().name("Sale").label("sys.menu.sale").icon("solar:cart-large-2-outline").type(PermissionType.MENU).route("sale").component("/sale/index.tsx").orderValue(2).build();
 
-            Permission products = Permission.builder().name("Products").label("sys.menu.products.index").icon("solar:document-add-linear").type(PermissionType.GROUP).route("products").orderValue(3).build();
-            Permission productList = Permission.builder().name("Product List").label("sys.menu.products.list").type(PermissionType.MENU).route("list").component("/products/list/index.tsx").orderValue(1).parent(products).build();
-            Permission productAdd = Permission.builder().name("Add Product").label("sys.menu.products.add").type(PermissionType.MENU).route("add").component("/products/add/index.tsx").orderValue(2).parent(products).build();
-            Permission productEdit = Permission.builder().name("Edit Product").label("sys.menu.products.edit").type(PermissionType.MENU).route("edit/:id").component("/products/add/index.tsx").hide(true).orderValue(3).parent(products).build();
+            Permission products = Permission.builder().name("Products").label("sys.menu.products.index").icon("solar:document-add-linear").type(PermissionType.GROUP).route("product").orderValue(3).build();
+            Permission productAdd = Permission.builder().name("Add Product").label("sys.menu.products.add").type(PermissionType.MENU).route("add").component("/products/add/index.tsx").orderValue(1).parent(products).build();
+            Permission productEdit = Permission.builder().name("Edit Product").label("sys.menu.products.edit").type(PermissionType.MENU).route("edit/:id").component("/products/add/index.tsx").hide(true).orderValue(2).parent(products).build();
+            Permission productsOrder = Permission.builder().name("Order Products").label("sys.menu.products.order").type(PermissionType.MENU).route("order").component("/products/order/index.tsx").orderValue(3).parent(products).build();
+            Permission productList = Permission.builder().name("Product List").label("sys.menu.products.list").type(PermissionType.MENU).route("list").component("/products/list/index.tsx").orderValue(4).parent(products).build();
 
-            Permission categories = Permission.builder().name("Categories").label("sys.menu.categories.index").icon("solar:bookmark-circle-outline").type(PermissionType.GROUP).route("categories").orderValue(4).build();
-            Permission categoryList = Permission.builder().name("Category List").label("sys.menu.categories.list").type(PermissionType.MENU).route("list").component("/categories/list/index.tsx").orderValue(1).parent(categories).build();
-            Permission categoryAdd = Permission.builder().name("Add Category").label("sys.menu.categories.add").type(PermissionType.MENU).route("add").component("/categories/add/index.tsx").orderValue(2).parent(categories).build();
-            Permission categoryEdit = Permission.builder().name("Edit Category").label("sys.menu.categories.edit").type(PermissionType.MENU).route("edit/:id").component("/categories/add/index.tsx").hide(true).orderValue(3).parent(categories).build();
+            Permission categories = Permission.builder().name("Categories").label("sys.menu.categories.index").icon("solar:bookmark-circle-outline").type(PermissionType.GROUP).route("category").orderValue(4).build();
+            Permission categoryAdd = Permission.builder().name("Add Category").label("sys.menu.categories.add").type(PermissionType.MENU).route("add").component("/categories/add/index.tsx").orderValue(1).parent(categories).build();
+            Permission categoryEdit = Permission.builder().name("Edit Category").label("sys.menu.categories.edit").type(PermissionType.MENU).route("edit/:id").component("/categories/add/index.tsx").hide(true).orderValue(2).parent(categories).build();
+            Permission categoryOrder = Permission.builder().name("Order Categories").label("sys.menu.categories.order").type(PermissionType.MENU).route("order").component("/categories/order/index.tsx").orderValue(3).parent(categories).build();
+            Permission categoryList = Permission.builder().name("Category List").label("sys.menu.categories.list").type(PermissionType.MENU).route("list").component("/categories/list/index.tsx").orderValue(4).parent(categories).build();
 
             // Dashboard İzinleri
 //            Permission dashboard = Permission.builder().name("Dashboard").label("sys.menu.dashboard").icon("solar:chart-square-linear").type(PermissionType.GROUP).route("dashboard").orderValue(3).build();
@@ -215,7 +217,9 @@ public class ApiInitializer implements CommandLineRunner {
                     .orderValue(16)
                     .build();
 
-            permissionRepository.saveAll(List.of(home, pos, products, productList, productAdd, productEdit, categories, categoryList, categoryAdd, categoryEdit, /*dashboard, welcome, analysis, workbench, management,*/ userIndex, userProfile, userAccount, systemIndex, systemOrganization, systemPermission, systemRole, systemUser, systemUserDetail, components, icon, animate, scroll, markdown, editor, multiLanguage, upload, chart, toast, functions, clipboard, tokenExpired, menuLevel, menuLevel1a, menuLevel1b, menuLevel2a, menuLevel2b, menuLevel3a, menuLevel3b, calendar, kanban, disabled, label, frame, externalLink, iframe, blank));
+            permissionRepository.saveAll(List.of(home, pos,
+                    products, productAdd, productEdit, productsOrder, productList,
+                    categories, categoryAdd, categoryEdit, categoryOrder, categoryList, /*dashboard, welcome, analysis, workbench, management,*/ userIndex, userProfile, userAccount, systemIndex, systemOrganization, systemPermission, systemRole, systemUser, systemUserDetail, components, icon, animate, scroll, markdown, editor, multiLanguage, upload, chart, toast, functions, clipboard, tokenExpired, menuLevel, menuLevel1a, menuLevel1b, menuLevel2a, menuLevel2b, menuLevel3a, menuLevel3b, calendar, kanban, disabled, label, frame, externalLink, iframe, blank));
 
             System.out.println("Default permissions created!");
         }
