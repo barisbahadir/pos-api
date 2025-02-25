@@ -11,7 +11,6 @@ import lombok.experimental.SuperBuilder;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Getter
 @Setter
@@ -38,6 +37,22 @@ public class Product extends BaseEntity {
     @JoinColumn(name = "category_id")
     @JsonBackReference  // Kategorinin geri referansı (kategorilerle ilgili gereksiz döngüyü önler)
     private Category category;  // Ürünün kategorisi
+
+    // Database'e kaydedilmeyecek, sadece getter'ı olan iki değişken
+    @Transient
+    private Long cId;
+
+    @Transient
+    private String cName;
+
+    // Getter metotları - categoryId ve categoryName için
+    public Long getcId() {
+        return category != null ? category.getId() : null;
+    }
+
+    public String getcName() {
+        return category != null ? category.getName() : null;
+    }
 
     @PrePersist
     protected void onCreate() {
