@@ -70,9 +70,9 @@ public class ProductController {
     }
 
     // Ürün sil
-    @PostMapping("/delete/{productId}")
-    public ResponseEntity<Boolean> delete(@PathVariable Long productId) {
-        productService.deleteProduct(productId);
+    @PostMapping("/delete/{id}")
+    public ResponseEntity<Boolean> delete(@PathVariable String id) {
+        productService.deleteProduct(ApiUtils.getPathId(id));
         return ResponseEntity.ok(true);
     }
 
