@@ -44,6 +44,21 @@ public class UserService {
         return userRepository.save(user);
     }
 
+    public User updateUser(Long id, User updatedUser) {
+        Optional<User> existingUser = userRepository.findById(id);
+
+        if (existingUser.isPresent()) {
+            updatedUser.setId(id);
+//            User existingCategory = existingCategoryOpt.get();
+//            existingCategory.setName(updatedCategory.getName()); // Diğer alanlar için de benzer şekilde setter kullanabilirsiniz
+//            existingCategory.setDescription(updatedCategory.getDescription());
+//            existingCategory.setStatus(updatedCategory.getStatus() != null ? updatedCategory.getStatus() : BaseStatus.ENABLE);
+            return userRepository.save(updatedUser);
+        } else {
+            throw new IllegalArgumentException("Kullanici bulunamadı: " + id);
+        }
+    }
+
 //    public Optional<User> findByEmail(String email) {
 //        return userRepository.findByEmail(email);
 //    }

@@ -2,6 +2,7 @@ package com.bahadir.pos.utils;
 
 import jakarta.servlet.http.HttpServletRequest;
 
+import java.security.SecureRandom;
 import java.util.Random;
 
 public class ApiUtils {
@@ -44,5 +45,10 @@ public class ApiUtils {
         }
 
         return barcode.toString();
+    }
+
+    public static int generateOtpNumber() {
+        SecureRandom random = new SecureRandom();
+        return 100_000 + random.nextInt(900_000); // 100000 ile 999999 arasında bir sayı üretir
     }
 }

@@ -9,7 +9,7 @@ import java.io.ByteArrayOutputStream;
 import java.util.Base64;
 
 @Service
-public class TwoFactorAuthService {
+public class TwoFactorOtpService {
 
     private static final String ISSUER = "BAHADIR POS"; // Uygulama adı
     private static final int CODE_DIGITS = 6; // OTP kod uzunluğu

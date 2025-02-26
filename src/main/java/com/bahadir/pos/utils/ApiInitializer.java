@@ -11,7 +11,8 @@ import com.bahadir.pos.entity.role.Role;
 import com.bahadir.pos.entity.user.User;
 import com.bahadir.pos.entity.user.UserRole;
 import com.bahadir.pos.repository.*;
-import com.bahadir.pos.service.TwoFactorAuthService;
+import com.bahadir.pos.service.TwoFactorMailService;
+import com.bahadir.pos.service.TwoFactorOtpService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -29,7 +30,8 @@ public class ApiInitializer implements CommandLineRunner {
     private final CategoryRepository categoryRepository;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final TwoFactorAuthService twoFactorAuthService;
+    private final TwoFactorOtpService twoFactorOtpService;
+    private final TwoFactorMailService twoFactorMailService;
 
     public ApiInitializer(CompanyRepository companyRepository,
                           OrganizationRepository organizationRepository,
@@ -38,7 +40,8 @@ public class ApiInitializer implements CommandLineRunner {
                           CategoryRepository categoryRepository,
                           UserRepository userRepository,
                           PasswordEncoder passwordEncoder,
-                          TwoFactorAuthService twoFactorAuthService) {
+                          TwoFactorOtpService twoFactorOtpService,
+                          TwoFactorMailService twoFactorMailService) {
         this.companyRepository = companyRepository;
         this.organizationRepository = organizationRepository;
         this.permissionRepository = permissionRepository;
@@ -46,7 +49,8 @@ public class ApiInitializer implements CommandLineRunner {
         this.categoryRepository = categoryRepository;
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
-        this.twoFactorAuthService = twoFactorAuthService;
+        this.twoFactorOtpService = twoFactorOtpService;
+        this.twoFactorMailService = twoFactorMailService;
     }
 
     @Override
@@ -277,7 +281,7 @@ public class ApiInitializer implements CommandLineRunner {
             userRepository.save(adminUser);
 
             String testEmail = "test";
-            String secretKey = twoFactorAuthService.generateSecretKey();
+            String secretKey = twoFactorOtpService.generateSecretKey();
 
             Role testRole = roleRepository.findByName(UserRole.TEST.name()).orElse(null);
             User testUser = User.builder()
@@ -291,6 +295,21 @@ public class ApiInitializer implements CommandLineRunner {
                     .twoFactorAuthSecretKey(secretKey)
                     .build();
             userRepository.save(testUser);
+
+            String mailAddress = "bbahadir2@gmail.com";
+            int emailCode = ApiUtils.generateOtpNumber();
+            int otpCode = twoFactorMailService.sendOtpEmail(mailAddress, emailCode);
+            User mailUser = User.builder()
+                    .username(mailAddress)
+                    .password(passwordEncoder.encode(mailAddress))
+                    .email(mailAddress)
+                    .role(adminRole)
+                    .authRole(UserRole.ADMIN)
+                    .organization(testOrg)
+                    .authType(AuthenticationType.EMAIL)
+                    .twoFactorEmailCode(String.valueOf(otpCode))
+                    .build();
+            userRepository.save(mailUser);
 
             System.out.println("Default users created!");
         }

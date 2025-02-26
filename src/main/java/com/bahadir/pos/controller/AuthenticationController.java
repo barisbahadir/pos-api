@@ -11,10 +11,7 @@ import com.bahadir.pos.entity.user.UserRole;
 import com.bahadir.pos.exception.ApiException;
 import com.bahadir.pos.security.JwtTokenProvider;
 import com.bahadir.pos.security.SecuredEndpoint;
-import com.bahadir.pos.service.PermissionService;
-import com.bahadir.pos.service.SessionService;
-import com.bahadir.pos.service.TwoFactorAuthService;
-import com.bahadir.pos.service.UserService;
+import com.bahadir.pos.service.*;
 import com.bahadir.pos.utils.ApiUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
@@ -37,20 +34,23 @@ public class AuthenticationController {
     private final PermissionService permissionService;
     private final UserService userService;
     private final SessionService sessionService;
-    private final TwoFactorAuthService twoFactorAuthService;
+    private final TwoFactorOtpService twoFactorOtpService;
+    private final TwoFactorMailService twoFactorMailService;
 
     public AuthenticationController(AuthenticationManager authenticationManager,
                                     JwtTokenProvider jwtTokenProvider,
                                     PermissionService permissionService,
                                     UserService userService,
                                     SessionService sessionService,
-                                    TwoFactorAuthService twoFactorAuthService) {
+                                    TwoFactorOtpService twoFactorOtpService,
+                                    TwoFactorMailService twoFactorMailService) {
         this.authenticationManager = authenticationManager;
         this.jwtTokenProvider = jwtTokenProvider;
         this.permissionService = permissionService;
         this.userService = userService;
         this.sessionService = sessionService;
-        this.twoFactorAuthService = twoFactorAuthService;
+        this.twoFactorOtpService = twoFactorOtpService;
+        this.twoFactorMailService = twoFactorMailService;
     }
 
     @GetMapping("/list")
@@ -101,41 +101,36 @@ public class AuthenticationController {
             AuthenticationResponseDto dto = AuthenticationResponseDto
                     .builder()
                     .authType(user.getAuthType())
-                    .twoFactorQrCode(
-                            user.getAuthType() == AuthenticationType.OTP
-                                    ? twoFactorAuthService.generateQrCode(user.getEmail(), user.getTwoFactorAuthSecretKey())
-                                    : null)
                     .build();
 
+            if(user.getAuthType() == AuthenticationType.OTP){
+                dto.setTwoFactorQrCode(twoFactorOtpService.generateQrCode(user.getEmail(), user.getTwoFactorAuthSecretKey()));
+            } else {
+                int emailCode = ApiUtils.generateOtpNumber();
+                user.setTwoFactorEmailCode(String.valueOf(emailCode));
+                userService.updateUser(user.getId(), user);
+                twoFactorMailService.sendOtpEmail(user.getEmail(), emailCode);
+            }
             return ResponseEntity.ok(dto);
         }
 
         // Kullanıcının 2FA türüne göre işlem yap
         if (user.getAuthType() == AuthenticationType.OTP) {
             if (authenticationRequest.getAuthValue() == null) {
-                throw new ApiException("Google Authenticator kodu girmeniz gereklidir.");
+                throw new ApiException("Authenticator ile uretilen kodu girmeniz gereklidir.");
             }
             int otpValue = authenticationRequest.getAuthValue().length() == 6 ? Integer.parseInt(authenticationRequest.getAuthValue()) : 0;
-            boolean is2faValid = twoFactorAuthService.validateOtp(user.getTwoFactorAuthSecretKey(), otpValue);
+            boolean is2faValid = twoFactorOtpService.validateOtp(user.getTwoFactorAuthSecretKey(), otpValue);
             if (!is2faValid) {
-                throw new ApiException("Geçersiz doğrulama kodu girdiniz.");
+                throw new ApiException("Geçersiz OTP doğrulama kodu girdiniz.");
             }
         } else if (user.getAuthType() == AuthenticationType.EMAIL) {
             if (authenticationRequest.getAuthValue() == null) {
-                // E-posta kodu oluştur ve gönder
-//                int emailCode = twoFactorAuthService.generateEmailCode();
-//                user.setTwoFactorEmailCode(String.valueOf(emailCode));
-//                userService.update(user);
-//                emailService.sendTwoFactorCode(user.getEmail(), emailCode);
-
-                throw new ApiException("E-posta doğrulama kodu gönderildi.");
+                throw new ApiException("E-posta ile gonderilen doğrulamanu kodu girmeniz gereklidir.");
             }
-            if (!user.getTwoFactorEmailCode().equals(String.valueOf(authenticationRequest.getAuthValue()))) {
-                throw new ApiException("Geçersiz 2FA kodu (E-Posta)");
+            if (!user.getTwoFactorEmailCode().equals(authenticationRequest.getAuthValue())) {
+                throw new ApiException("Geçersiz OTP doğrulama kodu girdiniz.");
             }
-            // Kodu bir kez kullandıktan sonra temizle
-            user.setTwoFactorEmailCode(null);
-            // userService.update(user);
         }
 
         /* -------------------------- OTP -------------------------- */
