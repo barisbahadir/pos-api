@@ -30,14 +30,14 @@ public class ProductService {
     }
 
     // Ürünleri listele
-    @Cacheable(value = "products", key = "all_products")
+    @Cacheable(value = "products", key = "'all_products'")
     public List<Product> getAllProducts() {
         return productRepository.findAll();
     }
 
-    @Cacheable(value = "products", key = "#id")
-    public Optional<Product> getProductById(Long id) {
-        return productRepository.findById(id);
+    @Cacheable(value = "products", key = "#productId")
+    public Optional<Product> getProductById(Long productId) {
+        return productRepository.findById(productId);
     }
 
     // Yeni ürün oluştur
@@ -56,9 +56,9 @@ public class ProductService {
     }
 
     // Ürün güncelle
-    @CachePut(value = "products", key = "#id")
-    public Product updateProduct(Long id, Product updatedProduct) {
-        Optional<Product> existingProductOpt = productRepository.findById(id);
+    @CachePut(value = "products", key = "#updatedProduct.id")
+    public Product updateProduct(Long productId, Product updatedProduct) {
+        Optional<Product> existingProductOpt = productRepository.findById(productId);
 
         if (existingProductOpt.isPresent()) {
             Product existingProduct = existingProductOpt.get();
@@ -78,12 +78,11 @@ public class ProductService {
 
             return productRepository.save(existingProduct);
         } else {
-            throw new IllegalArgumentException("Ürün bulunamadı: " + id);
+            throw new IllegalArgumentException("Ürün bulunamadı: " + productId);
         }
     }
 
     @Transactional
-    @CacheEvict(value = "products", allEntries = true)
     public Boolean updateOrderValues(Long categoryId, List<OrderUpdateItemDto> updates) {
 
         Boolean hasNullValues = updates.stream()
@@ -114,7 +113,7 @@ public class ProductService {
     }
 
     // Ürün sil
-    @CacheEvict(value = "products", allEntries = true)
+    @CacheEvict(value = "products", key = "#productId")
     public void deleteProduct(Long productId) {
         Optional<Product> existingProductOpt = productRepository.findById(productId);
 
