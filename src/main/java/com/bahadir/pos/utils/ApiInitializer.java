@@ -1,6 +1,7 @@
 package com.bahadir.pos.utils;
 
 import com.bahadir.pos.entity.BaseStatus;
+import com.bahadir.pos.entity.authentication.AuthenticationType;
 import com.bahadir.pos.entity.category.Category;
 import com.bahadir.pos.entity.company.Company;
 import com.bahadir.pos.entity.organization.Organization;
@@ -10,6 +11,7 @@ import com.bahadir.pos.entity.role.Role;
 import com.bahadir.pos.entity.user.User;
 import com.bahadir.pos.entity.user.UserRole;
 import com.bahadir.pos.repository.*;
+import com.bahadir.pos.service.TwoFactorAuthService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -27,12 +29,16 @@ public class ApiInitializer implements CommandLineRunner {
     private final CategoryRepository categoryRepository;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final TwoFactorAuthService twoFactorAuthService;
 
     public ApiInitializer(CompanyRepository companyRepository,
                           OrganizationRepository organizationRepository,
                           PermissionRepository permissionRepository,
                           RoleRepository roleRepository,
-                          CategoryRepository categoryRepository, UserRepository userRepository, PasswordEncoder passwordEncoder) {
+                          CategoryRepository categoryRepository,
+                          UserRepository userRepository,
+                          PasswordEncoder passwordEncoder,
+                          TwoFactorAuthService twoFactorAuthService) {
         this.companyRepository = companyRepository;
         this.organizationRepository = organizationRepository;
         this.permissionRepository = permissionRepository;
@@ -40,6 +46,7 @@ public class ApiInitializer implements CommandLineRunner {
         this.categoryRepository = categoryRepository;
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.twoFactorAuthService = twoFactorAuthService;
     }
 
     @Override
@@ -265,17 +272,23 @@ public class ApiInitializer implements CommandLineRunner {
                     .role(adminRole)
                     .authRole(UserRole.ADMIN)
                     .organization(adminOrg)
+                    .authType(AuthenticationType.NONE)
                     .build();
             userRepository.save(adminUser);
 
+            String testEmail = "test";
+            String secretKey = twoFactorAuthService.generateSecretKey();
+
             Role testRole = roleRepository.findByName(UserRole.TEST.name()).orElse(null);
             User testUser = User.builder()
-                    .username("test")
-                    .password(passwordEncoder.encode("test"))
-                    .email("test")
-                    .role(testRole)
-                    .authRole(UserRole.TEST)
+                    .username(testEmail)
+                    .password(passwordEncoder.encode(testEmail))
+                    .email(testEmail)
+                    .role(adminRole)
+                    .authRole(UserRole.ADMIN)
                     .organization(testOrg)
+                    .authType(AuthenticationType.OTP)
+                    .twoFactorAuthSecretKey(secretKey)
                     .build();
             userRepository.save(testUser);
 

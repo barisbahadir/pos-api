@@ -1,11 +1,10 @@
 package com.bahadir.pos.service;
 
+import com.bahadir.pos.entity.authentication.AuthenticationType;
 import com.bahadir.pos.entity.user.User;
 import com.bahadir.pos.entity.user.UserRole;
 import com.bahadir.pos.exception.ApiException;
 import com.bahadir.pos.repository.UserRepository;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -39,6 +38,7 @@ public class UserService {
                 .username(username)
                 .password(encodedPassword)
                 .authRole(UserRole.USER)
+                .authType(AuthenticationType.NONE)
                 .build();
 
         return userRepository.save(user);
@@ -48,7 +48,6 @@ public class UserService {
 //        return userRepository.findByEmail(email);
 //    }
 
-    @Cacheable(value = "users", key = "#email")
     public Optional<User> findByEmailWithDetails(String email) {
         return userRepository.findUserByEmailWithDetails(email);
     }
@@ -58,7 +57,6 @@ public class UserService {
     }
 
     // Tüm kullanicilari silme
-    @CacheEvict(value = "users")
     public void deleteAllUsers() {
         userRepository.deleteAll();
     }

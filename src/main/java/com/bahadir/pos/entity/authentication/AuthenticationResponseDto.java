@@ -19,10 +19,12 @@ public class AuthenticationResponseDto {
     private String email;
     private String username;
     private UserRole role;
-    private String token;
     private String avatar;
     private String status;
-    private String activeSessionId;
     private List<Permission> permissions;
+    private String token;
+
+    private AuthenticationType authType;
+    private String twoFactorQrCode;
 
 }
