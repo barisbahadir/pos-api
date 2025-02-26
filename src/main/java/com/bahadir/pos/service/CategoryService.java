@@ -31,14 +31,14 @@ public class CategoryService {
     }
 
     // Kategorileri listele
-    @Cacheable(value = "categories", key = "'all_categories'")
+    @Cacheable(value = "categories", key = "all_categories")
     public List<Category> getAllCategories() {
         return categoryRepository.findAll();
     }
 
-    @Cacheable(value = "categories", key = "#categoryId")
-    public Optional<Category> getCategoryById(Long categoryId) {
-        Optional<Category> category = categoryRepository.findById(categoryId);
+    @Cacheable(value = "categories", key = "#id")
+    public Optional<Category> getCategoryById(Long id) {
+        Optional<Category> category = categoryRepository.findById(id);
         category.ifPresent(value -> value.setProducts(null));
         return category;
     }
@@ -52,7 +52,7 @@ public class CategoryService {
     }
 
     // Kategori güncelleme
-    @CachePut(value = "categories", key = "#updatedCategory.id")
+    @CachePut(value = "categories", key = "#id")
     public Category updateCategory(Long id, Category updatedCategory) {
         Optional<Category> existingCategoryOpt = categoryRepository.findById(id);
 
@@ -68,6 +68,7 @@ public class CategoryService {
     }
 
     @Transactional
+    @CacheEvict(value = "categories", allEntries = true)
     public Boolean updateOrderValues(List<OrderUpdateItemDto> updates) {
 
         Boolean hasNullValues = updates.stream()
@@ -97,7 +98,7 @@ public class CategoryService {
     }
 
     @Transactional
-    @CacheEvict(value = "categories", key = "#categoryId")
+    @CacheEvict(value = "categories", allEntries = true)
     public void deleteCategory(Long categoryId) {
         Optional<Category> existingCategoryOpt = categoryRepository.findById(categoryId);
 
