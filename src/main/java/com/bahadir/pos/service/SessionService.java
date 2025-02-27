@@ -99,6 +99,6 @@ public class SessionService {
 
     @Transactional
     public void deleteAllPassiveSessions() {
-        sessionRepository.deleteByLogoutDateIsNull();
+        sessionRepository.deleteByLogoutDateIsNotNull();
     }
 }

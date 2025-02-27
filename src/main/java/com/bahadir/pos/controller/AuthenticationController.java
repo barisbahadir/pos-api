@@ -148,12 +148,13 @@ public class AuthenticationController {
 
         AuthenticationResponseDto authenticatedRes = AuthenticationResponseDto
                 .builder()
+                .id(user.getId())
+                .sessionId(jwtResponse.getSessionId())
                 .email(authenticationRequest.getEmail())
                 .username(user.getUsername())
                 .role(user.getAuthRole())
                 .permissions(sortedPermissions)
                 .avatar(null)
-                .id(user.getId())
                 .status(user.getStatus().name())
                 .authType(user.getAuthType())
                 .isAuthenticated(true)

@@ -16,6 +16,7 @@ import java.util.List;
 public class AuthenticationResponseDto {
 
     private Long id;
+    private String sessionId;
     private String email;
     private String username;
     private String name;

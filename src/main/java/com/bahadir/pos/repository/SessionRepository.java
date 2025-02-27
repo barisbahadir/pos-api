@@ -39,7 +39,7 @@ public interface SessionRepository extends JpaRepository<Session, String> {
     List<Session> findByLogoutDateIsNotNullOrderByLoginDateDesc();
 
     @Transactional
-    void deleteByLogoutDateIsNull();
+    void deleteByLogoutDateIsNotNull();
 
     Optional<Session> findByToken(String token);
 
