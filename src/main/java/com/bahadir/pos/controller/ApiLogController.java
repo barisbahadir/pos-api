@@ -22,7 +22,6 @@ public class ApiLogController {
         this.apiLogService = apiLogService;
     }
 
-    @SecuredEndpoint(role = UserRole.ADMIN, filter = true)
     @GetMapping("/list")
     public ResponseEntity<List<ApiLog>> listAll() {
         List<ApiLog> allLogs = apiLogService.getAllLogs();

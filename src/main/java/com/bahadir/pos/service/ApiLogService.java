@@ -2,6 +2,9 @@ package com.bahadir.pos.service;
 
 import com.bahadir.pos.entity.log.ApiLog;
 import com.bahadir.pos.repository.ApiLogRepository;
+import com.bahadir.pos.utils.ApiUtils;
+import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -11,35 +14,38 @@ import java.util.List;
 public class ApiLogService {
 
     private final ApiLogRepository apiLogRepository;
-    private final SessionService sessionService;
 
-    public ApiLogService(ApiLogRepository apiLogRepository,
-                         SessionService sessionService) {
+    public ApiLogService(ApiLogRepository apiLogRepository) {
         this.apiLogRepository = apiLogRepository;
-        this.sessionService = sessionService;
     }
 
     public List<ApiLog> getAllLogs() {
-        return apiLogRepository.findByIdIsNotNullOrderByDateDesc();
+        LocalDateTime yesterday = LocalDateTime.now().minusDays(1);
+        return apiLogRepository.findLogsFromStartDate(yesterday);
     }
 
-    public void saveApiLog(String token, String email, String requestUri,
-                           String method, String responseBody,
-                           int responseStatus) {
+    public ApiLog saveLog(HttpServletRequest request, Throwable exception, HttpStatus httpStatus, String errorSource) {
+        String message = "";
+        try {
+            message = ApiUtils.getExceptionMessage(exception);
+            ApiLog log = ApiLog.builder()
+                    .email(request.getUserPrincipal() != null ? request.getUserPrincipal().getName() : "Anonymous")
+                    .token(ApiUtils.getJwtFromRequest(request))
+                    .httpMethod(request.getMethod())
+                    .endpoint(request.getRequestURI())
+                    .clientIp(request.getRemoteAddr())
+                    .statusCode(httpStatus.value())
+                    .errorType(errorSource)
+                    .errorMessage(message)
+                    .errorDetailedMessage(ApiUtils.getStackTraceMessage(exception))
+                    .logDate(LocalDateTime.now())
+                    .build();
 
-        String userSessionId = sessionService.findSessionIdByToken(token);
-
-        ApiLog apiLog = new ApiLog();
-        apiLog.setUserSessionId(userSessionId);
-        apiLog.setEmail(email);
-        apiLog.setRequestUri(requestUri);
-        apiLog.setMethod(method);
-        apiLog.setResponse(responseBody.length() > 500 ? responseBody.substring(0, 500) + "..." : responseBody); // Uzun response'ları kısalteBody);
-        apiLog.setResponseStatus(responseStatus);
-        apiLog.setDate(LocalDateTime.now());  // Zaman damgası ekliyoruz
-
-        // Log'u veritabanına kaydediyoruz
-        apiLogRepository.save(apiLog);
+            return apiLogRepository.save(log);
+        } catch (Exception exc) {
+            System.out.println("Api log kaydedilirken bir hata olustu. Exc: " + message);
+        }
+        return null;
     }
 
     public void deleteAllLogs() {

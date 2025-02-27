@@ -7,6 +7,8 @@ import java.util.Random;
 
 public class ApiUtils {
 
+    public static final int MAX_TEXT_LENGTH = 65500; // Örneğin 65,534 karakter limitini alalım
+
     public static String getJwtFromRequest(HttpServletRequest request) {
         String authHeader = request.getHeader("Authorization");
         if (authHeader != null && authHeader.startsWith("Bearer ")) {

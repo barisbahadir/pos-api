@@ -1,6 +1,7 @@
 package com.bahadir.pos.controller;
 
 import com.bahadir.pos.exception.JwtTokenException;
+import com.bahadir.pos.service.ApiLogService;
 import com.bahadir.pos.utils.ApiResponse;
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -13,7 +14,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/error")
-public class CustomErrorController {
+public class ErrorController {
+
+    private final ApiLogService apiLogService;
+
+    public ErrorController(ApiLogService apiLogService) {
+        this.apiLogService = apiLogService;
+    }
 
     @GetMapping
     public ResponseEntity<ApiResponse<?>> handleError(HttpServletRequest request) {
@@ -27,7 +34,11 @@ public class CustomErrorController {
             httpStatus = HttpStatus.FORBIDDEN;
         }
 
-        ApiResponse<Void> response = ApiResponse.error(httpStatus.value(), exception, "SECURITY");
+        String errorSource = "SECURITY";
+
+        apiLogService.saveLog(request, exception, httpStatus, errorSource);
+
+        ApiResponse<Void> response = ApiResponse.error(httpStatus.value(), exception, errorSource);
 
         return new ResponseEntity<>(response, httpStatus);
     }
