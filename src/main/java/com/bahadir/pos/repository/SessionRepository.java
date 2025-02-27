@@ -32,6 +32,11 @@ public interface SessionRepository extends JpaRepository<Session, String> {
     @Query("UPDATE Session s SET s.logoutDate = :logoutTime WHERE s.logoutDate IS NULL AND s.tokenExpireDate < :now")
     int expireAllExpiredSessions(LocalDateTime now, LocalDateTime logoutTime);
 
+    @Modifying
+    @Transactional
+    @Query("UPDATE Session s SET s.logoutDate = :logoutTime WHERE s.logoutDate IS NULL")
+    int killAllActiveSessions(LocalDateTime logoutTime);
+
     // Girilen token icin oturum sonlandirilmis mi kontrolu
     boolean existsByTokenAndLogoutDateIsNotNull(String token);
 

@@ -49,4 +49,11 @@ public class SessionController {
         sessionService.deleteAllPassiveSessions();
         return ResponseEntity.ok(true);
     }
+
+    @SecuredEndpoint(role = UserRole.ADMIN, filter = true)
+    @PostMapping("/kill/all")
+    public ResponseEntity<Integer> killAll() {
+        int killedSessionCount = sessionService.killAllActiveSessions();
+        return ResponseEntity.ok(killedSessionCount);
+    }
 }

@@ -39,7 +39,7 @@ public class SessionService {
     @Transactional
     public Session createSession(User user, LocalDateTime tokenExpireDate, HttpServletRequest request, String token) {
 
-        if(isSingleDeviceSession){
+        if (isSingleDeviceSession) {
             expireOldSessions(user.getEmail());
         }
 
@@ -85,9 +85,9 @@ public class SessionService {
     }
 
     public String findSessionIdByToken(String token) {
-        try{
+        try {
             return sessionRepository.findSessionIdByToken(token);
-        }catch (Exception e){
+        } catch (Exception e) {
             return null;
         }
     }
@@ -100,5 +100,11 @@ public class SessionService {
     @Transactional
     public void deleteAllPassiveSessions() {
         sessionRepository.deleteByLogoutDateIsNotNull();
+    }
+
+    @Transactional
+    public int killAllActiveSessions() {
+        LocalDateTime now = LocalDateTime.now();
+        return sessionRepository.killAllActiveSessions(now);
     }
 }
