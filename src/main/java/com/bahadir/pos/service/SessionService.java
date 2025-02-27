@@ -68,11 +68,11 @@ public class SessionService {
     }
 
     public void updateSessionLastAccessDate(String token) {
-        sessionRepository.updateLastAccessDate(token, LocalDateTime.now());
+        sessionRepository.updateByTokenLastAccessDate(token, LocalDateTime.now());
     }
 
     public void expireOldSessions(String email) {
-        sessionRepository.expireOldSessions(email, LocalDateTime.now());
+        sessionRepository.expireOldSessionsWithEmail(email, LocalDateTime.now());
     }
 
     public boolean existsByTokenAndLogoutDateIsNotNull(String token) {
