@@ -75,9 +75,9 @@ public class JwtTokenProvider {
             Claims claims = getClaimsFromToken(token);
             // Token geçerliyse, session'ı kontrol et ve güncelle
             // sessionService.updateSessionLastAccessDate(token);
-            if (isSingleDeviceSession)
-                if(sessionService.existsByTokenAndLogoutDateIsNotNull(token)) {
-                throw new JwtTokenException("Hesabınızda yeni bir giriş tespit edildiği için oturumunuz sonlandırıldı. Tekrar giriş yapınız.");
+//            if (isSingleDeviceSession)
+            if (sessionService.existsByTokenAndLogoutDateIsNotNull(token)) {
+                throw new JwtTokenException("Kullanıcı doğrulanamadı. Yeniden giriş yapmanız gerekmektedir.");
             }
 
             return true;
