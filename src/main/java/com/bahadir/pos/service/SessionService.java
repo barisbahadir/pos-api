@@ -1,5 +1,6 @@
 package com.bahadir.pos.service;
 
+import com.bahadir.pos.entity.authentication.AuthenticationType;
 import com.bahadir.pos.entity.session.Session;
 import com.bahadir.pos.entity.user.User;
 import com.bahadir.pos.repository.SessionRepository;
@@ -47,6 +48,7 @@ public class SessionService {
         session.setUsername(user.getUsername());
         session.setEmail(user.getEmail());
         session.setUserRole(user.getAuthRole().name());
+        session.setLoginType(user.getAuthType() == AuthenticationType.NONE ? "PASSWORD" : user.getAuthType().name());
         session.setLoginDate(LocalDateTime.now());
         session.setLastAccessDate(LocalDateTime.now());
         session.setTokenExpireDate(tokenExpireDate);

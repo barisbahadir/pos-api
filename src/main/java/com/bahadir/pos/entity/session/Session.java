@@ -30,6 +30,8 @@ public class Session {
     @Column(nullable = false)
     private String userRole;
 
+    private String loginType;
+
     @Column(nullable = false)
     private LocalDateTime loginDate;
 
