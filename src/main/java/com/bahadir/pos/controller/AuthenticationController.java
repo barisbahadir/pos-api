@@ -77,14 +77,14 @@ public class AuthenticationController {
     public ResponseEntity<AuthenticationResponseDto> login(@RequestBody AuthenticationRequest authenticationRequest, HttpServletRequest request) {
 
         User user = userService.findByEmailWithDetails(authenticationRequest.getEmail())
-                .orElseThrow(() -> new ApiException("User can't found with email: " + authenticationRequest.getEmail()));
+                .orElseThrow(() -> new ApiException(authenticationRequest.getEmail() + " e-mail adresi ile kayitli kullanici bulunamadi"));
 
         if (!userService.validatePassword(user, authenticationRequest.getPassword())) {
-            throw new ApiException("Invalid password");
+            throw new ApiException("Kullanici adi veya sifre gecersiz");
         }
 
         if (user.getStatus() == BaseStatus.DISABLE) {
-            throw new ApiException("Kullanıcı aktif değildir, lütfen yöneticinizle görüşün.");
+            throw new ApiException("Kullanıcı aktif değildir, lütfen yöneticinizle görüşün");
         }
 
         Authentication authentication = authenticationManager.authenticate(
@@ -118,19 +118,19 @@ public class AuthenticationController {
         // Kullanıcının 2FA türüne göre işlem yap
         if (user.getAuthType() == AuthenticationType.OTP) {
             if (authenticationRequest.getAuthValue() == null) {
-                throw new ApiException("Authenticator ile uretilen kodu girmeniz gereklidir.");
+                throw new ApiException("Authenticator uygulamasi ile uretilen kodu girmeniz gerekmektedir");
             }
             int otpValue = authenticationRequest.getAuthValue().length() == 6 ? Integer.parseInt(authenticationRequest.getAuthValue()) : 0;
             boolean is2faValid = twoFactorOtpService.validateOtp(user.getTwoFactorAuthSecretKey(), otpValue);
             if (!is2faValid) {
-                throw new ApiException("Geçersiz OTP doğrulama kodu girdiniz.");
+                throw new ApiException("Geçersiz doğrulama kodu girdiniz");
             }
         } else if (user.getAuthType() == AuthenticationType.EMAIL) {
             if (authenticationRequest.getAuthValue() == null) {
-                throw new ApiException("E-posta ile gonderilen doğrulamanu kodu girmeniz gereklidir.");
+                throw new ApiException("E-posta adresinize gonderilen doğrulama kodunu girmeniz gerekmektedir");
             }
             if (!user.getTwoFactorEmailCode().equals(authenticationRequest.getAuthValue())) {
-                throw new ApiException("Geçersiz OTP doğrulama kodu girdiniz.");
+                throw new ApiException("Geçersiz doğrulama kodu girdiniz");
             }
         }
 
