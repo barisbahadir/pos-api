@@ -170,16 +170,19 @@ public class AuthenticationController {
         return ResponseEntity.ok(true);
     }
 
-    @PostMapping("/sessionEnd")
+    @PostMapping("/logout")
     public ResponseEntity<Boolean> logout(HttpServletRequest request) {
 
-//        SecurityContextHolder.clearContext();
-//        request.getSession().invalidate();   // Session'ı öldür
+        try {
+            SecurityContextHolder.clearContext();
+            request.getSession().invalidate();   // Session'ı öldür
+        } catch (Exception e) { }
 
         String token = ApiUtils.getJwtFromRequest(request);
-        sessionService.closeSessionByToken(token);
+        if (token != null)
+            sessionService.closeSessionByToken(token);
 
-        return ResponseEntity.ok(true);
+        return ResponseEntity.ok(token != null);
     }
 
 }
