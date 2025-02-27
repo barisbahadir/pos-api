@@ -15,6 +15,13 @@ public class ApiUtils {
         return null;
     }
 
+    public static String getExceptionMessage(Throwable exception) {
+        if(exception != null && exception.getMessage() != null){
+            return exception.getMessage();
+        }
+        return "Bilinmeyen bir hata oluştu.";
+    }
+
     public static String getStackTraceMessage(Throwable exception) {
        if(exception != null && exception.getStackTrace() != null){
            StringBuilder stackTrace = new StringBuilder();

@@ -58,7 +58,7 @@ public class ApiResponse<T> implements Serializable {
         return ApiResponse.<T>builder()
                 .isSuccess(false)
                 .status(errorCode)
-                .message(exception.getMessage())
+                .message(ApiUtils.getExceptionMessage(exception))
                 .detailedMessage(ApiUtils.getStackTraceMessage(exception))
                 .errorSource(errorSource)
                 .data(null)

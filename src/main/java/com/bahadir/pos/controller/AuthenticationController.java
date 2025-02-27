@@ -98,20 +98,21 @@ public class AuthenticationController {
 
         // Eğer 2FA etkinse, ikinci aşama için dönüş yap
         if (user.getAuthType() != AuthenticationType.NONE && authenticationRequest.getAuthValue() == null) {
-            AuthenticationResponseDto dto = AuthenticationResponseDto
+            AuthenticationResponseDto twoFactorResponse = AuthenticationResponseDto
                     .builder()
                     .authType(user.getAuthType())
+                    .isAuthenticated(false)
                     .build();
 
-            if(user.getAuthType() == AuthenticationType.OTP){
-                dto.setTwoFactorQrCode(twoFactorOtpService.generateQrCode(user.getEmail(), user.getTwoFactorAuthSecretKey()));
+            if (user.getAuthType() == AuthenticationType.OTP) {
+                twoFactorResponse.setTwoFactorQrCode(twoFactorOtpService.generateQrCode(user.getEmail(), user.getTwoFactorAuthSecretKey()));
             } else {
                 int emailCode = ApiUtils.generateOtpNumber();
                 user.setTwoFactorEmailCode(String.valueOf(emailCode));
                 userService.updateUser(user.getId(), user);
                 twoFactorMailService.sendOtpEmail(user.getEmail(), emailCode);
             }
-            return ResponseEntity.ok(dto);
+            return ResponseEntity.ok(twoFactorResponse);
         }
 
         // Kullanıcının 2FA türüne göre işlem yap
@@ -145,7 +146,7 @@ public class AuthenticationController {
             user.getRole().setPermissions(new LinkedHashSet<>(sortedPermissions));
         }
 
-        AuthenticationResponseDto dto = AuthenticationResponseDto
+        AuthenticationResponseDto authenticatedRes = AuthenticationResponseDto
                 .builder()
                 .email(authenticationRequest.getEmail())
                 .username(user.getUsername())
@@ -155,10 +156,11 @@ public class AuthenticationController {
                 .id(user.getId())
                 .status(user.getStatus().name())
                 .authType(user.getAuthType())
+                .isAuthenticated(true)
                 .token(jwtResponse.getJwtToken())
                 .build();
 
-        return ResponseEntity.ok(dto);
+        return ResponseEntity.ok(authenticatedRes);
     }
 
     @SecuredEndpoint(role = UserRole.ADMIN, filter = true)
@@ -168,10 +170,11 @@ public class AuthenticationController {
         return ResponseEntity.ok(true);
     }
 
-    @PostMapping("/logout")
+    @PostMapping("/sessionEnd")
     public ResponseEntity<Boolean> logout(HttpServletRequest request) {
-        SecurityContextHolder.clearContext();
-        request.getSession().invalidate();   // Session'ı öldür
+
+//        SecurityContextHolder.clearContext();
+//        request.getSession().invalidate();   // Session'ı öldür
 
         String token = ApiUtils.getJwtFromRequest(request);
         sessionService.closeSessionByToken(token);
