@@ -11,8 +11,8 @@ public class SwaggerConfig {
     @Bean
     public OpenAPI customOpenAPI() {
         return new OpenAPI()
-                .info(new Info().title("Bahadir POS API")
+                .info(new Info().title("API")
                         .version("1.0")
-                        .description("API documentation for Bahadir POS"));
+                        .description("API documentation for Client"));
     }
 }

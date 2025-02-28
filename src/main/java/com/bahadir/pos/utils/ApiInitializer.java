@@ -13,6 +13,7 @@ import com.bahadir.pos.entity.user.UserRole;
 import com.bahadir.pos.repository.*;
 import com.bahadir.pos.service.TwoFactorMailService;
 import com.bahadir.pos.service.TwoFactorOtpService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -22,6 +23,9 @@ import java.util.List;
 
 @Component
 public class ApiInitializer implements CommandLineRunner {
+
+    @Value("${spring.application.name}")
+    private String appName;
 
     private final CompanyRepository companyRepository;
     private final OrganizationRepository organizationRepository;
@@ -327,11 +331,11 @@ public class ApiInitializer implements CommandLineRunner {
         if (categoryRepository.count() == 0) {
             // Kayıt yoksa, yeni bir kategori ekle
             Category category = Category.builder()
-                    .name("POS")
+                    .name(appName)
                     .orderValue(1)
                     .build();
             categoryRepository.save(category);
-            System.out.println("Default category: 'POS' created!");
+            System.out.println("Default category: " + appName + " created!");
         }
 //
 //        // Kullanicilar
