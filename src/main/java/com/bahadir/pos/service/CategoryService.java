@@ -7,9 +7,6 @@ import com.bahadir.pos.repository.CategoryRepository;
 import com.bahadir.pos.repository.ProductRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.CachePut;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,12 +28,12 @@ public class CategoryService {
     }
 
     // Kategorileri listele
-    @Cacheable(value = "categories", key = "'all_categories'")
+//    @Cacheable(value = "categories", key = "'all_categories'")
     public List<Category> getAllCategories() {
         return categoryRepository.findAll();
     }
 
-    @Cacheable(value = "categories", key = "#categoryId")
+    //    @Cacheable(value = "categories", key = "#categoryId")
     public Optional<Category> getCategoryById(Long categoryId) {
         Optional<Category> category = categoryRepository.findById(categoryId);
         category.ifPresent(value -> value.setProducts(null));
@@ -44,7 +41,7 @@ public class CategoryService {
     }
 
     // Yeni kategori oluştur
-    @CachePut(value = "categories", key = "#category.id")
+//    @CachePut(value = "categories", key = "#category.id")
     public Category createCategory(Category category) {
         category.setOrderValue(1);
         category.setStatus(BaseStatus.ENABLE);
@@ -52,7 +49,7 @@ public class CategoryService {
     }
 
     // Kategori güncelleme
-    @CachePut(value = "categories", key = "#updatedCategory.id")
+//    @CachePut(value = "categories", key = "#updatedCategory.id")
     public Category updateCategory(Long id, Category updatedCategory) {
         Optional<Category> existingCategoryOpt = categoryRepository.findById(id);
 
@@ -96,8 +93,8 @@ public class CategoryService {
         }
     }
 
+    //    @CacheEvict(value = "categories", key = "#categoryId")
     @Transactional
-    @CacheEvict(value = "categories", key = "#categoryId")
     public void deleteCategory(Long categoryId) {
         Optional<Category> existingCategoryOpt = categoryRepository.findById(categoryId);
 
@@ -114,7 +111,7 @@ public class CategoryService {
     }
 
     // Tüm kategorileri silme
-    @CacheEvict(value = "categories", allEntries = true)
+//    @CacheEvict(value = "categories", allEntries = true)
     public void deleteAllCategories() {
         categoryRepository.deleteAll();
     }

@@ -12,6 +12,6 @@ public class CacheConfig {
 
     @Bean
     public CacheManager cacheManager() {
-        return new ConcurrentMapCacheManager("users", "categories", "products"); // "users" isimli cache'i kullanır
+        return new ConcurrentMapCacheManager("users" /* , "categories", "products" */); // "users" isimli cache'i kullanır
     }
 }
