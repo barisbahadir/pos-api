@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ApiLog {
+public class SystemLog {
 
     @Id
     @GeneratedValue(generator = "uuid2")
@@ -29,7 +29,6 @@ public class ApiLog {
     private String endpoint;     // Hangi URL çağrılmış?
     private Integer statusCode;  // HTTP Response Kodu
     private String clientIp;     // Kullanıcının IP adresi
-    private String responseStatus; // Yanıt durumu (SUCCESS / ERROR)
 
     private String errorType; // Hata Mesajı
     private String errorMessage; // Hata Mesajı
@@ -39,6 +38,13 @@ public class ApiLog {
 
     @Column(nullable = false)
     private LocalDateTime logDate;
+
+    @Transient
+    private boolean isSuccess;
+
+    public boolean getIsSuccess() {
+        return statusCode == 200;
+    }
 
     @PrePersist
     public void prePersist() {

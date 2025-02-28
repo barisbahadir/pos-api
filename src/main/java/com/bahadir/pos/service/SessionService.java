@@ -20,20 +20,22 @@ public class SessionService {
 
     private final SessionRepository sessionRepository;
 
+    private final LocalDateTime defaultFromDate = LocalDateTime.now().minusDays(2);
+
     public SessionService(SessionRepository sessionRepository) {
         this.sessionRepository = sessionRepository;
     }
 
     public List<Session> getAllSessions() {
-        return sessionRepository.findAllByOrderByLoginDateDesc();
+        return sessionRepository.findSessionsFromStartDate(defaultFromDate);
     }
 
     public List<Session> getActiveSessions() {
-        return sessionRepository.findByLogoutDateIsNullOrderByLoginDateDesc();
+        return sessionRepository.findActiveSessionsFromStartDate(defaultFromDate);
     }
 
     public List<Session> getPassiveSessions() {
-        return sessionRepository.findByLogoutDateIsNotNullOrderByLoginDateDesc();
+        return sessionRepository.findDeactiveSessionsFromStartDate(defaultFromDate);
     }
 
     @Transactional
@@ -75,8 +77,8 @@ public class SessionService {
         sessionRepository.expireOldSessionsWithEmail(email, LocalDateTime.now());
     }
 
-    public boolean existsByTokenAndLogoutDateIsNotNull(String token) {
-        return sessionRepository.existsByTokenAndLogoutDateIsNotNull(token);
+    public boolean isSessionInvalid(String token) {
+        return sessionRepository.isSessionInvalid(token);
     }
 
     public Session findSessionById(String sessionId) {

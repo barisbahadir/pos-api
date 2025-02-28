@@ -15,6 +15,18 @@ import java.util.Optional;
 @Repository
 public interface SessionRepository extends JpaRepository<Session, String> {
 
+    //Girilen tarihten gunumuze kadar olan kayitlari yeniden eskiye siralanmis sekilde getirir
+    @Query("SELECT a FROM Session a WHERE a.loginDate >= :startDate ORDER BY a.loginDate DESC")
+    List<Session> findSessionsFromStartDate(@Param("startDate") LocalDateTime startDate);
+
+    //Girilen tarihten gunumuze kadar olan kayitlari yeniden eskiye siralanmis sekilde getirir
+    @Query("SELECT a FROM Session a WHERE a.loginDate >= :startDate AND a.logoutDate IS NULL ORDER BY a.loginDate DESC")
+    List<Session> findActiveSessionsFromStartDate(@Param("startDate") LocalDateTime startDate);
+
+    //Girilen tarihten gunumuze kadar olan kayitlari yeniden eskiye siralanmis sekilde getirir
+    @Query("SELECT a FROM Session a WHERE a.loginDate >= :startDate AND a.logoutDate IS NOT NULL ORDER BY a.loginDate DESC")
+    List<Session> findDeactiveSessionsFromStartDate(@Param("startDate") LocalDateTime startDate);
+
     // Kullanıcının eski oturumlarını kapat
     @Modifying
     @Transactional
@@ -37,9 +49,6 @@ public interface SessionRepository extends JpaRepository<Session, String> {
     @Query("UPDATE Session s SET s.logoutDate = :logoutTime WHERE s.logoutDate IS NULL")
     int killAllActiveSessions(LocalDateTime logoutTime);
 
-    // Girilen token icin oturum sonlandirilmis mi kontrolu
-    boolean existsByTokenAndLogoutDateIsNotNull(String token);
-
     // Tüm sessionları createDate’e göre sıralı getir
     List<Session> findAllByOrderByLoginDateDesc();
 
@@ -56,4 +65,18 @@ public interface SessionRepository extends JpaRepository<Session, String> {
 
     @Query("SELECT s.id FROM Session s WHERE s.token = :token")
     String findSessionIdByToken(String token);
+
+    // Girilen token icin oturum sonlandirilmis mi kontrolu
+    @Query(value = """
+    SELECT 
+        CASE 
+            WHEN COUNT(*) = 0 THEN true 
+            WHEN MAX(s.logout_date) IS NOT NULL THEN true 
+            ELSE false 
+        END 
+    FROM session s 
+    WHERE s.token = :token
+""", nativeQuery = true)
+    boolean isSessionInvalid(@Param("token") String token);
+//    boolean existsByTokenAndLogoutDateIsNotNull(String token);
 }

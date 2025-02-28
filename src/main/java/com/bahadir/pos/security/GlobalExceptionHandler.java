@@ -2,7 +2,7 @@ package com.bahadir.pos.security;
 
 import com.bahadir.pos.exception.ApiException;
 import com.bahadir.pos.exception.JwtTokenException;
-import com.bahadir.pos.service.ApiLogService;
+import com.bahadir.pos.service.SystemLogService;
 import com.bahadir.pos.utils.ApiResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolationException;
@@ -27,10 +27,10 @@ public class GlobalExceptionHandler {
     private static HttpStatus defaultApiStatus = HttpStatus.FORBIDDEN;
     private static HttpStatus authApiStatus = HttpStatus.UNAUTHORIZED;
 
-    private final ApiLogService apiLogService;
+    private final SystemLogService systemLogService;
 
-    public GlobalExceptionHandler(ApiLogService apiLogService) {
-        this.apiLogService = apiLogService;
+    public GlobalExceptionHandler(SystemLogService systemLogService) {
+        this.systemLogService = systemLogService;
     }
 
     // JWT Token hatası için özel handler
@@ -134,7 +134,7 @@ public class GlobalExceptionHandler {
     private ResponseEntity<ApiResponse<?>> getApiResponse(HttpStatus status, Throwable exc, String source, HttpServletRequest request) {
         ApiResponse<Void> response = ApiResponse.error(status.value(), exc, source);
 
-        apiLogService.saveLog(request, exc, status, source);
+        systemLogService.saveLog(request, exc, status, source);
 
         return new ResponseEntity<>(response, status);
     }

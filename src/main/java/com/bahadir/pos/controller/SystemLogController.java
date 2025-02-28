@@ -1,9 +1,7 @@
 package com.bahadir.pos.controller;
 
-import com.bahadir.pos.entity.log.ApiLog;
-import com.bahadir.pos.entity.user.UserRole;
-import com.bahadir.pos.security.SecuredEndpoint;
-import com.bahadir.pos.service.ApiLogService;
+import com.bahadir.pos.entity.log.SystemLog;
+import com.bahadir.pos.service.SystemLogService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,24 +12,24 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/log")
-public class ApiLogController {
+public class SystemLogController {
 
-    private final ApiLogService apiLogService;
+    private final SystemLogService systemLogService;
 
-    public ApiLogController(ApiLogService apiLogService) {
-        this.apiLogService = apiLogService;
+    public SystemLogController(SystemLogService systemLogService) {
+        this.systemLogService = systemLogService;
     }
 
     @GetMapping("/list")
-    public ResponseEntity<List<ApiLog>> listAll() {
-        List<ApiLog> allLogs = apiLogService.getAllLogs();
+    public ResponseEntity<List<SystemLog>> listAll() {
+        List<SystemLog> allLogs = systemLogService.getAllLogs();
         return ResponseEntity.ok(allLogs);
     }
 
-    // Tüm şirketleri sil
+    // Tümünü sil
     @PostMapping("/delete/all")
     public ResponseEntity<Boolean> deleteAll() {
-        apiLogService.deleteAllLogs();
+        systemLogService.deleteAllLogs();
         return ResponseEntity.ok(true);
     }
 }

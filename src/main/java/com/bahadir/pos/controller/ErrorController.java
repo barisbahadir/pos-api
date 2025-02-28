@@ -1,7 +1,7 @@
 package com.bahadir.pos.controller;
 
 import com.bahadir.pos.exception.JwtTokenException;
-import com.bahadir.pos.service.ApiLogService;
+import com.bahadir.pos.service.SystemLogService;
 import com.bahadir.pos.utils.ApiResponse;
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -16,10 +16,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/error")
 public class ErrorController {
 
-    private final ApiLogService apiLogService;
+    private final SystemLogService systemLogService;
 
-    public ErrorController(ApiLogService apiLogService) {
-        this.apiLogService = apiLogService;
+    public ErrorController(SystemLogService systemLogService) {
+        this.systemLogService = systemLogService;
     }
 
     @GetMapping
@@ -36,7 +36,7 @@ public class ErrorController {
 
         String errorSource = "SECURITY";
 
-        apiLogService.saveLog(request, exception, httpStatus, errorSource);
+        systemLogService.saveLog(request, exception, httpStatus, errorSource);
 
         ApiResponse<Void> response = ApiResponse.error(httpStatus.value(), exception, errorSource);
 

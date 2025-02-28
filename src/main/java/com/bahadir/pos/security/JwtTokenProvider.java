@@ -76,7 +76,7 @@ public class JwtTokenProvider {
             // Token geçerliyse, session'ı kontrol et ve güncelle
             // sessionService.updateSessionLastAccessDate(token);
 //            if (isSingleDeviceSession)
-            if (sessionService.existsByTokenAndLogoutDateIsNotNull(token)) {
+            if (sessionService.isSessionInvalid(token)) {
                 throw new JwtTokenException("Kullanıcı doğrulanamadı. Yeniden giriş yapmanız gerekmektedir.");
             }
 

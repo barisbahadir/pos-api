@@ -1,7 +1,7 @@
 package com.bahadir.pos.service;
 
-import com.bahadir.pos.entity.log.ApiLog;
-import com.bahadir.pos.repository.ApiLogRepository;
+import com.bahadir.pos.entity.log.SystemLog;
+import com.bahadir.pos.repository.SystemLogRepository;
 import com.bahadir.pos.utils.ApiUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
@@ -11,24 +11,24 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
-public class ApiLogService {
+public class SystemLogService {
 
-    private final ApiLogRepository apiLogRepository;
+    private final SystemLogRepository systemLogRepository;
 
-    public ApiLogService(ApiLogRepository apiLogRepository) {
-        this.apiLogRepository = apiLogRepository;
+    public SystemLogService(SystemLogRepository systemLogRepository) {
+        this.systemLogRepository = systemLogRepository;
     }
 
-    public List<ApiLog> getAllLogs() {
+    public List<SystemLog> getAllLogs() {
         LocalDateTime yesterday = LocalDateTime.now().minusDays(1);
-        return apiLogRepository.findLogsFromStartDate(yesterday);
+        return systemLogRepository.findLogsFromStartDate(yesterday);
     }
 
-    public ApiLog saveLog(HttpServletRequest request, Throwable exception, HttpStatus httpStatus, String errorSource) {
+    public SystemLog saveLog(HttpServletRequest request, Throwable exception, HttpStatus httpStatus, String errorSource) {
         String message = "";
         try {
             message = ApiUtils.getExceptionMessage(exception);
-            ApiLog log = ApiLog.builder()
+            SystemLog log = SystemLog.builder()
                     .email(request.getUserPrincipal() != null ? request.getUserPrincipal().getName() : "Anonymous")
                     .token(ApiUtils.getJwtFromRequest(request))
                     .httpMethod(request.getMethod())
@@ -41,7 +41,7 @@ public class ApiLogService {
                     .logDate(LocalDateTime.now())
                     .build();
 
-            return apiLogRepository.save(log);
+            return systemLogRepository.save(log);
         } catch (Exception exc) {
             System.out.println("Api log kaydedilirken bir hata olustu. Exc: " + message);
         }
@@ -49,6 +49,6 @@ public class ApiLogService {
     }
 
     public void deleteAllLogs() {
-        apiLogRepository.deleteAll();
+        systemLogRepository.deleteAll();
     }
 }
